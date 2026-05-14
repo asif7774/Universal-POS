@@ -1,0 +1,82 @@
+{
+  "name": "vital",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "🚀 Optimized Vite + React 19 + TypeScript + Tailwind CSS 4 boilerplate template with modern tooling and best practices",
+  "keywords": [
+    "vite",
+    "react",
+    "typescript",
+    "tailwind",
+    "template",
+    "boilerplate",
+    "starter",
+    "modern",
+    "optimized",
+    "tailwind-css-4",
+    "react-19",
+    "vitest",
+    "eslint"
+  ],
+  "homepage": "https://github.com/asif7774/vital#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asif7774/vital.git"
+  },
+  "bugs": {
+    "url": "https://github.com/asif7774/vital/issues"
+  },
+  "author": "Asif Ansari <asif.ansari7774@gmail.com>",
+  "license": "MIT",
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not IE 11"
+  ],
+  "engines": {
+    "node": ">=18",
+    "yarn": ">=1.22.5"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:ui": "vitest --ui",
+    "tsc": "tsc --noEmit",
+    "generate-sprite": "node scripts/generate-svg-sprite.js"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.100.10",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.13.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.4",
+    "@tailwindcss/postcss": "4.2.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^22.19.15",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "@vitest/ui": "4.0.18",
+    "autoprefixer": "10.4.27",
+    "eslint": "9.39.4",
+    "eslint-plugin-react-hooks": "7.0.1",
+    "eslint-plugin-react-refresh": "0.5.2",
+    "jsdom": "^29.0.1",
+    "lint-staged": "16.4.0",
+    "postcss": "8.5.8",
+    "prettier": "3.8.1",
+    "tailwindcss": "4.2.2",
+    "terser": "^5.46.1",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.57.2",
+    "vite": "^8.0.2",
+    "vitest": "4.0.18"
+  }
+}
