@@ -354,10 +354,10 @@ gantt
 | NestJS backend install | Antigravity | ✅ Done | Dependencies installed |
 | TypeScript check | Antigravity | ✅ Done | 0 errors |
 | Logo | Antigravity | ✅ Done | Navy+gold bow tie + card chip |
-| Measurements page | Antigravity | 🔲 Next | Digital measurement book |
+| Measurements page | Antigravity | ✅ Done | Digital measurement book |
 | Tailoring jobs page | Antigravity | ✅ Done | Job card, stage tracking (API integrated) |
-| Inventory page | Antigravity | 🔲 Next | Stock levels, size grid |
-| Appointments page | Antigravity | 🔲 Next | Calendar view |
+| Inventory page | Antigravity | ✅ Done | Stock levels, size grid |
+| Appointments page | Antigravity | ✅ Done | Calendar view |
 | NestJS backend modules | Antigravity | ✅ Done | Auth, Products, Orders, Customers, Rentals, Tailoring |
 | PostgreSQL schema + Drizzle | Antigravity | ✅ Done | Core tables with RLS |
 

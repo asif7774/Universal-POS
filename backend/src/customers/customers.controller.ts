@@ -12,6 +12,11 @@ export class CustomersController {
     return this.svc.findAll(req.user.tenantId, search);
   }
 
+  @Get('measurements/all')
+  getAllMeasurements(@Request() req: any) {
+    return this.svc.getAllMeasurements(req.user.tenantId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string, @Request() req: any) {
     return this.svc.findById(id, req.user.tenantId);

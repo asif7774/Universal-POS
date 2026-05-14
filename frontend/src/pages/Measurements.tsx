@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiClient } from '../lib/apiClient';
 
 interface MeasurementRecord {
   id: string;
@@ -22,12 +24,7 @@ interface MeasurementRecord {
   fittingNotes?: string;
 }
 
-const RECORDS: MeasurementRecord[] = [
-  { id: 'm1', customerId: 'c1', customerName: 'Marcus Johnson', takenBy: 'James Miller', date: '2026-04-10', chest: '42"', waist: '36"', hips: '42"', inseam: '32"', outseam: '42"', neck: '16"', sleeve: '34"', shoulder: '19"', jacketSize: '42R', shoeSize: '10.5', weight: '185 lbs', height: '6\'1"', notes: 'Prefers slim fit. Left shoulder slightly higher by ¼".', fittingNotes: 'Wedding rental — May 15. Jacket hemmed at left shoulder.' },
-  { id: 'm2', customerId: 'c2', customerName: 'David Williams', takenBy: 'Sarah Connor', date: '2026-05-01', chest: '40"', waist: '32"', hips: '40"', inseam: '30"', outseam: '40"', neck: '15"', sleeve: '32"', shoulder: '18"', jacketSize: '40R', shoeSize: '9', weight: '165 lbs', height: '5\'10"', notes: 'Regular fit. First-time rental.' },
-  { id: 'm3', customerId: 'c3', customerName: 'Robert Chen', takenBy: 'James Miller', date: '2026-03-15', chest: '44"', waist: '38"', hips: '44"', inseam: '31"', outseam: '41"', neck: '17"', sleeve: '35"', shoulder: '20"', jacketSize: '44R', shoeSize: '11', weight: '210 lbs', height: '6\'2"', notes: 'Classic fit preferred. Broad shoulders.', fittingNotes: 'Jacket shoulders let out ½". Repeat customer — keep on file.' },
-  { id: 'm4', customerId: 'c5', customerName: 'Kevin Park', takenBy: 'Sarah Connor', date: '2026-05-12', chest: '38"', waist: '30"', hips: '38"', inseam: '28"', outseam: '38"', neck: '14.5"', sleeve: '31"', shoulder: '17"', jacketSize: '38S', shoeSize: '8.5', notes: 'Short fit. Group booking coordinator.' },
-];
+
 
 const FIELDS: Array<{ key: keyof MeasurementRecord; label: string; unit?: string }> = [
   { key: 'jacketSize', label: 'Jacket Size' },
@@ -48,11 +45,28 @@ const fmtDate = (d: string) => new Date(d).toLocaleDateString('en-US', { month: 
 
 // New Measurement Form
 const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const queryClient = useQueryClient();
   const [form, setForm] = useState<Partial<MeasurementRecord>>({});
   const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
 
+  const { data: customers = [] } = useQuery<{id: string, firstName: string, lastName: string}[]>({
+    queryKey: ['customers'],
+    queryFn: async () => await apiClient.get('/customers'),
+  });
+
+  const mutation = useMutation({
+    mutationFn: async (data: Partial<MeasurementRecord>) => {
+      const customerId = data.customerId;
+      if (!customerId) throw new Error("Customer ID is required");
+      return await apiClient.post(`/customers/${customerId}/measurements`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['measurements'] });
+      onClose();
+    }
+  });
+
   const inputFields = [
-    { key: 'customerName', label: 'Customer Name', placeholder: 'John Smith', type: 'text' },
     { key: 'jacketSize', label: 'Jacket Size', placeholder: '42R', type: 'text' },
     { key: 'chest', label: 'Chest', placeholder: '42"', type: 'text' },
     { key: 'waist', label: 'Waist', placeholder: '36"', type: 'text' },
@@ -76,8 +90,17 @@ const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
         </div>
         <div className="modal-body">
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+              <label className="input-label">Select Customer</label>
+              <select className="input" value={form.customerId ?? ''} onChange={e => set('customerId', e.target.value)}>
+                <option value="" disabled>Select a customer...</option>
+                {customers.map(c => (
+                  <option key={c.id} value={c.id}>{c.firstName} {c.lastName}</option>
+                ))}
+              </select>
+            </div>
             {inputFields.map(f => (
-              <div key={f.key} className="input-group" style={f.key === 'customerName' ? { gridColumn: '1 / -1' } : {}}>
+              <div key={f.key} className="input-group">
                 <label className="input-label">{f.label}</label>
                 <input
                   className="input" type={f.type} placeholder={f.placeholder}
@@ -98,8 +121,10 @@ const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
           </div>
         </div>
         <div className="modal-footer">
-          <button className="btn btn-outline" onClick={onClose}>Cancel</button>
-          <button className="btn btn-gold" onClick={onClose}>Save Measurements</button>
+          <button className="btn btn-outline" onClick={onClose} disabled={mutation.isPending}>Cancel</button>
+          <button className="btn btn-gold" onClick={() => mutation.mutate(form)} disabled={mutation.isPending}>
+            {mutation.isPending ? 'Saving...' : 'Save Measurements'}
+          </button>
         </div>
       </div>
     </div>
@@ -111,7 +136,15 @@ const Measurements: React.FC = () => {
   const [selected, setSelected] = useState<MeasurementRecord | null>(null);
   const [showNew, setShowNew] = useState(false);
 
-  const filtered = RECORDS.filter(r =>
+  const { data: records = [], isLoading, error } = useQuery<MeasurementRecord[]>({
+    queryKey: ['measurements'],
+    queryFn: async () => await apiClient.get<MeasurementRecord[]>('/customers/measurements/all'),
+  });
+
+  if (isLoading) return <div className="page-header"><h1 className="page-title">Loading...</h1></div>;
+  if (error) return <div className="page-header"><h1 className="page-title" style={{ color: 'red' }}>Error loading measurements</h1></div>;
+
+  const filtered = records.filter(r =>
     r.customerName.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -120,7 +153,7 @@ const Measurements: React.FC = () => {
       <div className="page-header">
         <div>
           <h1 className="page-title">Measurements</h1>
-          <p className="page-subtitle">Digital measurement book · {RECORDS.length} profiles on file</p>
+          <p className="page-subtitle">Digital measurement book · {records.length} profiles on file</p>
         </div>
         <button className="btn btn-gold" onClick={() => setShowNew(true)}>+ Take Measurement</button>
       </div>

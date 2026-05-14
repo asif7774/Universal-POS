@@ -1,4 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiClient } from '../lib/apiClient';
 
 // ── Types ─────────────────────────────────────────────────────
 interface Product {
@@ -20,23 +22,7 @@ interface CartItem {
   lineTotal: number;
 }
 
-// ── Mock product catalog ──────────────────────────────────────
-const PRODUCTS: Product[] = [
-  { id: 'p1', name: 'Black Classic Tuxedo', sku: 'TUX-BLK-001', price: 599, rentalRate: 85, type: 'rental', category: 'Tuxedos', stock: 8 },
-  { id: 'p2', name: 'Navy Slim Fit Tuxedo', sku: 'TUX-NVY-002', price: 649, rentalRate: 90, type: 'rental', category: 'Tuxedos', stock: 5 },
-  { id: 'p3', name: 'White Dinner Jacket', sku: 'TUX-WHT-003', price: 549, rentalRate: 75, type: 'rental', category: 'Tuxedos', stock: 4 },
-  { id: 'p4', name: 'Charcoal Suit', sku: 'SUT-CHR-001', price: 499, rentalRate: 65, type: 'rental', category: 'Suits', stock: 6 },
-  { id: 'p5', name: 'Black Bow Tie', sku: 'ACC-BT-001', price: 24.99, type: 'sale', category: 'Accessories', stock: 30 },
-  { id: 'p6', name: 'White Dress Shirt', sku: 'SHT-WHT-001', price: 49.99, type: 'sale', category: 'Shirts', stock: 20 },
-  { id: 'p7', name: 'Black Patent Shoes', sku: 'SHO-BLK-001', price: 149, rentalRate: 25, type: 'rental', category: 'Shoes', stock: 10 },
-  { id: 'p8', name: 'Cummerbund', sku: 'ACC-CB-001', price: 19.99, type: 'sale', category: 'Accessories', stock: 25 },
-  { id: 'p9', name: 'Suspenders', sku: 'ACC-SUS-001', price: 14.99, type: 'sale', category: 'Accessories', stock: 18 },
-  { id: 'p10', name: 'Pocket Square', sku: 'ACC-PS-001', price: 9.99, type: 'sale', category: 'Accessories', stock: 40 },
-  { id: 'p11', name: 'Alteration — Hem', sku: 'SVC-ALT-001', price: 25, type: 'sale', category: 'Services', stock: 999 },
-  { id: 'p12', name: 'Alteration — Waist', sku: 'SVC-ALT-002', price: 35, type: 'sale', category: 'Services', stock: 999 },
-];
 
-const CATEGORIES = ['All', ...Array.from(new Set(PRODUCTS.map(p => p.category)))];
 
 const TAX_RATE = 0.0875; // 8.75% CA sales tax example
 
@@ -51,6 +37,7 @@ const fmt = (n: number) => `$${n.toFixed(2)}`;
 
 // ── POS Terminal ──────────────────────────────────────────────
 const POS: React.FC = () => {
+  const queryClient = useQueryClient();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
@@ -61,6 +48,25 @@ const POS: React.FC = () => {
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderId, setOrderId] = useState('');
   const searchRef = useRef<HTMLInputElement>(null);
+
+  const { data: products = [], isLoading: productsLoading } = useQuery<Product[]>({
+    queryKey: ['products'],
+    queryFn: async () => {
+      const data = await apiClient.get<any[]>('/products');
+      return data.map(p => ({
+        id: p.id,
+        name: p.name,
+        sku: p.sku,
+        price: p.salePrice ? parseFloat(p.salePrice) : 0,
+        type: p.type,
+        category: p.category,
+        stock: 99,
+        rentalRate: p.rentalRatePerDay ? parseFloat(p.rentalRatePerDay) : undefined
+      }));
+    }
+  });
+
+  const CATEGORIES = ['All', ...Array.from(new Set(products.map(p => p.category)))];
 
   const [barcodeFlash, setBarcodeFlash] = useState('');
   const barcodeBuffer = useRef('');
@@ -92,7 +98,7 @@ const POS: React.FC = () => {
       clearTimeout(barcodeTimer.current);
       if (e.key === 'Enter' && barcodeBuffer.current.length > 3) {
         const sku = barcodeBuffer.current.trim().toUpperCase();
-        const hit = PRODUCTS.find(p => p.sku.toUpperCase() === sku);
+        const hit = products.find(p => p.sku.toUpperCase() === sku);
         if (hit) {
           addToCart(hit, hit.type === 'rental');
           setBarcodeFlash(hit.name);
@@ -108,7 +114,7 @@ const POS: React.FC = () => {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [addToCart]);
+  }, [addToCart, products]);
 
   // Cart calculations
   const subtotal = cart.reduce((s, i) => s + i.lineTotal, 0);
@@ -118,7 +124,7 @@ const POS: React.FC = () => {
   const total = taxable + tax;
   const change = parseFloat(cashGiven) - total;
 
-  const filtered = PRODUCTS.filter(p => {
+  const filtered = products.filter(p => {
     const matchCat = category === 'All' || p.category === category;
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.sku.toLowerCase().includes(search.toLowerCase());
@@ -154,11 +160,41 @@ const POS: React.FC = () => {
     });
   };
 
+  const mutation = useMutation({
+    mutationFn: async (orderData: any) => {
+      return await apiClient.post('/orders', orderData);
+    },
+    onSuccess: (data: any) => {
+      setOrderId(data.orderNo);
+      setOrderComplete(true);
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
+    }
+  });
+
   const processOrder = () => {
-    const id = `ORD-${Date.now().toString().slice(-6)}`;
-    setOrderId(id);
-    setOrderComplete(true);
-    // TODO: POST to API
+    const orderData = {
+      status: 'completed',
+      type: cart.some(i => i.isRental) && cart.some(i => !i.isRental) ? 'mixed' : cart.some(i => i.isRental) ? 'rental' : 'sale',
+      subtotal: subtotal.toString(),
+      discountPct: discount.toString(),
+      discountAmt: discountAmt.toString(),
+      taxRate: TAX_RATE.toString(),
+      taxAmt: tax.toString(),
+      total: total.toString(),
+      paymentMethod,
+      paymentStatus: 'paid',
+      items: cart.map(i => ({
+        productId: i.product.id,
+        name: i.product.name,
+        sku: i.product.sku,
+        isRental: i.isRental,
+        qty: i.qty,
+        days: i.days,
+        unitPrice: (i.isRental ? i.product.rentalRate : i.product.price)?.toString(),
+        lineTotal: i.lineTotal.toString()
+      }))
+    };
+    mutation.mutate(orderData);
   };
 
   const newOrder = () => {

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { db } from '../db';
-import { customers, measurements } from '../db/schema';
-import { eq, and, or, ilike, sql } from 'drizzle-orm';
+import { customers, measurements, users } from '../db/schema';
+import { eq, and, or, ilike, sql, desc } from 'drizzle-orm';
 
 export interface Customer {
   id: string;
@@ -66,6 +66,37 @@ export class CustomersService {
   async getMeasurements(customerId: string, tenantId: string): Promise<Measurement[]> {
     const res = await db.select().from(measurements).where(and(eq(measurements.customerId, customerId), eq(measurements.tenantId, tenantId)));
     return res as unknown as Measurement[];
+  }
+
+  async getAllMeasurements(tenantId: string) {
+    const res = await db.select({
+      id: measurements.id,
+      customerId: measurements.customerId,
+      customerName: sql<string>`trim(concat(${customers.firstName}, ' ', coalesce(${customers.lastName}, '')))`,
+      takenBy: users.name,
+      date: measurements.createdAt,
+      chest: measurements.chest,
+      waist: measurements.waist,
+      hips: measurements.hips,
+      inseam: measurements.inseam,
+      outseam: measurements.outseam,
+      neck: measurements.neck,
+      sleeve: measurements.sleeve,
+      shoulder: measurements.shoulder,
+      jacketSize: measurements.jacketSize,
+      shoeSize: measurements.shoeSize,
+      height: measurements.height,
+      weight: measurements.weight,
+      notes: measurements.notes,
+      fittingNotes: measurements.fittingNotes
+    })
+    .from(measurements)
+    .leftJoin(customers, eq(measurements.customerId, customers.id))
+    .leftJoin(users, eq(measurements.takenById, users.id))
+    .where(eq(measurements.tenantId, tenantId))
+    .orderBy(desc(measurements.createdAt));
+
+    return res;
   }
 
   async create(tenantId: string, storeId: string, data: Partial<Customer>): Promise<Customer> {

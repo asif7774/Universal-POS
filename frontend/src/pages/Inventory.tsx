@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiClient } from '../lib/apiClient';
 
 interface InventoryItem {
   id: string;
@@ -14,57 +16,7 @@ interface InventoryItem {
   condition: 'Excellent' | 'Good' | 'Fair' | 'Poor';
 }
 
-const INVENTORY: InventoryItem[] = [
-  {
-    id: 'i1', sku: 'TUX-BLK', name: 'Black Classic Tuxedo', category: 'Tuxedos', type: 'rental',
-    sizes: {
-      '36R': { total: 4, available: 3, out: 1, cleaning: 0 },
-      '38R': { total: 6, available: 4, out: 1, cleaning: 1 },
-      '40R': { total: 8, available: 5, out: 2, cleaning: 1 },
-      '42R': { total: 6, available: 3, out: 2, cleaning: 1 },
-      '44R': { total: 4, available: 3, out: 1, cleaning: 0 },
-      '46R': { total: 2, available: 1, out: 1, cleaning: 0 },
-    },
-    rentalRate: 85, lowStockThreshold: 2, location: 'Rack A1', condition: 'Excellent',
-  },
-  {
-    id: 'i2', sku: 'TUX-NVY', name: 'Navy Slim Fit Tuxedo', category: 'Tuxedos', type: 'rental',
-    sizes: {
-      '38R': { total: 3, available: 1, out: 2, cleaning: 0 },
-      '40R': { total: 5, available: 3, out: 1, cleaning: 1 },
-      '42R': { total: 4, available: 2, out: 1, cleaning: 1 },
-      '44R': { total: 2, available: 1, out: 1, cleaning: 0 },
-    },
-    rentalRate: 90, lowStockThreshold: 2, location: 'Rack A2', condition: 'Excellent',
-  },
-  {
-    id: 'i3', sku: 'TUX-WHT', name: 'White Dinner Jacket', category: 'Tuxedos', type: 'rental',
-    sizes: {
-      '38R': { total: 2, available: 2, out: 0, cleaning: 0 },
-      '40R': { total: 3, available: 2, out: 1, cleaning: 0 },
-      '42R': { total: 3, available: 1, out: 1, cleaning: 1 },
-    },
-    rentalRate: 75, lowStockThreshold: 1, location: 'Rack B1', condition: 'Good',
-  },
-  {
-    id: 'i4', sku: 'ACC-BT', name: 'Black Bow Tie', category: 'Accessories', type: 'sale',
-    sizes: { 'One Size': { total: 30, available: 24, out: 0, cleaning: 0 } },
-    salePrice: 24.99, lowStockThreshold: 5, location: 'Display Case A', condition: 'Excellent',
-  },
-  {
-    id: 'i5', sku: 'SHO-BLK', name: 'Black Patent Shoes', category: 'Shoes', type: 'rental',
-    sizes: {
-      '8': { total: 3, available: 2, out: 1, cleaning: 0 },
-      '9': { total: 4, available: 3, out: 1, cleaning: 0 },
-      '10': { total: 4, available: 2, out: 1, cleaning: 1 },
-      '11': { total: 3, available: 2, out: 1, cleaning: 0 },
-      '12': { total: 2, available: 2, out: 0, cleaning: 0 },
-    },
-    rentalRate: 25, lowStockThreshold: 1, location: 'Shelf S1', condition: 'Good',
-  },
-];
 
-const CATEGORIES = ['All', ...Array.from(new Set(INVENTORY.map(i => i.category)))];
 
 const SizeCell: React.FC<{ data: { total: number; available: number; out: number; cleaning: number }; lowThreshold: number }> = ({ data, lowThreshold }) => {
   const isLow = data.available <= lowThreshold;
@@ -92,18 +44,28 @@ const Inventory: React.FC = () => {
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<InventoryItem | null>(null);
 
-  const filtered = INVENTORY.filter(i => {
+  const { data: inventory = [], isLoading, error } = useQuery<InventoryItem[]>({
+    queryKey: ['inventory'],
+    queryFn: async () => await apiClient.get<InventoryItem[]>('/inventory'),
+  });
+
+  if (isLoading) return <div className="page-header"><h1 className="page-title">Loading...</h1></div>;
+  if (error) return <div className="page-header"><h1 className="page-title" style={{ color: 'red' }}>Error loading inventory</h1></div>;
+
+  const CATEGORIES = ['All', ...Array.from(new Set(inventory.map(i => i.category)))];
+
+  const filtered = inventory.filter(i => {
     const matchCat = category === 'All' || i.category === category;
     const matchSearch = i.name.toLowerCase().includes(search.toLowerCase()) || i.sku.toLowerCase().includes(search.toLowerCase());
     return matchCat && matchSearch;
   });
 
-  const totalItems = INVENTORY.reduce((s, i) => s + Object.values(i.sizes).reduce((a, b) => a + b.total, 0), 0);
-  const totalOut = INVENTORY.reduce((s, i) => s + Object.values(i.sizes).reduce((a, b) => a + b.out, 0), 0);
-  const lowStockItems = INVENTORY.filter(i =>
+  const totalItems = inventory.reduce((s, i) => s + Object.values(i.sizes).reduce((a, b) => a + b.total, 0), 0);
+  const totalOut = inventory.reduce((s, i) => s + Object.values(i.sizes).reduce((a, b) => a + b.out, 0), 0);
+  const lowStockItems = inventory.filter(i =>
     Object.values(i.sizes).some(s => s.available <= i.lowStockThreshold && s.available > 0)
   ).length;
-  const outOfStock = INVENTORY.filter(i =>
+  const outOfStock = inventory.filter(i =>
     Object.values(i.sizes).some(s => s.available === 0)
   ).length;
 
