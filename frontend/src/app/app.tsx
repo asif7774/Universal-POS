@@ -28,8 +28,8 @@ const queryClient = new QueryClient({
 const Login        = lazy(() => import('pages/Login'));
 const Dashboard    = lazy(() => import('pages/Dashboard'));
 const POS          = lazy(() => import('pages/pos'));
-const Rentals      = lazy(() => import('pages/Rentals'));
-const Customers    = lazy(() => import('pages/Customers'));
+const Rentals      = lazy(() => import('pages/rentals'));
+const Customers    = lazy(() => import('pages/customers'));
 const Measurements = lazy(() => import('pages/Measurements'));
 const Tailoring    = lazy(() => import('pages/Tailoring'));
 const Inventory    = lazy(() => import('pages/Inventory'));
