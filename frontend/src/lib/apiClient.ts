@@ -31,6 +31,9 @@ async function request<T>(
   });
 
   if (!res.ok) {
+    if (res.status === 401 || res.status === 403) {
+      window.dispatchEvent(new CustomEvent('auth:unauthorized', { detail: { status: res.status } }));
+    }
     const err = await res.json().catch(() => ({ message: res.statusText })) as { message: string };
     throw new Error(err.message ?? `HTTP ${res.status}`);
   }
