@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal } from 'components/atoms/modal/Modal';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -22,9 +23,9 @@ interface CheckoutModalProps {
 }
 
 const PAYMENT_METHODS = [
-  { id: 'cash', label: 'Cash', icon: '💵' },
-  { id: 'card', label: 'Card', icon: '💳' },
-  { id: 'check', label: 'Check', icon: '📝' },
+  { id: 'cash', label: 'Cash', icon: 'banknote' },
+  { id: 'card', label: 'Card', icon: 'credit-card' },
+  { id: 'check', label: 'Check', icon: 'receipt' },
 ];
 
 const fmt = (n: number) => `$${n.toFixed(2)}`;
@@ -116,7 +117,9 @@ export const CheckoutModal = ({
                   background: paymentMethod === m.id ? '#EEF2F8' : 'var(--surface-card)',
                   cursor: 'pointer', textAlign: 'center', transition: 'all .15s',
                 }}>
-                <div style={{ fontSize: '1.3rem' }}>{m.icon}</div>
+                <div style={{ marginBottom: 6, color: paymentMethod === m.id ? 'var(--tux-navy)' : 'var(--text-muted)' }}>
+                  <SvgIcon name={m.icon} width="24" height="24" />
+                </div>
                 <div style={{ fontSize: '.75rem', fontWeight: 600, color: paymentMethod === m.id ? 'var(--tux-navy)' : 'var(--text-secondary)' }}>{m.label}</div>
               </button>
             ))}

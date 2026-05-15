@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 type SnackbarType = 'success' | 'error' | 'info' | 'warning';
 
@@ -45,9 +46,12 @@ export const SnackbarProvider: React.FC<{ children: ReactNode }> = ({ children }
         pointerEvents: 'none'
       }}>
         {snackbars.map(s => (
-          <div key={s.id} className={`toast toast-${s.type} animate-slide-up`} style={{ pointerEvents: 'auto' }}>
-            <span>{s.type === 'success' ? '✅' : s.type === 'error' ? '❌' : s.type === 'warning' ? '⚠️' : 'ℹ️'}</span>
-            <span>{s.message}</span>
+          <div key={s.id} className={`toast toast-${s.type} animate-slide-up`} style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <SvgIcon 
+              name={s.type === 'success' ? 'success' : s.type === 'error' ? 'warning' : s.type === 'warning' ? 'warning' : 'info'} 
+              width="18" height="18" 
+            />
+            <span style={{ flex: 1 }}>{s.message}</span>
             <button onClick={() => removeSnackbar(s.id)} style={{ marginLeft: 8, background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
           </div>
         ))}

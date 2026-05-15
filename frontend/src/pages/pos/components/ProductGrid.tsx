@@ -63,7 +63,9 @@ export const ProductGrid = memo(({
       <div style={{ flex: 1, overflowY: 'auto', padding: 16 }}>
         {filtered.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-state-icon">🔍</div>
+            <div className="empty-state-icon">
+              <SvgIcon name="search" width="40" height="40" style={{ opacity: 0.2 }} />
+            </div>
             <p>No products found for "<strong>{search}</strong>"</p>
           </div>
         ) : (
@@ -77,12 +79,18 @@ export const ProductGrid = memo(({
                 tabIndex={0}
                 onKeyDown={e => e.key === 'Enter' && onAddToCart(product, product.type === 'rental')}
               >
-                <div style={{ fontSize: '1.6rem', marginBottom: 6 }}>
-                  {product.category === 'Tuxedos' ? '🎩' :
-                   product.category === 'Suits' ? '👔' :
-                   product.category === 'Accessories' ? '🎀' :
-                   product.category === 'Shoes' ? '👞' :
-                   product.category === 'Shirts' ? '👕' : '✂️'}
+                <div style={{ marginBottom: 12, color: 'var(--tux-navy)', opacity: 0.8 }}>
+                  <SvgIcon 
+                    name={
+                      product.category === 'Tuxedos' ? 'tuxedo' :
+                      product.category === 'Suits' ? 'shirt' :
+                      product.category === 'Accessories' ? 'accessory' :
+                      product.category === 'Shoes' ? 'shoe' :
+                      product.category === 'Shirts' ? 'shirt' : 'scissors'
+                    } 
+                    width="28" 
+                    height="28" 
+                  />
                 </div>
                 <div style={{ fontSize: '.8rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4, lineHeight: 1.2 }}>
                   {product.name}

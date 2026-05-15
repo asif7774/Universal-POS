@@ -90,7 +90,7 @@ const POS: React.FC = () => {
         const hit = products.find(p => p.sku.toUpperCase() === sku);
         if (hit) {
           addToCart(hit, hit.type === 'rental');
-          showSnackbar(`📦 Added: ${hit.name}`, 'success');
+          showSnackbar(`Added: ${hit.name}`, 'success');
         } else {
           setSearch(sku);
         }
@@ -150,7 +150,7 @@ const POS: React.FC = () => {
       setCompletedOrder(data);
       setOrderComplete(true);
       queryClient.invalidateQueries({ queryKey: ['orders'] });
-      showSnackbar(`✅ Order ${data.orderNo} completed!`, 'success');
+      showSnackbar(`Order ${data.orderNo} completed!`, 'success');
       
       if (paymentMethod === 'cash') {
         await HAL.openCashDrawer();

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal } from 'components/atoms/modal/Modal';
 import { CartItem } from 'types/pos';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 interface OrderCompleteModalProps {
   isOpen: boolean;
@@ -26,7 +27,9 @@ export const OrderCompleteModal = ({
       maxWidth={380}
     >
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: '3.5rem', marginBottom: 12 }}>✅</div>
+        <div style={{ marginBottom: 12 }}>
+          <SvgIcon name="success" width="56" height="56" style={{ color: 'var(--status-success)' }} />
+        </div>
         <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.4rem', marginBottom: 6 }}>Sale Complete!</h3>
         <code style={{ fontSize: '.85rem', color: 'var(--tux-navy)', fontWeight: 700 }}>{orderId}</code>
 
@@ -49,8 +52,9 @@ export const OrderCompleteModal = ({
         </div>
 
         <div style={{ display: 'flex', gap: 8, flexDirection: 'column' }}>
-          <button className="btn btn-outline" style={{ width: '100%', fontSize: '.85rem' }} onClick={onPrintReceipt}>
-            🖨️ Print Receipt
+          <button className="btn btn-outline" style={{ width: '100%', fontSize: '.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }} onClick={onPrintReceipt}>
+            <SvgIcon name="printer" width="16" height="16" />
+            Print Receipt
           </button>
           <button className="btn btn-gold" style={{ width: '100%' }} onClick={onClose}>
             + New Order

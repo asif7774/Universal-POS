@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { CartItem } from 'types/pos';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 interface CartSidebarProps {
   cart: CartItem[];
@@ -31,8 +32,9 @@ export const CartSidebar = memo(({
     }}>
       {/* Cart header */}
       <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--surface-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontWeight: 700, fontSize: '.95rem' }}>
-          🛒 Cart {cart.length > 0 && <span className="badge badge-navy" style={{ marginLeft: 6 }}>{cart.length}</span>}
+        <span style={{ fontWeight: 700, fontSize: '.95rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <SvgIcon name="pos" width="18" height="18" style={{ color: 'var(--tux-navy)' }} />
+          Cart {cart.length > 0 && <span className="badge badge-navy" style={{ marginLeft: 6 }}>{cart.length}</span>}
         </span>
         {cart.length > 0 && (
           <button className="btn btn-ghost btn-sm" onClick={() => setCart([])} style={{ color: 'var(--status-error)', fontSize: '.75rem' }}>
@@ -45,7 +47,9 @@ export const CartSidebar = memo(({
       <div style={{ flex: 1, overflowY: 'auto', padding: '8px 12px' }}>
         {cart.length === 0 ? (
           <div className="empty-state" style={{ padding: '40px 16px' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: 10 }}>🛒</div>
+            <div style={{ marginBottom: 12 }}>
+              <SvgIcon name="pos" width="48" height="48" style={{ opacity: 0.1 }} />
+            </div>
             <p style={{ fontSize: '.85rem' }}>Click a product to add it to the cart</p>
           </div>
         ) : (
