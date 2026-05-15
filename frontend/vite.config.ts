@@ -58,6 +58,8 @@ export default defineConfig(() => {
         pages:      resolve(__dirname, "src", "pages"),
         utils:      resolve(__dirname, "src", "utils"),
         lib:        resolve(__dirname, "src", "lib"),
+        types:      resolve(__dirname, "src", "types"),
+        constants:  resolve(__dirname, "src", "constants"),
       },
     },
     build: {
