@@ -30,13 +30,13 @@ const Dashboard    = lazy(() => import('pages/Dashboard'));
 const POS          = lazy(() => import('pages/pos'));
 const Rentals      = lazy(() => import('pages/rentals'));
 const Customers    = lazy(() => import('pages/customers'));
-const Measurements = lazy(() => import('pages/Measurements'));
+const Measurements = lazy(() => import('pages/measurements'));
 const Tailoring    = lazy(() => import('pages/tailoring'));
 const Inventory    = lazy(() => import('pages/inventory'));
 const Appointments = lazy(() => import('pages/appointments'));
-const Reports      = lazy(() => import('pages/Reports'));
-const Settings     = lazy(() => import('pages/Settings'));
-const AdminPanel   = lazy(() => import('pages/Admin'));
+const Reports      = lazy(() => import('pages/reports'));
+const Settings     = lazy(() => import('pages/settings'));
+const AdminPanel   = lazy(() => import('pages/admin'));
 
 const ComingSoon = ({ page }: { page: string }) => (
   <div style={{ textAlign: 'center', padding: '80px 24px', color: 'var(--text-muted)' }}>
