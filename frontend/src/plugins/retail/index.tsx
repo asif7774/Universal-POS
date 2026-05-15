@@ -1,5 +1,6 @@
 import React from 'react';
 import { PluginModule } from '../types';
+import { SvgIcon } from '../../components/atoms/svg-sprite-loader';
 
 const LoyaltySettings = () => (
   <div style={{ padding: 20 }}>
@@ -31,9 +32,8 @@ const RetailPlugin: PluginModule = {
   
   navItems: [
     {
-      id: 'nav-returns',
       label: 'Returns',
-      icon: '↩️',
+      icon: 'return',
       path: '/returns',
       roles: ['owner', 'manager', 'cashier']
     }
@@ -45,8 +45,9 @@ const RetailPlugin: PluginModule = {
       label: 'Apply Loyalty Points',
       position: 'before-payment',
       component: (
-        <button className="btn" style={{ width: '100%', marginBottom: 12 }}>
-          🎁 Redeem Points
+        <button className="btn flex items-center justify-center gap-2" style={{ width: '100%', marginBottom: 12 }}>
+          <SvgIcon name="gift" width="16" height="16" />
+          Redeem Points
         </button>
       )
     }

@@ -7,7 +7,7 @@ import { OfflineProvider } from 'contexts/OfflineContext';
 import { TenantProvider } from 'contexts/TenantContext';
 import { PluginProvider, usePlugins } from 'contexts/PluginContext';
 import AppLayout from 'layouts/AppLayout';
-import { SvgSpriteLoader } from 'components/atoms/svg-sprite-loader';
+import { SvgSpriteLoader, SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,7 +40,9 @@ const AdminPanel   = lazy(() => import('pages/admin'));
 
 const ComingSoon = ({ page }: { page: string }) => (
   <div style={{ textAlign: 'center', padding: '80px 24px', color: 'var(--text-muted)' }}>
-    <div style={{ fontSize: '3rem', marginBottom: 16 }}>🚧</div>
+    <div className="text-[3rem] mb-4 text-[var(--tux-gold)]">
+      <SvgIcon name="wrench" width="64" height="64" />
+    </div>
     <h2 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)', marginBottom: 8 }}>{page}</h2>
     <p style={{ fontSize: '.9rem' }}>This module is being built — check back soon!</p>
   </div>
@@ -112,7 +114,7 @@ const AppRoutes = () => {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <SvgSpriteLoader url="/sprites/app-icons.svg?v=1.2.0" version="1.2.0">
+      <SvgSpriteLoader url="/sprites/app-icons.svg?v=1.2.1" version="1.2.1">
         <SnackbarProvider>
           <OfflineProvider>
             <TenantProvider>

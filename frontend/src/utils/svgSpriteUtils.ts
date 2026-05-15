@@ -14,14 +14,16 @@ const loadedSprites = new Set<string>();
  * Generate cache key for SVG sprite
  */
 export const getCacheKey = (url: string): string => {
-  return `${CACHE_KEY_PREFIX}${btoa(url)}`;
+  const normalizedUrl = url.split('?')[0];
+  return `${CACHE_KEY_PREFIX}${btoa(normalizedUrl)}`;
 };
 
 /**
  * Generate version cache key for SVG sprite
  */
 export const getVersionKey = (url: string): string => {
-  return `${CACHE_VERSION_KEY}${btoa(url)}`;
+  const normalizedUrl = url.split('?')[0];
+  return `${CACHE_VERSION_KEY}${btoa(normalizedUrl)}`;
 };
 
 /**
@@ -109,6 +111,26 @@ export const clearCachedSvgSprite = (url: string): void => {
   } catch (error) {
     if (import.meta.env.DEV) {
       console.warn('Failed to clear cached SVG sprite:', error);
+    }
+  }
+};
+
+/**
+ * Clear all cached SVG sprites from local storage
+ */
+export const clearAllCachedSvgSprites = (): void => {
+  try {
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && (key.startsWith(CACHE_KEY_PREFIX) || key.startsWith(CACHE_VERSION_KEY))) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach(key => localStorage.removeItem(key));
+  } catch (error) {
+    if (import.meta.env.DEV) {
+      console.warn('Failed to clear all cached SVG sprites:', error);
     }
   }
 };

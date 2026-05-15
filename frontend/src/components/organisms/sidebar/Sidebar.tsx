@@ -22,7 +22,7 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { label: 'Dashboard', path: '/dashboard', iconName: 'dashboard' },
       { label: 'POS Terminal', path: '/pos', iconName: 'pos' },
-      { label: 'Rentals', path: '/rentals', iconName: 'rental' },
+      { label: 'Rentals', path: '/rentals', iconName: 'tuxedo' },
       { label: 'Appointments', path: '/appointments', iconName: 'appointments' },
     ],
   },
@@ -112,7 +112,7 @@ const Sidebar: React.FC = () => {
   return (
     <>
       {/* Spacer to maintain layout without shifting content */}
-      <div style={{ width: collapsed ? 68 : 260, flexShrink: 0, transition: 'width .2s ease' }} />
+      <div className={`shrink-0 transition-[width] duration-200 ease-in-out ${collapsed ? 'w-[68px]' : 'w-[260px]'}`} />
 
       <nav
         className="sidebar"
@@ -131,29 +131,21 @@ const Sidebar: React.FC = () => {
         }}
       >
         {/* Logo */}
-        <div className="sidebar-logo" style={{ justifyContent: isEffectivelyExpanded ? 'flex-start' : 'center' }}>
+        <div className={`sidebar-logo ${isEffectivelyExpanded ? 'justify-start' : 'justify-center'}`}>
           <div className="sidebar-logo-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path d="M12 11L4 7v10l8 4 8-4V7l-8 4z" fill="white" />
-              <ellipse cx="12" cy="7" rx="8" ry="3" fill="#D4AF37" />
+              <ellipse cx="12" cy="7" rx="8" ry="3" style={{ fill: 'var(--tux-gold)' }} />
             </svg>
           </div>
           {isEffectivelyExpanded && (
-            <span className="sidebar-logo-text" style={{ whiteSpace: 'nowrap' }}>
+            <span className="sidebar-logo-text whitespace-nowrap">
               Tuxedo<span>POS</span>
             </span>
           )}
           <button
             onClick={() => { setCollapsed(c => !c); }}
-            style={{
-              marginLeft: isEffectivelyExpanded ? 'auto' : 0,
-              background: 'rgba(255,255,255,.1)',
-              border: 'none', borderRadius: 6, width: 28, height: 28,
-              cursor: 'pointer', color: 'rgba(255,255,255,.6)',
-              display: isEffectivelyExpanded || !collapsed ? 'flex' : 'none',
-              alignItems: 'center', justifyContent: 'center',
-              flexShrink: 0,
-            }}
+            className={`shrink-0 items-center justify-center bg-white/10 border-none rounded-md w-7 h-7 cursor-pointer text-white/60 ${isEffectivelyExpanded ? 'ml-auto flex' : !collapsed ? 'flex' : 'hidden'}`}
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             <SvgIcon name={collapsed ? 'pinned' : 'menu'} width="20" height="20" strokeWidth="2" fill="none" />
@@ -183,14 +175,13 @@ const Sidebar: React.FC = () => {
                     <NavLink
                       key={item.path}
                       to={item.path}
-                      className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
+                      className={({ isActive }) => `nav-item transition-all duration-150 whitespace-nowrap ${isActive ? 'active' : ''} ${isEffectivelyExpanded ? 'justify-start' : 'justify-center'}`}
                       title={!isEffectivelyExpanded ? item.label : undefined}
-                      style={{ justifyContent: isEffectivelyExpanded ? 'flex-start' : 'center', whiteSpace: 'nowrap' }}
                     >
                       {isEmoji ? (
-                        <span className="nav-icon" style={{ fontSize: 16, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 18, height: 18, flexShrink: 0 }}>{item.iconName}</span>
+                        <span className="nav-icon text-[16px] inline-flex items-center justify-center w-[18px] h-[18px] shrink-0">{item.iconName}</span>
                       ) : (
-                        <SvgIcon name={item.iconName} width="18" height="18" className="nav-icon" style={{ flexShrink: 0 }} />
+                        <SvgIcon name={item.iconName} width="18" height="18" className="nav-icon shrink-0" />
                       )}
                       {isEffectivelyExpanded && <span>{item.label}</span>}
                     </NavLink>
@@ -202,87 +193,63 @@ const Sidebar: React.FC = () => {
         </div>
 
         {/* Footer — user info + logout */}
-        <div className="sidebar-footer" style={{ overflow: 'visible', position: 'relative' }}>
+        <div className="sidebar-footer relative overflow-visible">
           {isEffectivelyExpanded && user ? (
             <>
               <button 
                 onClick={() => { setIsUserMenuOpen(prev => !prev); }}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 10,
-                  padding: '10px 12px', marginBottom: 0,
-                  background: isUserMenuOpen ? 'rgba(255,255,255,.1)' : 'rgba(255,255,255,.06)', 
-                  borderRadius: 10,
-                  whiteSpace: 'nowrap', width: '100%', border: 'none', cursor: 'pointer', textAlign: 'left'
-                }}
+                className={`flex items-center gap-2.5 p-[10px_12px] mb-0 rounded-lg whitespace-nowrap w-full border-none cursor-pointer text-left transition-all duration-150 ${isUserMenuOpen ? 'bg-white/10' : 'bg-white/5'}`}
               >
-                <div className="avatar avatar-gold" style={{ fontSize: '.7rem', flexShrink: 0 }}>
+                <div className="avatar avatar-gold text-[0.7rem] shrink-0">
                   {user.name.split(' ').map(n => n[0]).join('')}
                 </div>
-                <div style={{ overflow: 'hidden', flex: 1 }}>
-                  <div style={{ fontSize: '.82rem', fontWeight: 600, color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <div className="overflow-hidden flex-1">
+                  <div className="text-[0.82rem] font-bold text-white whitespace-nowrap overflow-hidden text-ellipsis">
                     {user.name}
                   </div>
-                  <div style={{ fontSize: '.7rem', color: 'rgba(255,255,255,.5)', textTransform: 'capitalize' }}>
+                  <div className="text-[0.7rem] text-white/50 capitalize">
                     {roleInitial(user.role)}{user.role.slice(1)}
                   </div>
                 </div>
-                <SvgIcon name="chevron-collapse" width="12" height="12" style={{ transform: isUserMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', opacity: 0.5, color: 'white' }} />
+                <SvgIcon name="chevron-collapse" width="12" height="12" className={`text-white transition-transform duration-200 opacity-50 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
               </button>
               
               {isUserMenuOpen && (
-                <div style={{
-                  position: 'absolute',
-                  bottom: 'calc(100% + 8px)',
-                  left: 12,
-                  right: 12,
-                  background: 'var(--surface-card)',
-                  borderRadius: 10,
-                  padding: 8,
-                  boxShadow: 'var(--shadow-lg)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 4,
-                  zIndex: 100,
-                  border: '1px solid var(--surface-border)'
-                }}>
+                <div className="absolute bottom-[calc(100%+8px)] left-3 right-3 bg-[var(--surface-card)] rounded-lg p-2 shadow-[var(--shadow-lg)] flex flex-col gap-1 z-[100] border border-[var(--surface-border)]">
                   <button
                     onClick={() => { setIsDark(d => !d); setIsUserMenuOpen(false); }}
-                    className="nav-item"
-                    style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', justifyContent: 'flex-start', color: 'var(--text-primary)', whiteSpace: 'nowrap', padding: '8px 12px' }}
+                    className="nav-item w-full text-left bg-none border-none justify-start text-[var(--text-primary)] whitespace-nowrap p-[8px_12px]"
                   >
-                    <SvgIcon name={isDark ? 'moon' : 'sun'} width="18" height="18" className="nav-icon" style={{ flexShrink: 0, color: 'var(--text-secondary)' }} />
+                    <SvgIcon name={isDark ? 'moon' : 'sun'} width="18" height="18" className="nav-icon shrink-0 text-[var(--text-secondary)]" />
                     <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
                   </button>
 
                   <button
                     onClick={handleLogout}
-                    className="nav-item"
-                    style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', justifyContent: 'flex-start', color: 'rgba(255,69,58,.9)', whiteSpace: 'nowrap', padding: '8px 12px' }}
+                    className="nav-item w-full text-left bg-none border-none justify-start text-red-500/90 whitespace-nowrap p-[8px_12px]"
                   >
-                    <SvgIcon name="logout" width="18" height="18" className="nav-icon" style={{ flexShrink: 0 }} />
+                    <SvgIcon name="logout" width="18" height="18" className="nav-icon shrink-0" />
                     <span>Sign out</span>
                   </button>
                 </div>
               )}
             </>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div className="flex flex-col gap-2">
               <button
                 onClick={() => { setIsDark(d => !d); }}
-                className="nav-item"
-                style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', justifyContent: 'center', color: 'rgba(255,255,255,.8)', whiteSpace: 'nowrap' }}
+                className="nav-item w-full text-left bg-none border-none justify-center text-white/80 whitespace-nowrap"
                 title="Toggle theme"
               >
-                <SvgIcon name={isDark ? 'moon' : 'sun'} width="18" height="18" className="nav-icon" style={{ flexShrink: 0 }} />
+                <SvgIcon name={isDark ? 'moon' : 'sun'} width="18" height="18" className="nav-icon shrink-0" />
               </button>
 
               <button
                 onClick={handleLogout}
-                className="nav-item"
-                style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', justifyContent: 'center', color: 'rgba(255,69,58,.8)', whiteSpace: 'nowrap' }}
+                className="nav-item w-full text-left bg-none border-none justify-center text-red-400/80 whitespace-nowrap"
                 title="Sign out"
               >
-                <SvgIcon name="logout" width="18" height="18" className="nav-icon" style={{ flexShrink: 0 }} />
+                <SvgIcon name="logout" width="18" height="18" className="nav-icon shrink-0" />
               </button>
             </div>
           )}

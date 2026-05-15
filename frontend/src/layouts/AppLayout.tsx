@@ -5,13 +5,13 @@ import { useOffline } from 'contexts/OfflineContext';
 import Sidebar from 'components/organisms/sidebar/Sidebar';
 
 const SkeletonBar = () => (
-  <div className="skeleton" style={{ height: 20, borderRadius: 6, marginBottom: 8 }} />
+  <div className="skeleton h-5 rounded-md mb-2" />
 );
 
 const AppSkeleton = () => (
   <div className="app-shell">
-    <div style={{ background: 'var(--tux-navy)', width: 260 }} />
-    <div style={{ padding: 24 }}>
+    <div className="bg-[var(--tux-navy)] w-[260px]" />
+    <div className="p-6">
       <SkeletonBar />
       <SkeletonBar />
       <SkeletonBar />
@@ -26,15 +26,7 @@ const OfflineBanner: React.FC = () => {
   if (isOnline && queuedItems === 0) {return null;}
 
   return (
-    <div style={{
-      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999,
-      background: isOnline ? 'var(--status-success)' : '#B45309',
-      color: 'white',
-      padding: '8px 20px',
-      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-      fontSize: '.82rem', fontWeight: 600,
-      animation: 'slideDown .25s ease',
-    }}>
+    <div className={`fixed top-0 left-0 right-0 z-[9999] p-[8px_20px] flex items-center justify-center gap-2.5 text-[0.82rem] font-semibold text-white animate-slide-down ${isOnline ? 'bg-[var(--status-success)]' : 'bg-amber-700'}`}>
       <span>
         <SvgIcon name={isOnline ? 'check-circle' : 'warning'} width="18" height="18" />
       </span>
@@ -56,11 +48,11 @@ const AppLayout: React.FC = () => {
   return (
     <>
       <OfflineBanner />
-      <div className="app-shell" style={{ marginTop: (!isOnline) ? 38 : 0, transition: 'margin-top .25s ease' }}>
+      <div className={`app-shell transition-[margin-top] duration-250 ease-in-out ${!isOnline ? 'mt-[38px]' : 'mt-0'}`}>
         <Sidebar />
         <div className="main-content">
           <Suspense fallback={
-            <div style={{ padding: 24 }}>
+            <div className="p-6">
               {[1,2,3].map(i => <SkeletonBar key={i} />)}
             </div>
           }>

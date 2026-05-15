@@ -9,20 +9,20 @@
    ───────────────────────────────────────────── */
 
 :root {
-  /* Brand */
-  --tux-navy:        #1E3A5F;
-  --tux-navy-light:  #2A4F80;
-  --tux-navy-dark:   #132740;
-  --tux-gold:        #D4AF37;
-  --tux-gold-light:  #E8CC6A;
-  --tux-gold-dark:   #A88A20;
+  /* Brand: Deep Navy & Sunset Orange Theme */
+  --tux-navy:        #1E1B4B; /* Indigo 950 */
+  --tux-navy-light:  #312E81; /* Indigo 900 */
+  --tux-navy-dark:   #0F172A; /* Slate 950 */
+  --tux-gold:        #F97316; /* Orange 500 */
+  --tux-gold-light:  #FB923C; /* Orange 400 */
+  --tux-gold-dark:   #EA580C; /* Orange 600 */
 
   /* Surfaces (light mode) */
-  --surface-bg:      #F8F9FC;
+  --surface-bg:      #F8FAFC;
   --surface-card:    #FFFFFF;
-  --surface-sidebar: #1E3A5F;
+  --surface-sidebar: #1E1B4B;
   --surface-border:  #E2E8F0;
-  --surface-hover:   #F1F5F9;
+  --surface-hover:   #FFF7ED;
 
   /* Text (light mode) */
   --text-primary:    #0F172A;
@@ -46,16 +46,16 @@
   --shadow-sm:  0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
   --shadow-md:  0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
   --shadow-lg:  0 10px 30px rgba(0,0,0,.10), 0 4px 8px rgba(0,0,0,.05);
-  --shadow-gold: 0 4px 20px rgba(212,175,55,.25);
+  --shadow-gold: 0 4px 20px rgba(249,115,22,.25); /* Updated to match Orange */
 }
 
 /* Dark mode */
 .dark {
-  --surface-bg:      #0D1B2A;
-  --surface-card:    #132740;
-  --surface-sidebar: #0A1628;
-  --surface-border:  #1E3A5F;
-  --surface-hover:   #1A2E45;
+  --surface-bg:      #020617;
+  --surface-card:    #0F172A;
+  --surface-sidebar: #020617;
+  --surface-border:  #1E293B;
+  --surface-hover:   #1E1B4B;
   --text-primary:    #F1F5F9;
   --text-secondary:  #94A3B8;
   --text-muted:      #475569;
