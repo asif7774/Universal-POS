@@ -318,7 +318,7 @@ gantt
     Milestone: MVP Ready                 :milestone, after p4d, 0d
 
     section Phase 5: Scale
-    Restaurant plugin                    :p5a, after p4d, 10d
+    Restaurant plugin                    :done, p5a, after p4d, 10d
     Stripe / Razorpay integration        :p5b, after p4d, 5d
     Advanced reporting                   :p5c, after p5b, 7d
     Hardware abstraction layer           :p5d, after p5a, 5d

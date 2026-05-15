@@ -19,7 +19,7 @@ const DEFAULT_TENANT: TenantConfig = {
   tenantId: 'demo-tenant',
   businessName: 'TuxedoPOS HQ',
   domain: 'tuxedo',
-  enabledPlugins: ['retail', 'measurements'],
+  enabledPlugins: ['retail', 'restaurant', 'measurements'],
   features: ['rentals', 'tailoring', 'appointments'],
   ui: {
     theme: 'light',

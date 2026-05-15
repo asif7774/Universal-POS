@@ -6,7 +6,7 @@ import { PluginModule } from '../plugins/types';
 // only downloaded/loaded if the tenant config says they should be.
 const pluginRegistry: Record<string, () => Promise<{ default: PluginModule }>> = {
   'retail': () => import('../plugins/retail'),
-  // 'restaurant': () => import('../plugins/restaurant'),
+  'restaurant': () => import('../plugins/restaurant'),
   // etc...
 };
 
