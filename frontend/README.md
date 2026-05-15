@@ -1,17 +1,16 @@
 <p align='center'>
-  <img src='https://i.imgur.com/KVmyXyo.png' alt='Vital React Template' width='600'/>
+  <h1 align="center">TuxedoPOS — Frontend 🎩</h1>
 </p>
 
 <p align='center'>
-Create modern React apps with <b>Vital</b><sup><em>(speed)</em></sup><br>
+Modern, data-driven Point of Sale platform for Formalwear and Retail.
 </p>
 
 <br>
 
 <p align='center'>
-<a href="https://github.com/asif7774/vital">🐙 GitHub</a> •
-<a href="https://github.com/asif7774/vital/issues">🐛 Issues</a> •
-<a href="https://github.com/asif7774/vital/stargazers">⭐ Stars</a>
+<a href="https://github.com/asif7774/Universal-POS">🐙 GitHub</a> •
+<a href="https://github.com/asif7774/Universal-POS/issues">🐛 Issues</a>
 </p>
 
 <br>
@@ -155,23 +154,23 @@ This template includes optimized Tailwind CSS 4 setup with:
 
 All packages are updated to their latest versions:
 
-- **React**: 19.1.1
-- **TypeScript**: 5.9.2
-- **Tailwind CSS**: 4.1.13
-- **Vite**: 7.1.7
-- **ESLint**: 9.36.0
-- **Vitest**: 3.2.4
+- **React**: 19.2.4
+- **TypeScript**: 5.9.3
+- **Tailwind CSS**: 4.2.2
+- **Vite**: 8.0.2
+- **ESLint**: 9.39.4
+- **Vitest**: 4.0.18
 
-## 🎯 Why Vital?
+## 🎯 Why TuxedoPOS?
 
-I created this template because setting up modern React projects with all the latest tooling was becoming a bottleneck for rapid prototyping and development.
+TuxedoPOS is built on the **Vital** template but heavily customized for the tuxedo and formal wear industry.
 
-**Vital** provides:
+**TuxedoPOS** provides:
 - ⚡️ **Zero-config setup** - Everything works out of the box
-- 🎨 **Optimized Tailwind CSS 4** - Latest features with component classes
-- 🚀 **Latest tooling** - React 19, TypeScript 5.9, Vite 7
-- 📦 **One command** - `npx degit asif7774/vital my-app` and you're ready to code
-- 🛠 **Best practices** - ESLint, Prettier, testing, and more
+- 🎨 **Tailwind CSS 4** - Modern, utility-first design system
+- 🚀 **Latest tooling** - React 19, TypeScript 5.9, Vite 8
+- 📋 **Industry-Specific** - Rental management, tailoring jobs, and measurement profiles built-in
+- 🛠 **Best practices** - ESLint, Prettier, TanStack Query, and more
 
 Perfect for:
 - 🚀 **Rapid prototyping** - Get started in seconds
