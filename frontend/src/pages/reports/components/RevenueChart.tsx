@@ -4,16 +4,22 @@ import { fmt } from 'constants/reports';
 
 interface RevenueChartProps {
   data: Array<{ label: string; revenue: number }>;
+  isLoading?: boolean;
 }
 
-export const RevenueChart: React.FC<RevenueChartProps> = ({ data }) => {
+export const RevenueChart: React.FC<RevenueChartProps> = ({ data, isLoading }) => {
   return (
     <div className="card" style={{ display: 'flex', flexDirection: 'column' }}>
       <div className="card-header">
         <span className="card-title">Revenue Trend</span>
         <span style={{ fontSize: '.8rem', color: 'var(--text-muted)' }}>Last 7 Days</span>
       </div>
-      <div style={{ flex: 1, minHeight: 300, width: '100%' }}>
+      <div style={{ flex: 1, minHeight: 300, width: '100%', position: 'relative' }}>
+        {isLoading && (
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.6)', zIndex: 5, borderRadius: 8 }}>
+            <div className="spinner" />
+          </div>
+        )}
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <defs>
@@ -26,7 +32,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ data }) => {
             <XAxis dataKey="label" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--text-secondary)' }} dy={10} />
             <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--text-secondary)' }} tickFormatter={(val) => `$${val}`} />
             <RechartsTooltip 
-              formatter={(value: number) => [fmt(value), 'Revenue']}
+              formatter={(value: any) => [fmt(Number(value)), 'Revenue']}
               contentStyle={{ borderRadius: 8, border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
             />
             <Area type="monotone" dataKey="revenue" stroke="var(--tux-navy)" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />

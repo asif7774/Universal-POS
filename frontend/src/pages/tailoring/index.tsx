@@ -7,11 +7,13 @@ import { STATUS_COLOR, TYPE_BADGE, fmt, fmtDate, isOverdue } from 'constants/tai
 import { StatusPipeline } from './components/StatusPipeline';
 import { KanbanCol } from './components/KanbanCol';
 import { TailoringDetailModal } from './components/TailoringDetailModal';
+import { NewTailoringJobModal } from './components/NewTailoringJobModal';
 
 const Tailoring: React.FC = () => {
   const [view, setView] = useState<'kanban' | 'list'>('kanban');
   const [selected, setSelected] = useState<TailoringJob | null>(null);
   const [search, setSearch] = useState('');
+  const [showNewJob, setShowNewJob] = useState(false);
   
   const queryClient = useQueryClient();
 
@@ -64,7 +66,7 @@ const Tailoring: React.FC = () => {
               </button>
             ))}
           </div>
-          <button className="btn btn-gold">+ New Job Card</button>
+          <button className="btn btn-gold" onClick={() => { setShowNewJob(true); }}>+ New Job Card</button>
         </div>
       </div>
       
@@ -149,6 +151,8 @@ const Tailoring: React.FC = () => {
         setSelected={setSelected} 
         updateStatus={updateStatus} 
       />
+
+      {showNewJob && <NewTailoringJobModal onClose={() => { setShowNewJob(false); }} />}
     </div>
   );
 };

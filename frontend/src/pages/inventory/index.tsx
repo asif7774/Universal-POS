@@ -6,6 +6,7 @@ import { InventoryItem } from 'types/inventory';
 import { AddItemModal } from './components/AddItemModal';
 import { InventoryCard } from './components/InventoryCard';
 import { InventoryDetailModal } from './components/InventoryDetailModal';
+import { Skeleton } from 'components/atoms/skeleton/Skeleton';
 
 const Inventory: React.FC = () => {
   const [isAdding, setIsAdding] = useState(false);
@@ -18,7 +19,30 @@ const Inventory: React.FC = () => {
     queryFn: async () => await apiClient.get<InventoryItem[]>('/inventory'),
   });
 
-  if (isLoading) {return <div className="page-header"><h1 className="page-title">Loading...</h1></div>;}
+  if (isLoading) {
+    return (
+      <div className="animate-fade-in">
+        <div className="page-header">
+          <div>
+            <Skeleton width={120} height={24} style={{ marginBottom: 8 }} />
+            <Skeleton width={180} height={14} />
+          </div>
+        </div>
+        <div className="search-container">
+          <div className="grid grid-cols-4 gap-[14px] w-full mb-6">
+            {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} height={80} style={{ borderRadius: 'var(--radius-lg)' }} />)}
+          </div>
+          <Skeleton height={42} style={{ marginBottom: 16 }} />
+          <div className="flex gap-2">
+            {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} width={80} height={32} />)}
+          </div>
+        </div>
+        <div className="flex flex-col gap-4">
+          {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} height={100} style={{ borderRadius: 'var(--radius-lg)' }} />)}
+        </div>
+      </div>
+    );
+  }
   if (error) {return <div className="page-header"><h1 className="page-title text-red-500">Error loading inventory</h1></div>;}
 
   const CATEGORIES = ['All', ...Array.from(new Set(inventory.map(i => i.category)))];

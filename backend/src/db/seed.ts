@@ -1,82 +1,189 @@
 import { db } from './index';
-import { tenants, stores, users, products, customers, measurements } from './schema';
+import { tenants, stores, users, products, inventory, customers, measurements, orders, orderItems, rentals, appointments, tailoringJobs } from './schema';
 import { eq } from 'drizzle-orm';
 
 async function seed() {
   console.log('🌱 Seeding database...');
 
-  // 1. Tenant
-  const [tenant] = await db.insert(tenants).values({
+  // 1. Tenants
+  const [hqTenant] = await db.insert(tenants).values({
     name: 'TuxedoPOS HQ',
     slug: 'tuxedopos-hq',
-  }).onConflictDoNothing().returning();
+    plan: 'enterprise',
+    taxRate: '0.08875',
+  }).onConflictDoUpdate({ target: tenants.slug, set: { name: 'TuxedoPOS HQ' } }).returning();
 
-  let tenantId = tenant?.id;
-  if (!tenantId) {
-    const t = await db.select().from(tenants).where(eq(tenants.slug, 'tuxedopos-hq')).limit(1);
-    tenantId = t[0].id;
-  }
+  const [prestigeTenant] = await db.insert(tenants).values({
+    name: 'Prestige Formalwear',
+    slug: 'prestige',
+    plan: 'pro',
+    taxRate: '0.075',
+  }).onConflictDoUpdate({ target: tenants.slug, set: { name: 'Prestige Formalwear' } }).returning();
 
-  // 2. Store
-  const [store] = await db.insert(stores).values({
+  const tenantId = hqTenant.id;
+  const t2Id = prestigeTenant.id;
+
+  // 2. Stores
+  const [mainStore] = await db.insert(stores).values({
     tenantId,
-    name: 'Main Store',
+    name: 'Manhattan Flagship',
     city: 'New York',
     state: 'NY',
-  }).onConflictDoNothing().returning();
+    address: '123 Broadway St',
+  }).returning();
 
-  let storeId = store?.id;
-  if (!storeId) {
-    const s = await db.select().from(stores).where(eq(stores.tenantId, tenantId)).limit(1);
-    storeId = s[0].id;
-  }
-
-  // 3. User
-  await db.insert(users).values({
+  const [bkStore] = await db.insert(stores).values({
     tenantId,
-    storeId,
-    name: 'James Miller',
-    email: 'admin@tuxedopos.com',
-    passwordHash: 'password', // in real app, use bcrypt
-    role: 'owner',
-  }).onConflictDoNothing();
+    name: 'Brooklyn Outlet',
+    city: 'Brooklyn',
+    state: 'NY',
+    address: '456 Atlantic Ave',
+  }).returning();
 
-  await db.insert(users).values({
-    tenantId,
-    storeId,
-    name: 'Tom Baker',
-    email: 'cashier@tuxedopos.com',
-    passwordHash: '123456',
-    role: 'cashier',
-  }).onConflictDoNothing();
+  const storeId = mainStore.id;
 
-  // 4. Products
-  const sampleProducts = [
-    { tenantId, sku: 'TUX-BLK-001', name: 'Black Classic Tuxedo', type: 'rental', category: 'Tuxedos', rentalRatePerDay: '85', taxable: true },
-    { tenantId, sku: 'SUT-CHR-001', name: 'Charcoal Suit', type: 'rental', category: 'Suits', rentalRatePerDay: '65', taxable: true },
-    { tenantId, sku: 'ACC-BT-001', name: 'Black Bow Tie', type: 'sale', category: 'Accessories', salePrice: '24.99', taxable: true },
-    { tenantId, sku: 'SVC-ALT-001', name: 'Alteration — Hem', type: 'service', category: 'Services', salePrice: '25.00', taxable: false },
+  // 3. Users (Staff)
+  const staff = await db.insert(users).values([
+    { tenantId, storeId, name: 'James Miller', email: 'james@tuxedopos.com', passwordHash: 'pass', role: 'owner' },
+    { tenantId, storeId, name: 'Sarah Wilson', email: 'sarah@tuxedopos.com', passwordHash: 'pass', role: 'manager' },
+    { tenantId, storeId, name: 'Tom Baker', email: 'tom@tuxedopos.com', passwordHash: 'pass', role: 'cashier' },
+    { tenantId, storeId: bkStore.id, name: 'Emma Davis', email: 'emma@tuxedopos.com', passwordHash: 'pass', role: 'cashier' },
+    { tenantId, storeId, name: 'Robert Tailor', email: 'robert@tuxedopos.com', passwordHash: 'pass', role: 'cashier' },
+  ]).returning();
+
+  // 4. Products & Inventory
+  const productData = [
+    { sku: 'TUX-BLK-001', name: 'Black Peak Lapel Tuxedo', type: 'rental', category: 'Tuxedos', rentalRatePerDay: '85.00', depositAmount: '250.00' },
+    { sku: 'TUX-BLU-002', name: 'Midnight Blue Slim Tuxedo', type: 'rental', category: 'Tuxedos', rentalRatePerDay: '95.00', depositAmount: '300.00' },
+    { sku: 'SUT-CHR-001', name: 'Charcoal Modern Suit', type: 'rental', category: 'Suits', rentalRatePerDay: '65.00', depositAmount: '150.00' },
+    { sku: 'SUT-GRY-002', name: 'Light Grey Summer Suit', type: 'rental', category: 'Suits', rentalRatePerDay: '65.00', depositAmount: '150.00' },
+    { sku: 'SHI-WHT-001', name: 'Premium Wing Collar Shirt', type: 'sale', category: 'Shirts', salePrice: '45.00' },
+    { sku: 'ACC-BT-001', name: 'Silk Bow Tie (Black)', type: 'sale', category: 'Accessories', salePrice: '24.99' },
+    { sku: 'ACC-ST-001', name: 'Silver Cufflink Set', type: 'sale', category: 'Accessories', salePrice: '35.00' },
+    { sku: 'SHO-PAT-001', name: 'Patent Leather Shoes', type: 'rental', category: 'Shoes', rentalRatePerDay: '25.00', depositAmount: '50.00' },
+    { sku: 'SVC-ALT-001', name: 'Basic Alteration', type: 'service', category: 'Services', salePrice: '20.00', taxable: false },
   ];
-  for (const p of sampleProducts) {
-    await db.insert(products).values(p).onConflictDoNothing();
+
+  const sizes = ['36R', '38R', '40R', '42R', '44R', '38L', '40L', '42L'];
+
+  for (const pd of productData) {
+    const [p] = await db.insert(products).values({ ...pd, tenantId }).returning();
+    
+    if (pd.type !== 'service') {
+      const invValues = sizes.map(size => ({
+        tenantId,
+        storeId,
+        productId: p.id,
+        size,
+        totalQty: 5,
+        availableQty: size === '40R' ? 1 : 5,
+        rentedQty: size === '40R' ? 4 : 0,
+        location: 'A-1',
+      }));
+      await db.insert(inventory).values(invValues);
+    }
   }
 
-  // 5. Customers
-  const [c1] = await db.insert(customers).values({
-    tenantId, storeId, firstName: 'Marcus', lastName: 'Johnson', email: 'marcus.j@email.com', phone: '(555) 234-5678', notes: 'Wedding May 15. VIP.', tags: ['Wedding', 'VIP'], loyaltyPoints: 620, totalOrders: 5, totalSpent: '1240.00'
-  }).onConflictDoNothing().returning();
-  await db.insert(customers).values({
-    tenantId, storeId, firstName: 'David', lastName: 'Williams', email: 'david.w@email.com', phone: '(555) 345-6789', tags: ['Prom'], loyaltyPoints: 195, totalOrders: 2, totalSpent: '390.00'
-  }).onConflictDoNothing();
-  
-  if (c1?.id) {
+  // 5. Customers & Measurements
+  const customerList = [
+    { firstName: 'Marcus', lastName: 'Johnson', email: 'marcus@example.com', phone: '555-0101', loyaltyPoints: 450, totalOrders: 3, totalSpent: '850.00' },
+    { firstName: 'David', lastName: 'Williams', email: 'david@example.com', phone: '555-0102', loyaltyPoints: 120, totalOrders: 1, totalSpent: '125.00' },
+    { firstName: 'Michael', lastName: 'Brown', email: 'michael@example.com', phone: '555-0103', loyaltyPoints: 890, totalOrders: 6, totalSpent: '1540.00' },
+    { firstName: 'Chris', lastName: 'Evans', email: 'chris@example.com', phone: '555-0104' },
+  ];
+
+  for (const [i, cd] of customerList.entries()) {
+    const [c] = await db.insert(customers).values({ ...cd, tenantId, storeId }).returning();
+    
     await db.insert(measurements).values({
-      customerId: c1.id, tenantId, takenById: undefined,
-      jacketSize: '42R', chest: '42"', waist: '36"', hips: '42"', inseam: '32"', outseam: '42"', neck: '16"', sleeve: '34"', shoulder: '19"', shoeSize: '10.5', height: "6'1\"", weight: '185 lbs', notes: 'Prefers slim fit. Left shoulder slightly higher by ¼".', fittingNotes: 'Jacket hemmed at left shoulder.'
-    }).onConflictDoNothing();
+      customerId: c.id,
+      tenantId,
+      takenById: staff[0].id,
+      jacketSize: '40R',
+      chest: '40"', waist: '34"', neck: '15.5"', sleeve: '33"', inseam: '30"', shoeSize: '10'
+    });
+
+    // 6. Historical Orders (Last 30 Days)
+    const paymentMethods = ['credit_card', 'cash', 'gift_card', 'loyalty'];
+    const orderStatuses = ['completed', 'completed', 'completed', 'cancelled'];
+    const categories = ['Tuxedos', 'Suits', 'Accessories', 'Shoes', 'Services'];
+
+    for (let j = 0; j < 60; j++) {
+      const date = new Date();
+      date.setDate(date.getDate() - Math.floor(Math.random() * 30));
+      const amount = (Math.random() * 200 + 50).toFixed(2);
+      
+      const [o] = await db.insert(orders).values({
+        tenantId,
+        storeId,
+        customerId: c.id,
+        cashierId: staff[Math.floor(Math.random() * staff.length)].id,
+        orderNo: `ORD-${20000 + i * 100 + j}`,
+        status: orderStatuses[Math.floor(Math.random() * orderStatuses.length)],
+        type: Math.random() > 0.5 ? 'rental' : 'sale',
+        subtotal: amount,
+        taxRate: '0.08875',
+        taxAmt: (parseFloat(amount) * 0.08875).toFixed(2),
+        total: (parseFloat(amount) * 1.08875).toFixed(2),
+        paymentMethod: paymentMethods[Math.floor(Math.random() * paymentMethods.length)],
+        paymentStatus: 'paid',
+        createdAt: date,
+      }).returning();
+
+      // Add a line item
+      await db.insert(orderItems).values({
+        orderId: o.id,
+        name: `${categories[Math.floor(Math.random() * categories.length)]} Item`,
+        unitPrice: amount,
+        lineTotal: amount,
+        qty: 1,
+      });
+    }
+
+    // 7. Appointments
+    const apptDate = new Date();
+    apptDate.setDate(apptDate.getDate() + (Math.floor(Math.random() * 10) - 5));
+    await db.insert(appointments).values({
+      tenantId,
+      storeId,
+      customerId: c.id,
+      assignedTo: staff[1].id,
+      type: i % 2 === 0 ? 'Fitting' : 'Measurement',
+      date: apptDate.toISOString().split('T')[0],
+      startTime: `${10 + (i % 8)}:00`,
+      duration: 30,
+      status: apptDate < new Date() ? 'completed' : 'scheduled',
+      notes: 'Standard appointment sequence',
+    });
+
+    // 8. Tailoring Jobs
+    await db.insert(tailoringJobs).values({
+      tenantId,
+      customerId: c.id,
+      assignedTo: staff[4].id,
+      jobNo: `JOB-${30000 + i}`,
+      type: 'Hemming',
+      status: i % 3 === 0 ? 'completed' : 'in_progress',
+      garment: 'Classic Tuxedo Pants',
+      price: '25.00',
+      dueDate: new Date(Date.now() + 86400000 * (i % 10)).toISOString().split('T')[0],
+    });
   }
 
-  console.log('✅ Seed complete!');
+  // 9. Specific Active Rentals
+  const [activeRentC] = await db.select().from(customers).limit(1);
+  const [activeRental] = await db.insert(rentals).values({
+    tenantId,
+    customerId: activeRentC.id,
+    rentalNo: 'RN-9001',
+    status: 'out',
+    eventName: 'Summer Gala',
+    pickupDate: new Date(Date.now() - 86400000 * 2).toISOString().split('T')[0],
+    returnDate: new Date(Date.now() + 86400000 * 3).toISOString().split('T')[0],
+    depositPaid: '150.00',
+  }).returning();
+
+  console.log('✅ Comprehensive Seed complete!');
   process.exit(0);
 }
 

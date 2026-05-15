@@ -1,6 +1,43 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
 
+@theme {
+  --color-tux-navy: var(--tux-navy);
+  --color-tux-navy-light: var(--tux-navy-light);
+  --color-tux-navy-dark: var(--tux-navy-dark);
+  --color-tux-gold: var(--tux-gold);
+  --color-tux-gold-light: var(--tux-gold-light);
+  --color-tux-gold-dark: var(--tux-gold-dark);
+  
+  --color-surface-bg: var(--surface-bg);
+  --color-surface-card: var(--surface-card);
+  --color-surface-border: var(--surface-border);
+  --color-surface-hover: var(--surface-hover);
+  
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-inverse: var(--text-inverse);
+  
+  --color-status-success: var(--status-success);
+  --color-status-warning: var(--status-warning);
+  --color-status-error: var(--status-error);
+  --color-status-info: var(--status-info);
+  
+  --font-display: "Playfair Display", serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-gold: var(--shadow-gold);
+}
+
 /* ─────────────────────────────────────────────
    TuxedoPOS Design System
    Primary:  Navy   #1E3A5F
@@ -600,10 +637,16 @@
 
   /* ── Loading Skeleton ────────────────────── */
   .skeleton {
-    background: linear-gradient(90deg, var(--surface-hover) 25%, var(--surface-border) 50%, var(--surface-hover) 75%);
+    background: linear-gradient(
+      90deg, 
+      var(--surface-border) 0%, 
+      var(--surface-hover) 50%, 
+      var(--surface-border) 100%
+    );
     background-size: 200% 100%;
-    animation: shimmer 1.4s infinite;
+    animation: shimmer 1.5s linear infinite;
     border-radius: var(--radius-sm);
+    display: block;
   }
 
   /* ── Modal ───────────────────────────────── */
@@ -659,9 +702,6 @@
 
   /* ── Toast ───────────────────────────────── */
   .toast {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
     background: var(--text-primary);
     color: var(--text-inverse);
     padding: 12px 18px;
@@ -673,12 +713,15 @@
     align-items: center;
     gap: 8px;
     z-index: 200;
-    animation: slideUp .2s ease;
+    animation: slideDown .2s ease;
     max-width: 360px;
+    min-width: 300px;
   }
 
-  .toast-success { background: var(--status-success); }
-  .toast-error   { background: var(--status-error); }
+  .toast-success { background: var(--status-success); color: white; }
+  .toast-error   { background: var(--status-error); color: white; }
+  .toast-warning { background: var(--status-warning); color: white; }
+  .toast-info    { background: var(--status-info); color: white; }
 
   /* ── Empty State ─────────────────────────── */
   .empty-state {

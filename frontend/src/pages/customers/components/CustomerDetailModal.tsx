@@ -1,4 +1,7 @@
+import { useState } from 'react';
 import { Customer, Measurement } from 'types/customers';
+import { useUpdateCustomer, useDeleteCustomer, useAddLoyalty } from '../../../lib/queries';
+import { useSnackbar } from 'contexts/SnackbarContext';
 import { Modal } from 'components/atoms/modal/Modal';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
@@ -21,12 +24,69 @@ const MeasurementRow = ({ label, value }: { label: string; value: string | null 
 );
 
 export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiveTab, measurements }: CustomerDetailModalProps) => {
+  const { showSnackbar } = useSnackbar();
+  const updateCustomer = useUpdateCustomer();
+  const deleteCustomer = useDeleteCustomer();
+  const addLoyalty = useAddLoyalty();
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [loyaltyInput, setLoyaltyInput] = useState('');
+  const [editForm, setEditForm] = useState({
+    firstName: '', lastName: '', email: '', phone: '', notes: '',
+  });
+
   if (!selected) {return null;}
+
+  const startEditing = () => {
+    setEditForm({
+      firstName: selected.firstName,
+      lastName: selected.lastName,
+      email: selected.email ?? '',
+      phone: selected.phone ?? '',
+      notes: selected.notes ?? '',
+    });
+    setIsEditing(true);
+  };
+
+  const saveEdit = () => {
+    updateCustomer.mutate({ id: selected.id, ...editForm }, {
+      onSuccess: () => {
+        showSnackbar('Customer updated!', 'success');
+        setIsEditing(false);
+        setSelected(null);
+      },
+      onError: () => showSnackbar('Failed to update customer', 'error'),
+    });
+  };
+
+  const handleDelete = () => {
+    deleteCustomer.mutate(selected.id, {
+      onSuccess: () => {
+        showSnackbar('Customer deleted', 'success');
+        setShowDeleteConfirm(false);
+        setSelected(null);
+      },
+      onError: () => showSnackbar('Failed to delete customer', 'error'),
+    });
+  };
+
+  const handleAddLoyalty = () => {
+    const pts = parseInt(loyaltyInput);
+    if (!pts || pts <= 0) return;
+    addLoyalty.mutate({ id: selected.id, points: pts }, {
+      onSuccess: () => {
+        showSnackbar(`Added ${pts} loyalty points!`, 'success');
+        setLoyaltyInput('');
+      },
+      onError: () => showSnackbar('Failed to add points', 'error'),
+    });
+  };
 
   return (
     <Modal
       isOpen={!!selected}
-      onClose={() => { setSelected(null); }}
+      onClose={() => { setSelected(null); setIsEditing(false); setShowDeleteConfirm(false); }}
       maxWidth={580}
       title={(
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
@@ -42,18 +102,40 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
         </div>
       )}
       footer={
-        <>
-          <button className="btn btn-outline">Edit Customer</button>
-          <button className="btn btn-gold">+ New Rental</button>
-          <button className="btn btn-ghost btn-sm" onClick={() => { setSelected(null); }}>Close</button>
-        </>
+        showDeleteConfirm ? (
+          <>
+            <span style={{ fontSize: '.85rem', color: 'var(--status-error)', fontWeight: 600 }}>Delete this customer permanently?</span>
+            <button className="btn btn-outline" onClick={() => { setShowDeleteConfirm(false); }}>Cancel</button>
+            <button className="btn" style={{ background: 'var(--status-error)', color: 'white' }}
+              onClick={handleDelete} disabled={deleteCustomer.isPending}>
+              {deleteCustomer.isPending ? 'Deleting...' : 'Yes, Delete'}
+            </button>
+          </>
+        ) : isEditing ? (
+          <>
+            <button className="btn btn-outline" onClick={() => { setIsEditing(false); }}>Cancel</button>
+            <button className="btn btn-gold" onClick={saveEdit} disabled={updateCustomer.isPending}>
+              {updateCustomer.isPending ? 'Saving...' : 'Save Changes'}
+            </button>
+          </>
+        ) : (
+          <>
+            <button className="btn btn-outline" onClick={startEditing} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              <SvgIcon name="tailoring" width="14" height="14" /> Edit
+            </button>
+            <button className="btn btn-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              <SvgIcon name="rental" width="14" height="14" /> + New Rental
+            </button>
+            <button className="btn btn-ghost btn-sm text-[var(--status-error)]" onClick={() => { setShowDeleteConfirm(true); }}>Delete</button>
+          </>
+        )
       }
     >
       <div style={{ margin: '-16px -20px 0' }}>
         {/* Tabs */}
         <div style={{ display: 'flex', borderBottom: '1px solid var(--surface-border)', background: 'var(--surface-hover)' }}>
           {(['profile', 'measurements', 'history'] as const).map(tab => (
-            <button key={tab} onClick={() => { setActiveTab(tab); }}
+            <button key={tab} onClick={() => { setActiveTab(tab); setIsEditing(false); }}
               style={{
                 flex: 1, padding: '12px 10px', border: 'none', background: 'none',
                 cursor: 'pointer', fontWeight: 600, fontSize: '.8rem',
@@ -71,38 +153,85 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
 
         <div style={{ padding: '20px' }}>
           {activeTab === 'profile' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                {[
-                  { label: 'Member Since', value: fmtDate(selected.createdAt) },
-                  { label: 'Last Visit', value: fmtDate(selected.lastVisitAt) },
-                  { label: 'Total Orders', value: selected.totalOrders },
-                  { label: 'Total Spent', value: fmt(selected.totalSpent) },
-                  { label: 'Loyalty Points', value: `${selected.loyaltyPoints} pts` },
-                  { label: 'Value as Credit', value: fmt(selected.loyaltyPoints * 0.01) },
-                ].map(item => (
-                  <div key={item.label} style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
-                    <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 4 }}>{item.label}</div>
-                    <div style={{ fontSize: '.95rem', fontWeight: 700 }}>{item.value}</div>
+            isEditing ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                  <div className="input-group">
+                    <label className="input-label">First Name</label>
+                    <input className="input" value={editForm.firstName}
+                      onChange={e => { setEditForm(f => ({ ...f, firstName: e.target.value })); }} />
                   </div>
-                ))}
+                  <div className="input-group">
+                    <label className="input-label">Last Name</label>
+                    <input className="input" value={editForm.lastName}
+                      onChange={e => { setEditForm(f => ({ ...f, lastName: e.target.value })); }} />
+                  </div>
+                  <div className="input-group">
+                    <label className="input-label">Email</label>
+                    <input className="input" type="email" value={editForm.email}
+                      onChange={e => { setEditForm(f => ({ ...f, email: e.target.value })); }} />
+                  </div>
+                  <div className="input-group">
+                    <label className="input-label">Phone</label>
+                    <input className="input" value={editForm.phone}
+                      onChange={e => { setEditForm(f => ({ ...f, phone: e.target.value })); }} />
+                  </div>
+                </div>
+                <div className="input-group">
+                  <label className="input-label">Notes</label>
+                  <textarea className="input" rows={2} value={editForm.notes}
+                    onChange={e => { setEditForm(f => ({ ...f, notes: e.target.value })); }}
+                    style={{ resize: 'vertical' }} />
+                </div>
               </div>
-              {selected.tags && selected.tags.length > 0 && (
-                <div>
-                  <div style={{ fontSize: '.75rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 6 }}>TAGS</div>
-                  <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                    {selected.tags.map(tag => (
-                      <span key={tag} className={`badge ${tag === 'VIP' ? 'badge-gold' : tag === 'Overdue' ? 'badge-red' : tag === 'Corporate' ? 'badge-navy' : 'badge-gray'}`}>{tag}</span>
-                    ))}
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                  {[
+                    { label: 'Member Since', value: fmtDate(selected.createdAt) },
+                    { label: 'Last Visit', value: fmtDate(selected.lastVisitAt) },
+                    { label: 'Total Orders', value: selected.totalOrders },
+                    { label: 'Total Spent', value: fmt(selected.totalSpent) },
+                    { label: 'Loyalty Points', value: `${selected.loyaltyPoints} pts` },
+                    { label: 'Value as Credit', value: fmt(selected.loyaltyPoints * 0.01) },
+                  ].map(item => (
+                    <div key={item.label} style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
+                      <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 4 }}>{item.label}</div>
+                      <div style={{ fontSize: '.95rem', fontWeight: 700 }}>{item.value}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Add loyalty points */}
+                <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
+                  <div className="input-group" style={{ flex: 1 }}>
+                    <label className="input-label">Add Loyalty Points</label>
+                    <input className="input" type="number" placeholder="e.g. 100" value={loyaltyInput}
+                      onChange={e => { setLoyaltyInput(e.target.value); }} />
                   </div>
+                  <button className="btn btn-gold btn-sm" onClick={handleAddLoyalty}
+                    disabled={addLoyalty.isPending} style={{ height: 38 }}>
+                    {addLoyalty.isPending ? '...' : '+ Add'}
+                  </button>
                 </div>
-              )}
-              {selected.notes && (
-                <div style={{ padding: '10px 12px', background: '#FFFBEB', borderRadius: 'var(--radius-sm)', border: '1px solid #FDE68A', fontSize: '.85rem', color: '#92400E', display: 'flex', gap: 8 }}>
-                  <SvgIcon name="warning" width="16" height="16" style={{ marginTop: 2 }} /> {selected.notes}
-                </div>
-              )}
-            </div>
+
+                {selected.tags && selected.tags.length > 0 && (
+                  <div>
+                    <div style={{ fontSize: '.75rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 6 }}>TAGS</div>
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                      {selected.tags.map(tag => (
+                        <span key={tag} className={`badge ${tag === 'VIP' ? 'badge-gold' : tag === 'Overdue' ? 'badge-red' : tag === 'Corporate' ? 'badge-navy' : 'badge-gray'}`}>{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {selected.notes && (
+                  <div style={{ padding: '10px 12px', background: '#FFFBEB', borderRadius: 'var(--radius-sm)', border: '1px solid #FDE68A', fontSize: '.85rem', color: '#92400E', display: 'flex', gap: 8 }}>
+                    <SvgIcon name="warning" width="16" height="16" style={{ marginTop: 2 }} /> {selected.notes}
+                  </div>
+                )}
+              </div>
+            )
           )}
 
           {activeTab === 'measurements' && (

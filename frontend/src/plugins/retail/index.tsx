@@ -1,6 +1,6 @@
-import React from 'react';
 import { PluginModule } from '../types';
-import { SvgIcon } from '../../components/atoms/svg-sprite-loader';
+import { ReturnsPage } from './pages/ReturnsPage';
+import { LoyaltyRedeemButton } from './components/LoyaltyRedeemButton';
 
 const LoyaltySettings = () => (
   <div style={{ padding: 20 }}>
@@ -26,12 +26,13 @@ const RetailPlugin: PluginModule = {
   routes: [
     {
       path: '/returns',
-      element: <div style={{ padding: 40 }}><h2>Returns & Exchanges</h2><p>Process refunds and exchanges here.</p></div>
+      element: <ReturnsPage />
     }
   ],
   
   navItems: [
     {
+      id: 'retail-returns',
       label: 'Returns',
       icon: 'return',
       path: '/returns',
@@ -44,12 +45,7 @@ const RetailPlugin: PluginModule = {
       id: 'loyalty-apply',
       label: 'Apply Loyalty Points',
       position: 'before-payment',
-      component: (
-        <button className="btn flex items-center justify-center gap-2" style={{ width: '100%', marginBottom: 12 }}>
-          <SvgIcon name="gift" width="16" height="16" />
-          Redeem Points
-        </button>
-      )
+      component: <LoyaltyRedeemButton />
     }
   ],
   

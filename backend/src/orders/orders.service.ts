@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { db } from '../db';
-import { orders, orderItems } from '../db/schema';
+import { orders, orderItems, customers } from '../db/schema';
 import { eq, and, desc } from 'drizzle-orm';
 
 export interface OrderItem {
@@ -45,16 +45,44 @@ const generateOrderNo = () => `ORD-${Date.now().toString().slice(-6)}`;
 @Injectable()
 export class OrdersService {
   async findAll(tenantId: string, limit = 50, offset = 0): Promise<Order[]> {
-    const res = await db.select().from(orders).where(eq(orders.tenantId, tenantId)).orderBy(desc(orders.createdAt)).limit(limit).offset(offset);
-    return res as unknown as Order[];
+    const res = await db.select({
+      order: orders,
+      customer: {
+        id: customers.id,
+        firstName: customers.firstName,
+        lastName: customers.lastName,
+      }
+    })
+    .from(orders)
+    .leftJoin(customers, eq(orders.customerId, customers.id))
+    .where(eq(orders.tenantId, tenantId))
+    .orderBy(desc(orders.createdAt))
+    .limit(limit)
+    .offset(offset);
+
+    return res.map(row => ({ ...row.order, customer: row.customer })) as unknown as Order[];
   }
 
   async findById(id: string, tenantId: string): Promise<Order> {
-    const res = await db.select().from(orders).where(and(eq(orders.id, id), eq(orders.tenantId, tenantId))).limit(1);
+    const res = await db.select({
+      order: orders,
+      customer: {
+        id: customers.id,
+        firstName: customers.firstName,
+        lastName: customers.lastName,
+        email: customers.email,
+        phone: customers.phone,
+      }
+    })
+    .from(orders)
+    .leftJoin(customers, eq(orders.customerId, customers.id))
+    .where(and(eq(orders.id, id), eq(orders.tenantId, tenantId)))
+    .limit(1);
+
     if (!res[0]) throw new NotFoundException(`Order ${id} not found`);
     
     const itemsRes = await db.select().from(orderItems).where(eq(orderItems.orderId, id));
-    return { ...res[0], items: itemsRes } as unknown as Order;
+    return { ...res[0].order, customer: res[0].customer, items: itemsRes } as unknown as Order;
   }
 
   async findByCustomer(customerId: string, tenantId: string): Promise<Order[]> {

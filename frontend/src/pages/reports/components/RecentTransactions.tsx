@@ -1,19 +1,24 @@
 import React from 'react';
 import { Order } from 'types/reports';
+import { TableSkeleton } from 'components/atoms/skeleton/Skeleton';
 
 interface RecentTransactionsProps {
   orders: Order[];
+  isLoading?: boolean;
 }
 
-export const RecentTransactions: React.FC<RecentTransactionsProps> = ({ orders }) => {
+export const RecentTransactions: React.FC<RecentTransactionsProps> = ({ orders, isLoading }) => {
   return (
     <div className="card" style={{ height: 350, display: 'flex', flexDirection: 'column' }}>
       <div className="card-header">
         <span className="card-title">Recent Transactions</span>
         <button className="btn btn-outline btn-sm">View All</button>
       </div>
-      <div style={{ flex: 1, overflowY: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+      <div style={{ flex: 1, overflowY: 'auto', position: 'relative', padding: isLoading ? '0 16px' : 0 }}>
+        {isLoading ? (
+          <TableSkeleton rows={5} cols={4} />
+        ) : (
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--surface-border)', color: 'var(--text-secondary)', fontSize: '.8rem' }}>
               <th style={{ padding: '12px 16px', fontWeight: 600 }}>Order #</th>
@@ -42,6 +47,7 @@ export const RecentTransactions: React.FC<RecentTransactionsProps> = ({ orders }
             )}
           </tbody>
         </table>
+        )}
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import { Rental } from 'types/rentals';
 import { RentalTable, daysLeft } from './components/RentalTable';
 import { RentalDetailModal } from './components/RentalDetailModal';
 import { NewRentalForm } from './components/NewRentalForm';
+import { TableSkeleton } from 'components/atoms/skeleton/Skeleton';
 
 const Rentals: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('all');
@@ -120,7 +121,6 @@ const Rentals: React.FC = () => {
           </div>
         </div>
       )}
-
       {isAdding ? (
         <NewRentalForm 
           customers={customers}
@@ -131,7 +131,7 @@ const Rentals: React.FC = () => {
       ) : (
         <>
           {isLoading ? (
-            <div className="p-10 text-center text-[var(--text-muted)]">Loading rentals...</div>
+            <TableSkeleton rows={8} cols={6} />
           ) : (
             <RentalTable filtered={filtered} setSelected={setSelected} />
           )}

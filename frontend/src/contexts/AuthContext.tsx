@@ -36,9 +36,12 @@ export const useAuth = () => {
 const SESSION_KEY = 'tuxedopos_session';
 const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api/v1';
 
+import { useSnackbar } from './SnackbarContext';
+
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const { showSnackbar } = useSnackbar();
 
   // Restore session on mount
   useEffect(() => {
@@ -82,8 +85,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const session: AuthSession = { user: sessionUser, access_token: data.access_token };
       setUser(sessionUser);
       localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      showSnackbar(`Welcome back, ${sessionUser.name}!`, 'success');
       return true;
     } catch {
+      showSnackbar('Invalid credentials or server error.', 'error');
       return false;
     } finally {
       setLoading(false);
@@ -93,6 +98,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const logout = () => {
     setUser(null);
     localStorage.removeItem(SESSION_KEY);
+    showSnackbar('Logged out successfully.', 'info');
   };
 
   return (

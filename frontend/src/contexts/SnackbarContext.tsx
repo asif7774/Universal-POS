@@ -46,7 +46,7 @@ export const SnackbarProvider: React.FC<{ children: ReactNode }> = ({ children }
         pointerEvents: 'none'
       }}>
         {snackbars.map(s => (
-          <div key={s.id} className={`toast toast-${s.type} animate-slide-up`} style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div key={s.id} className={`toast toast-${s.type} animate-slide-down`} style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
             <SvgIcon 
               name={s.type === 'success' ? 'success' : s.type === 'error' ? 'warning' : s.type === 'warning' ? 'warning' : 'info'} 
               width="18" height="18" 

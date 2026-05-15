@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { CartItem } from 'types/pos';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
@@ -24,75 +24,67 @@ export const CartSidebar = memo(({
 }: CartSidebarProps) => {
 
   return (
-    <div style={{
-      background: 'var(--surface-card)',
-      borderLeft: '1px solid var(--surface-border)',
-      display: 'flex', flexDirection: 'column',
-      height: '100%', overflow: 'hidden',
-    }}>
+    <div className="bg-surface-card border-l border-surface-border flex flex-col h-full overflow-hidden">
       {/* Cart header */}
-      <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--surface-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontWeight: 700, fontSize: '.95rem', display: 'flex', alignItems: 'center', gap: 8 }}>
-          <SvgIcon name="pos" width="18" height="18" style={{ color: 'var(--tux-navy)' }} />
-          Cart {cart.length > 0 && <span className="badge badge-navy" style={{ marginLeft: 6 }}>{cart.length}</span>}
+      <div className="p-[14px_16px] border-b border-surface-border flex items-center justify-between">
+        <span className="font-bold text-[0.95rem] flex items-center gap-2">
+          <SvgIcon name="pos" width="18" height="18" className="text-tux-navy" />
+          Cart {cart.length > 0 && <span className="badge badge-navy ml-1.5">{cart.length}</span>}
         </span>
         {cart.length > 0 && (
-          <button className="btn btn-ghost btn-sm" onClick={() => { setCart([]); }} style={{ color: 'var(--status-error)', fontSize: '.75rem' }}>
+          <button className="btn btn-ghost btn-sm text-status-error text-[0.75rem]" onClick={() => { setCart([]); }}>
             Clear all
           </button>
         )}
       </div>
 
       {/* Cart items */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '8px 12px' }}>
+      <div className="flex-1 overflow-y-auto p-[8px_12px]">
         {cart.length === 0 ? (
-          <div className="empty-state" style={{ padding: '40px 16px' }}>
-            <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'center' }}>
-              <SvgIcon name="pos" width="48" height="48" style={{ opacity: 0.1 }} />
+          <div className="empty-state py-10 px-4">
+            <div className="mb-3 flex justify-center">
+              <SvgIcon name="pos" width="48" height="48" className="opacity-10" />
             </div>
-            <p style={{ fontSize: '.85rem' }}>Click a product to add it to the cart</p>
+            <p className="text-[0.85rem]">Click a product to add it to the cart</p>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div className="flex flex-col gap-2">
             {cart.map((item, idx) => (
-              <div key={`${item.product.id}-${item.isRental}`} style={{
-                padding: '10px 12px',
-                background: 'var(--surface-hover)',
-                borderRadius: 'var(--radius-md)',
-                border: `1px solid ${item.isRental ? 'var(--tux-gold)' : 'var(--surface-border)'}`,
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
+              <div key={`${item.product.id}-${item.isRental}`}
+                className={`p-[10px_12px] bg-surface-hover rounded-md border ${item.isRental ? 'border-tux-gold' : 'border-surface-border'}`}
+              >
+                <div className="flex justify-between items-start mb-1.5">
                   <div>
-                    <div style={{ fontSize: '.82rem', fontWeight: 700, lineHeight: 1.2 }}>{item.product.name}</div>
-                    <div style={{ fontSize: '.7rem', color: 'var(--text-muted)' }}>{item.product.sku}</div>
-                    {item.isRental && <span className="badge badge-gold" style={{ marginTop: 3 }}>Rental</span>}
+                    <div className="text-[0.82rem] font-bold leading-tight">{item.product.name}</div>
+                    <div className="text-[0.7rem] text-text-muted">{item.product.sku}</div>
+                    {item.isRental && <span className="badge badge-gold mt-0.5">Rental</span>}
                   </div>
-                  <span style={{ fontWeight: 800, fontSize: '.9rem', color: 'var(--tux-navy)', whiteSpace: 'nowrap' }}>
+                  <span className="font-extrabold text-[0.9rem] text-tux-navy whitespace-nowrap">
                     {fmt(item.lineTotal)}
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                <div className="flex items-center gap-2 flex-wrap">
                   {/* Qty controls */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 0, background: 'var(--surface-card)', borderRadius: 8, border: '1px solid var(--surface-border)', overflow: 'hidden' }}>
-                    <button onClick={() => { updateQty(idx, -1); }} style={{ width: 28, height: 28, border: 'none', background: 'none', cursor: 'pointer', fontWeight: 700, fontSize: '1rem', color: 'var(--text-secondary)' }}>−</button>
-                    <span style={{ minWidth: 24, textAlign: 'center', fontSize: '.85rem', fontWeight: 700 }}>{item.qty}</span>
-                    <button onClick={() => { updateQty(idx, 1); }} style={{ width: 28, height: 28, border: 'none', background: 'none', cursor: 'pointer', fontWeight: 700, fontSize: '1rem', color: 'var(--text-secondary)' }}>+</button>
+                  <div className="flex items-center bg-surface-card rounded-lg border border-surface-border overflow-hidden">
+                    <button onClick={() => { updateQty(idx, -1); }} className="w-7 h-7 border-none bg-none cursor-pointer font-bold text-base text-text-secondary">−</button>
+                    <span className="min-w-[24px] text-center text-[0.85rem] font-bold">{item.qty}</span>
+                    <button onClick={() => { updateQty(idx, 1); }} className="w-7 h-7 border-none bg-none cursor-pointer font-bold text-base text-text-secondary">+</button>
                   </div>
 
                   {/* Days for rental */}
                   {item.isRental && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <span style={{ fontSize: '.75rem', color: 'var(--text-muted)' }}>Days:</span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 0, background: 'var(--surface-card)', borderRadius: 8, border: '1px solid var(--tux-gold)', overflow: 'hidden' }}>
-                        <button onClick={() => { updateDays(idx, (item.days ?? 1) - 1); }} style={{ width: 26, height: 26, border: 'none', background: 'none', cursor: 'pointer', fontWeight: 700, color: 'var(--tux-gold-dark)' }}>−</button>
-                        <span style={{ minWidth: 22, textAlign: 'center', fontSize: '.82rem', fontWeight: 700, color: 'var(--tux-gold-dark)' }}>{item.days}</span>
-                        <button onClick={() => { updateDays(idx, (item.days ?? 1) + 1); }} style={{ width: 26, height: 26, border: 'none', background: 'none', cursor: 'pointer', fontWeight: 700, color: 'var(--tux-gold-dark)' }}>+</button>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[0.75rem] text-text-muted">Days:</span>
+                      <div className="flex items-center bg-surface-card rounded-lg border border-tux-gold overflow-hidden">
+                        <button onClick={() => { updateDays(idx, (item.days ?? 1) - 1); }} className="w-[26px] h-[26px] border-none bg-none cursor-pointer font-bold text-tux-gold-dark">−</button>
+                        <span className="min-w-[22px] text-center text-[0.82rem] font-bold text-tux-gold-dark">{item.days}</span>
+                        <button onClick={() => { updateDays(idx, (item.days ?? 1) + 1); }} className="w-[26px] h-[26px] border-none bg-none cursor-pointer font-bold text-tux-gold-dark">+</button>
                       </div>
                     </div>
                   )}
 
-                  <button onClick={() => { updateQty(idx, -item.qty); }} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--status-error)', fontSize: '.7rem', fontWeight: 600 }}>
+                  <button onClick={() => { updateQty(idx, -item.qty); }} className="ml-auto bg-transparent border-none cursor-pointer text-status-error text-[0.7rem] font-semibold">
                     Remove
                   </button>
                 </div>
@@ -104,20 +96,16 @@ export const CartSidebar = memo(({
 
       {/* Totals + checkout */}
       {cart.length > 0 && (
-        <div style={{ padding: '12px 14px', borderTop: '1px solid var(--surface-border)', background: 'var(--surface-card)' }}>
+        <div className="p-[12px_14px] border-t border-surface-border bg-surface-card">
           {/* Discount */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-            <span style={{ fontSize: '.8rem', color: 'var(--text-secondary)', flex: 1 }}>Discount %</span>
-            <div style={{ display: 'flex', gap: 4 }}>
+          <div className="flex items-center gap-2 mb-2.5">
+            <span className="text-[0.8rem] text-text-secondary flex-1">Discount %</span>
+            <div className="flex gap-1">
               {[0, 5, 10, 15].map(d => (
                 <button key={d} onClick={() => { setDiscount(d); }}
-                  style={{
-                    padding: '3px 8px', borderRadius: 6, border: '1.5px solid',
-                    borderColor: discount === d ? 'var(--tux-navy)' : 'var(--surface-border)',
-                    background: discount === d ? 'var(--tux-navy)' : 'transparent',
-                    color: discount === d ? 'white' : 'var(--text-secondary)',
-                    cursor: 'pointer', fontSize: '.75rem', fontWeight: 600,
-                  }}>
+                  className={`px-2 py-0.5 rounded-md border-[1.5px] cursor-pointer text-[0.75rem] font-semibold transition-colors ${discount === d ? 'border-tux-navy bg-tux-navy text-white' : 'border-surface-border bg-transparent text-text-secondary'
+                    }`}
+                >
                   {d}%
                 </button>
               ))}
@@ -125,26 +113,25 @@ export const CartSidebar = memo(({
           </div>
 
           {/* Totals */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: '.82rem', color: 'var(--text-secondary)', marginBottom: 12 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="flex flex-col gap-1 text-[0.82rem] text-text-secondary mb-3">
+            <div className="flex justify-between">
               <span>Subtotal</span><span>{fmt(subtotal)}</span>
             </div>
             {discount > 0 && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--status-success)' }}>
+              <div className="flex justify-between text-status-success">
                 <span>Discount ({discount}%)</span><span>-{fmt(discountAmt)}</span>
               </div>
             )}
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div className="flex justify-between">
               <span>Sales Tax (8.75%)</span><span>{fmt(tax)}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '1rem', color: 'var(--text-primary)', paddingTop: 6, borderTop: '1px solid var(--surface-border)', marginTop: 2 }}>
-              <span>Total</span><span style={{ color: 'var(--tux-navy)' }}>{fmt(total)}</span>
+            <div className="flex justify-between font-extrabold text-[1rem] text-text-primary pt-1.5 border-t border-surface-border mt-0.5">
+              <span>Total</span><span className="text-tux-navy">{fmt(total)}</span>
             </div>
           </div>
 
           <button
-            className="btn btn-gold"
-            style={{ width: '100%', fontSize: '.95rem', padding: '12px' }}
+            className="btn btn-gold w-full text-[0.95rem] p-3 shadow-gold"
             onClick={onCheckout}
           >
             Proceed to Checkout →

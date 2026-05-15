@@ -115,27 +115,17 @@ const Sidebar: React.FC = () => {
       <div className={`shrink-0 transition-[width] duration-200 ease-in-out ${collapsed ? 'w-[68px]' : 'w-[260px]'}`} />
 
       <nav
-        className="sidebar"
+        className={`sidebar fixed left-0 top-0 bottom-0 z-50 transition-[width] duration-200 ease-in-out ${isEffectivelyExpanded ? 'w-[260px]' : 'w-[68px]'} ${(collapsed && isEffectivelyExpanded) ? 'shadow-[4px_0_24px_rgba(0,0,0,0.2)]' : 'shadow-none'}`}
         aria-label="Main navigation"
         onMouseEnter={isPointerFine ? () => { setIsHovered(true); } : undefined}
         onMouseLeave={isPointerFine ? () => { setIsHovered(false); } : undefined}
-        style={{
-          width: isEffectivelyExpanded ? 260 : 68,
-          transition: 'width .2s ease',
-          position: 'fixed',
-          left: 0,
-          top: 0,
-          bottom: 0,
-          zIndex: 50,
-          boxShadow: (collapsed && isEffectivelyExpanded) ? '4px 0 24px rgba(0,0,0,0.2)' : 'none'
-        }}
       >
         {/* Logo */}
         <div className={`sidebar-logo ${isEffectivelyExpanded ? 'justify-start' : 'justify-center'}`}>
           <div className="sidebar-logo-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path d="M12 11L4 7v10l8 4 8-4V7l-8 4z" fill="white" />
-              <ellipse cx="12" cy="7" rx="8" ry="3" style={{ fill: 'var(--tux-gold)' }} />
+              <ellipse cx="12" cy="7" rx="8" ry="3" fill="var(--tux-gold)" />
             </svg>
           </div>
           {isEffectivelyExpanded && (
@@ -215,18 +205,18 @@ const Sidebar: React.FC = () => {
               </button>
               
               {isUserMenuOpen && (
-                <div className="absolute bottom-[calc(100%+8px)] left-3 right-3 bg-[var(--surface-card)] rounded-lg p-2 shadow-[var(--shadow-lg)] flex flex-col gap-1 z-[100] border border-[var(--surface-border)]">
+                <div className="absolute bottom-[calc(100%+8px)] left-3 right-3 bg-surface-card rounded-lg p-2 shadow-lg flex flex-col gap-1 z-[100] border border-surface-border">
                   <button
                     onClick={() => { setIsDark(d => !d); setIsUserMenuOpen(false); }}
-                    className="nav-item w-full text-left bg-none border-none justify-start text-[var(--text-primary)] whitespace-nowrap p-[8px_12px]"
+                    className="nav-item w-full text-left bg-transparent border-none justify-start text-text-primary whitespace-nowrap p-[8px_12px]"
                   >
-                    <SvgIcon name={isDark ? 'moon' : 'sun'} width="18" height="18" className="nav-icon shrink-0 text-[var(--text-secondary)]" />
+                    <SvgIcon name={isDark ? 'moon' : 'sun'} width="18" height="18" className="nav-icon shrink-0 text-text-secondary" />
                     <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
                   </button>
 
                   <button
                     onClick={handleLogout}
-                    className="nav-item w-full text-left bg-none border-none justify-start text-red-500/90 whitespace-nowrap p-[8px_12px]"
+                    className="nav-item w-full text-left bg-transparent border-none justify-start text-status-error/90 whitespace-nowrap p-[8px_12px]"
                   >
                     <SvgIcon name="logout" width="18" height="18" className="nav-icon shrink-0" />
                     <span>Sign out</span>
@@ -238,7 +228,7 @@ const Sidebar: React.FC = () => {
             <div className="flex flex-col gap-2">
               <button
                 onClick={() => { setIsDark(d => !d); }}
-                className="nav-item w-full text-left bg-none border-none justify-center text-white/80 whitespace-nowrap"
+                className="nav-item w-full text-left bg-transparent border-none justify-center text-white/80 whitespace-nowrap"
                 title="Toggle theme"
               >
                 <SvgIcon name={isDark ? 'moon' : 'sun'} width="18" height="18" className="nav-icon shrink-0" />
@@ -246,7 +236,7 @@ const Sidebar: React.FC = () => {
 
               <button
                 onClick={handleLogout}
-                className="nav-item w-full text-left bg-none border-none justify-center text-red-400/80 whitespace-nowrap"
+                className="nav-item w-full text-left bg-transparent border-none justify-center text-red-400/80 whitespace-nowrap"
                 title="Sign out"
               >
                 <SvgIcon name="logout" width="18" height="18" className="nav-icon shrink-0" />

@@ -9,6 +9,13 @@ import { RentalsModule } from './rentals/rentals.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { TailoringModule } from './tailoring/tailoring.module';
 import { AppointmentsModule } from './appointments/appointments.module';
+import { ReportsModule } from './reports/reports.module';
+import { SettingsModule } from './settings/settings.module';
+import { StaffModule } from './staff/staff.module';
+import { ReturnsModule } from './returns/returns.module';
+import { LoyaltyModule } from './loyalty/loyalty.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -22,6 +29,13 @@ import { AppointmentsModule } from './appointments/appointments.module';
     InventoryModule,
     TailoringModule,
     AppointmentsModule,
+    ReportsModule,
+    SettingsModule,
+    StaffModule,
+    ReturnsModule,
+    LoyaltyModule,
+    DashboardModule,
+    AdminModule,
   ],
 })
 export class AppModule {}

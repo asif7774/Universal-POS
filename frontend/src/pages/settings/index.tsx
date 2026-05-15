@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePlugins } from 'contexts/PluginContext';
+import { useSnackbar } from 'contexts/SnackbarContext';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
+import { useSettings, useUpdateSettings } from '../../lib/queries';
 import { SettingsTabType, StoreSettings } from 'types/settings';
 import { StoreInfoTab } from './components/StoreInfoTab';
 import { StaffTab } from './components/StaffTab';
@@ -8,26 +10,39 @@ import { TaxesTab } from './components/TaxesTab';
 import { ReceiptsTab } from './components/ReceiptsTab';
 import { SecurityTab } from './components/SecurityTab';
 
+// Fallback defaults used only while the API is loading or unavailable
+const DEFAULT_SETTINGS: StoreSettings = {
+  name: '', address: '', city: '', state: '', zip: '',
+  phone: '', email: '', taxRate: '0', currency: 'USD',
+  timezone: 'America/New_York', lateFeePerDay: '0',
+  depositPct: '0', rentalBuffer: '0',
+};
+
 const Settings: React.FC = () => {
   const { getSettingsPages } = usePlugins();
+  const { showSnackbar } = useSnackbar();
   const [tab, setTab] = useState('store');
-  const [saved, setSaved] = useState(false);
-  const [store, setStore] = useState({
-    name: 'TuxedoPOS HQ',
-    address: '123 Fifth Avenue',
-    city: 'New York', state: 'NY', zip: '10001',
-    phone: '(212) 555-0100',
-    email: 'contact@tuxedopos.com',
-    taxRate: '8.875',
-    currency: 'USD',
-    timezone: 'America/New_York',
-    lateFeePerDay: '25',
-    depositPct: '30',
-    rentalBuffer: '1',
-  });
+
+  // ── API integration ──
+  const { data: serverSettings, isLoading } = useSettings();
+  const updateSettings = useUpdateSettings();
+  const [store, setStore] = useState<StoreSettings>(DEFAULT_SETTINGS);
+
+  // Sync server data into local form state when loaded
+  useEffect(() => {
+    if (serverSettings) {
+      setStore(serverSettings);
+    }
+  }, [serverSettings]);
 
   const set = (k: string, v: string) => { setStore(s => ({ ...s, [k]: v })); };
-  const save = () => { setSaved(true); setTimeout(() => { setSaved(false); }, 2500); };
+
+  const save = () => {
+    updateSettings.mutate(store, {
+      onSuccess: () => showSnackbar('Settings saved successfully!', 'success'),
+      onError: () => showSnackbar('Failed to save settings.', 'error'),
+    });
+  };
 
   const TABS: { id: SettingsTabType; label: string; icon: string }[] = [
     { id: 'store',    label: 'Store Info',  icon: 'home' },
@@ -49,11 +64,11 @@ const Settings: React.FC = () => {
       <div className="page-header">
         <div>
           <h1 className="page-title">Settings</h1>
-          <p className="page-subtitle">TuxedoPOS HQ · Configure your store</p>
+          <p className="page-subtitle">{store.name || 'TuxedoPOS'} · Configure your store</p>
         </div>
         {tab !== 'staff' && (
-          <button className="btn btn-gold" onClick={save} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            {saved ? (
+          <button className="btn btn-gold" onClick={save} disabled={updateSettings.isPending} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            {updateSettings.isPending ? 'Saving...' : updateSettings.isSuccess ? (
               <>
                 <SvgIcon name="check-circle" width="14" height="14" /> Saved!
               </>
@@ -62,44 +77,48 @@ const Settings: React.FC = () => {
         )}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 20 }}>
-        {/* Sidebar nav */}
-        <div className="card" style={{ padding: 8, alignSelf: 'start' }}>
-          {TABS.map(t => (
-            <button key={t.id} onClick={() => { setTab(t.id); }}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 10, width: '100%',
-                padding: '10px 12px', border: 'none', borderRadius: 'var(--radius-md)',
-                background: tab === t.id ? 'var(--tux-navy)' : 'transparent',
-                color: tab === t.id ? 'white' : 'var(--text-secondary)',
-                cursor: 'pointer', fontSize: '.875rem', fontWeight: tab === t.id ? 700 : 500,
-                transition: 'all .15s', textAlign: 'left', marginBottom: 2,
-              }}>
-              <SvgIcon name={t.icon} width="16" height="16" /> {t.label}
-            </button>
-          ))}
-        </div>
+      {isLoading ? (
+        <div className="p-10 text-center text-[var(--text-muted)]">Loading settings...</div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 20 }}>
+          {/* Sidebar nav */}
+          <div className="card" style={{ padding: 8, alignSelf: 'start' }}>
+            {TABS.map(t => (
+              <button key={t.id} onClick={() => { setTab(t.id); }}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 10, width: '100%',
+                  padding: '10px 12px', border: 'none', borderRadius: 'var(--radius-md)',
+                  background: tab === t.id ? 'var(--tux-navy)' : 'transparent',
+                  color: tab === t.id ? 'white' : 'var(--text-secondary)',
+                  cursor: 'pointer', fontSize: '.875rem', fontWeight: tab === t.id ? 700 : 500,
+                  transition: 'all .15s', textAlign: 'left', marginBottom: 2,
+                }}>
+                <SvgIcon name={t.icon} width="16" height="16" /> {t.label}
+              </button>
+            ))}
+          </div>
 
-        {/* Content */}
-        <div>
-          {tab === 'store' && <StoreInfoTab store={store} set={set} />}
-          {tab === 'staff' && <StaffTab />}
-          {tab === 'taxes' && <TaxesTab store={store} set={set} />}
-          {tab === 'receipts' && <ReceiptsTab />}
-          {tab === 'security' && <SecurityTab />}
+          {/* Content */}
+          <div>
+            {tab === 'store' && <StoreInfoTab store={store} set={set} />}
+            {tab === 'staff' && <StaffTab />}
+            {tab === 'taxes' && <TaxesTab store={store} set={set} />}
+            {tab === 'receipts' && <ReceiptsTab />}
+            {tab === 'security' && <SecurityTab />}
 
-          {/* ── Plugin Settings ── */}
-          {activePluginPage && (
-            <div className="card">
-              <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <SvgIcon name="settings" width="18" height="18" style={{ color: 'var(--tux-gold)' }} />
-                <span className="card-title">{activePluginPage.title}</span>
+            {/* ── Plugin Settings ── */}
+            {activePluginPage && (
+              <div className="card">
+                <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <SvgIcon name="settings" width="18" height="18" style={{ color: 'var(--tux-gold)' }} />
+                  <span className="card-title">{activePluginPage.title}</span>
+                </div>
+                {activePluginPage.component}
               </div>
-              {activePluginPage.component}
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

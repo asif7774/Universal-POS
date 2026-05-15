@@ -12,7 +12,7 @@ export const RentalDetailModal = ({ selected, setSelected }: RentalDetailModalPr
   if (!selected) {return null;}
 
   const currentStatus = daysLeft(selected.returnDate) < 0 && selected.status === 'out' ? 'overdue' : selected.status;
-  const cfg = STATUS_CONFIG[currentStatus];
+  const cfg = STATUS_CONFIG[currentStatus as keyof typeof STATUS_CONFIG] || { cls: 'badge-gray', icon: 'help-circle' };
 
   return (
     <Modal

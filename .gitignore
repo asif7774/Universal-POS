@@ -45,3 +45,10 @@ coverage/
 
 # Drizzle migrations (committed deliberately, so excluded here)
 # !backend/drizzle/migrations/
+# Database
+*.db
+*.sqlite
+
+# Local env files
+.env.development
+.env.production

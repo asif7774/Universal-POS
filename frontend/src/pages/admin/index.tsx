@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useAuth } from 'contexts/AuthContext';
 import { Navigate } from 'react-router-dom';
-import { MOCK_TENANTS } from 'constants/admin';
+import { useAdminTenants } from '../../lib/queries';
 import { GlobalStats } from './components/GlobalStats';
 import { TenantList } from './components/TenantList';
+import { NewTenantModal } from './components/NewTenantModal';
 
 const AdminPanel: React.FC = () => {
   const { user } = useAuth();
@@ -15,6 +16,9 @@ const AdminPanel: React.FC = () => {
     return <Navigate to="/dashboard" replace />;
   }
 
+  const { data: tenants = [], isLoading } = useAdminTenants();
+  const [showNewTenant, setShowNewTenant] = useState(false);
+
   return (
     <div className="animate-fade-in">
       <div className="page-header">
@@ -22,16 +26,22 @@ const AdminPanel: React.FC = () => {
           <h1 className="page-title">Super Admin</h1>
           <p className="page-subtitle">Global oversight and tenant management</p>
         </div>
-        <button className="btn btn-navy">+ New Tenant</button>
+        <button className="btn btn-navy" onClick={() => { setShowNewTenant(true); }}>+ New Tenant</button>
       </div>
 
       <GlobalStats />
       
-      <TenantList 
-        tenants={MOCK_TENANTS} 
-        search={search} 
-        setSearch={setSearch} 
-      />
+      {isLoading ? (
+        <div className="p-10 text-center text-[var(--text-muted)]">Loading tenants...</div>
+      ) : (
+        <TenantList 
+          tenants={tenants} 
+          search={search} 
+          setSearch={setSearch} 
+        />
+      )}
+
+      {showNewTenant && <NewTenantModal onClose={() => { setShowNewTenant(false); }} />}
     </div>
   );
 };

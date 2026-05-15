@@ -70,53 +70,82 @@ Universal-POS/
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | React 19, Vite, TypeScript |
-| Styling | Vanilla CSS (custom design system) |
-| State | Zustand + TanStack Query *(coming soon)* |
+| Frontend | React 19, Vite, TypeScript, TanStack Query |
+| Styling | Vanilla CSS (Premium Custom Design System) |
 | Backend | NestJS 11, TypeScript |
 | Auth | JWT + Passport.js |
-| ORM | Drizzle ORM *(coming soon)* |
-| Database | PostgreSQL 16 *(coming soon)* |
+| ORM | Drizzle ORM (PostgreSQL) |
+| Database | PostgreSQL 16 |
 
 ---
 
-## ✅ Week 1 Features
+## 🚀 Development & Seeding
 
-- [x] Premium login (email + PIN modes)
-- [x] Role-based navigation (Owner / Manager / Cashier)
-- [x] Dashboard with stats, alerts, fleet status
-- [x] POS Terminal with cart, rentals, tax, checkout
-- [x] Rental Management (status tracking, overdue detection)
-- [x] Customer Profiles + Measurements
-- [x] Tailoring Jobs (Kanban + List view)
-- [x] Inventory with size-grid availability
-- [x] NestJS API with Auth + Products endpoints
-- [ ] PostgreSQL + Drizzle ORM (Day 3)
-- [ ] Appointments calendar (Day 3)
-- [ ] Reports & Analytics (Day 4)
+### 1. Database Setup
+Ensure you have a PostgreSQL instance running. Update `backend/.env` with your `DATABASE_URL`.
+
+### 2. Seeding Data
+To populate the system with comprehensive sample data (last 30 days of orders, rentals, inventory, etc.):
+```bash
+cd backend
+npx ts-node src/db/seed.ts
+```
 
 ---
 
-## 📡 API Endpoints
+---
 
-### Auth
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/v1/auth/login` | Email + password login |
-| POST | `/api/v1/auth/login/pin` | Cashier PIN login |
-| POST | `/api/v1/auth/refresh` | Refresh JWT token |
-| POST | `/api/v1/auth/logout` | Logout |
+## 🗺️ Roadmap & Progress
 
-### Products *(JWT required)*
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/products` | List products |
-| GET | `/api/v1/products/categories` | Get categories |
-| GET | `/api/v1/products/:id` | Get product |
-| POST | `/api/v1/products` | Create product |
-| PUT | `/api/v1/products/:id` | Update product |
-| DELETE | `/api/v1/products/:id` | Deactivate product |
+### Phase 1: Foundation (Completed)
+- [x] Multi-tenant architecture & Store isolation
+- [x] Premium Custom Design System (Tuxedo Navy & Gold)
+- [x] Secure JWT-based Authentication (Email & PIN)
+- [x] Basic CRUD for Products, Customers, and Orders
+
+### Phase 2: Modernization (Completed)
+- [x] **Full API Synchronization**: Eliminated all mock data.
+- [x] **Reporting Suite**: Real-time revenue and sales analytics.
+- [x] **Inventory Grid**: Responsive size/stock management.
+- [x] **Rental Lifecycle**: Pickup, Return, and Overdue automation.
+
+### Phase 3: Advanced Features (Upcoming)
+- [ ] **Offline Mode**: Seamless operation during internet outages using IndexedDB (Dexie.js).
+- [ ] **Predictive Analytics**: Demand forecasting for rental inventory.
+- [ ] **Customer Portal**: Self-service measurements and booking tracking.
+- [ ] **Hardware Integration**: Direct printing (Zebra/Star) and Barcode scanner native support.
+- [ ] **Automated Marketing**: SMS/Email loyalty rewards and birthday campaigns.
 
 ---
 
-*Built with ❤️ for the US formal wear rental industry.*
+## 🛠️ Tech Stack & Architecture
+
+### Frontend
+- **Framework**: React 19 (Stable)
+- **Tooling**: Vite 6, TypeScript 5.9
+- **State Management**: TanStack Query v5 (Server State) + React Context (Auth/UI)
+- **Styling**: Vanilla CSS with CSS Variables (BEM naming convention)
+- **Charts**: Recharts (Optimized for performance)
+
+### Backend
+- **Framework**: NestJS 11
+- **Database**: PostgreSQL 16
+- **ORM**: Drizzle ORM (Type-safe SQL builder)
+- **Auth**: Passport.js + JWT Strategy
+
+---
+
+## 📡 Core API Reference
+
+### System Health & Monitoring
+- `GET /api/v1/dashboard/alerts`: Active system/rental warnings.
+- `GET /api/v1/admin/stats`: Global MRR and terminal health.
+
+### Transactional
+- `POST /api/v1/orders`: Mixed Sale/Rental checkout.
+- `POST /api/v1/returns`: Process partial or full order returns.
+- `PATCH /api/v1/rentals/:id/checkin`: Rental return with condition tracking.
+
+---
+
+*Built with ❤️ for the US formal wear rental industry. Optimized for performance and scale.*

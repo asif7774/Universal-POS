@@ -259,3 +259,25 @@ export const tailoringJobs = pgTable('tailoring_jobs', {
   createdAt:   timestamp('created_at').notNull().defaultNow(),
   updatedAt:   timestamp('updated_at').notNull().defaultNow(),
 }, t => [index('tailoring_tenant_idx').on(t.tenantId)]);
+
+// ── Returns ──────────────────────────────────────────────────
+export const returns = pgTable('returns', {
+  id:           uuid('id').primaryKey().defaultRandom(),
+  tenantId:     uuid('tenant_id').notNull().references(() => tenants.id),
+  orderId:      uuid('order_id').references(() => orders.id),
+  orderNo:      varchar('order_no', { length: 50 }).notNull(),
+  customerName: varchar('customer_name', { length: 255 }),
+  reason:       text('reason'),
+  status:       varchar('status', { length: 50 }).notNull().default('pending'),
+  refundAmount: numeric('refund_amount', { precision: 10, scale: 2 }).notNull().default('0'),
+  createdAt:    timestamp('created_at').defaultNow().notNull(),
+  updatedAt:    timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const returnItems = pgTable('return_items', {
+  id:           uuid('id').primaryKey().defaultRandom(),
+  returnId:     uuid('return_id').notNull().references(() => returns.id),
+  name:         varchar('name', { length: 255 }).notNull(),
+  qty:          integer('qty').notNull().default(1),
+  unitPrice:    numeric('unit_price', { precision: 10, scale: 2 }),
+});

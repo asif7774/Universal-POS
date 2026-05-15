@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { Rental, RentalStatus } from 'types/rentals';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
@@ -41,7 +41,7 @@ export const RentalTable = memo(({ filtered, setSelected }: RentalTableProps) =>
             const isOverdue = r.status === 'out' && daysLeft(r.returnDate) < 0;
             const computedStatus = isOverdue ? 'overdue' : r.status;
             const days = daysLeft(r.returnDate);
-            const cfg = STATUS_CONFIG[computedStatus];
+            const cfg = STATUS_CONFIG[computedStatus as RentalStatus] || { cls: 'badge-gray', icon: 'help-circle' };
             const customerName = r.customer ? `${r.customer.firstName} ${r.customer.lastName}` : 'Unknown';
             const phone = r.customer ? r.customer.phone : '';
             

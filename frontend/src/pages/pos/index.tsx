@@ -3,20 +3,23 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../lib/apiClient';
 import { useSnackbar } from 'contexts/SnackbarContext';
 import { usePlugins } from 'contexts/PluginContext';
+import { useSettings } from '../../lib/queries';
 import { processCardPayment } from '../../lib/payments';
 import { HAL } from '../../lib/hardware';
 import { Product, CartItem } from 'types/pos';
+import { InventoryItem } from 'types/inventory';
 import { ProductGrid } from './components/ProductGrid';
+import { TableSkeleton } from 'components/atoms/skeleton/Skeleton';
 import { CartSidebar } from './components/CartSidebar';
 import { CheckoutModal } from './checkout/CheckoutModal';
 import { OrderCompleteModal } from './checkout/OrderCompleteModal';
-
-const TAX_RATE = 0.0875; // 8.75% CA sales tax example
 
 const POS: React.FC = () => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
   const { getCheckoutExtensions } = usePlugins();
+  const { data: settings } = useSettings();
+  const TAX_RATE = settings?.taxRate ? parseFloat(settings.taxRate) / 100 : 0.0875;
 
   // -- State --
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -34,23 +37,38 @@ const POS: React.FC = () => {
   const [processingPayment, setProcessingPayment] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
 
-  // -- Data --
-  const { data: products = [] } = useQuery<Product[]>({
-    queryKey: ['products'],
-    queryFn: async () => {
-      const data = await apiClient.get<any[]>('/products');
-      return data.map(p => ({
+  // Fetch inventory for real stock levels
+  const { data: inventory = [] } = useQuery<InventoryItem[]>({
+    queryKey: ['inventory'],
+    queryFn: () => apiClient.get<InventoryItem[]>('/inventory'),
+    staleTime: 2 * 60 * 1000,
+  });
+
+  const { data: rawProducts = [], isLoading: isLoadingProducts } = useQuery<any[]>({
+    queryKey: ['products-raw'],
+    queryFn: () => apiClient.get<any[]>('/products'),
+  });
+
+  const products = React.useMemo(() => {
+    return rawProducts.map(p => {
+      // Cross-reference with inventory for real stock
+      const inv = inventory.find((i: InventoryItem) => i.sku === p.sku);
+      const totalStock = inv
+        ? Object.values(inv.sizes).reduce((sum: number, s: { available: number }) => sum + s.available, 0)
+        : 0;
+
+      return {
         id: p.id,
         name: p.name,
         sku: p.sku,
         price: p.salePrice ? parseFloat(p.salePrice) : 0,
         type: p.type,
         category: p.category,
-        stock: 99,
+        stock: totalStock,
         rentalRate: p.rentalRatePerDay ? parseFloat(p.rentalRatePerDay) : undefined
-      }));
-    }
-  });
+      } as Product;
+    });
+  }, [rawProducts, inventory]);
 
   const { data: customers = [] } = useQuery<{ id: string; firstName: string; lastName: string }[]>({
     queryKey: ['customers-list'],
@@ -211,7 +229,7 @@ const POS: React.FC = () => {
   };
 
   const printReceipt = async () => {
-    const storeName = 'TuxedoPOS';
+    const storeName = settings?.name || 'TuxedoPOS';
     const receiptItems = (completedOrder?.items ?? cart).map((i: any) => {
       const name = i.name ?? i.product?.name;
       const qty = i.qty;
@@ -243,16 +261,20 @@ const POS: React.FC = () => {
 
   return (
     <div className={`grid h-screen gap-0 -mx-6 -mb-6 overflow-hidden transition-[grid-template-columns] duration-300 ease-in-out ${cart.length > 0 ? 'grid-cols-[1fr_360px]' : 'grid-cols-1'}`}>
-      <ProductGrid
-        products={products}
-        search={search}
-        setSearch={setSearch}
-        category={category}
-        setCategory={setCategory}
-        categories={CATEGORIES}
-        onAddToCart={addToCart}
-        searchRef={searchRef}
-      />
+      {isLoadingProducts ? (
+        <div className="p-8"><TableSkeleton rows={10} cols={4} /></div>
+      ) : (
+        <ProductGrid
+          products={products}
+          search={search}
+          setSearch={setSearch}
+          category={category}
+          setCategory={setCategory}
+          categories={CATEGORIES}
+          onAddToCart={addToCart}
+          searchRef={searchRef}
+        />
+      )}
 
       {cart.length > 0 && (
         <CartSidebar

@@ -1,6 +1,10 @@
 import React from 'react';
 import { RecentOrder } from 'types/dashboard';
-import { STATUS_BADGE } from 'constants/dashboard';
+
+const STATUS_BADGE: Record<string, string> = {
+  Completed: 'badge-green', Out: 'badge-navy', Processing: 'badge-yellow',
+  Booked: 'badge-gold', Overdue: 'badge-red',
+};
 
 export const RecentOrders: React.FC<{ orders: RecentOrder[] }> = ({ orders }) => (
   <div className="card p-0 overflow-hidden">

@@ -7,6 +7,7 @@ import { Customer, Measurement } from 'types/customers';
 import { CustomerCard } from './components/CustomerCard';
 import { NewCustomerForm } from './components/NewCustomerForm';
 import { CustomerDetailModal } from './components/CustomerDetailModal';
+import { CardSkeleton } from 'components/atoms/skeleton/Skeleton';
 
 const Customers: React.FC = () => {
   const [search, setSearch] = useState('');
@@ -93,7 +94,9 @@ const Customers: React.FC = () => {
       ) : (
         <>
           {isLoading ? (
-            <div className="p-10 text-center text-[var(--text-muted)]">Loading customers...</div>
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
+              {Array.from({ length: 6 }).map((_, i) => <CardSkeleton key={i} />)}
+            </div>
           ) : (
             <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
               {filtered.map(c => (

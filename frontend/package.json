@@ -1,27 +1,19 @@
 {
-  "name": "vital",
+  "name": "@tuxedopos/web",
   "type": "module",
-  "version": "1.0.0",
-  "description": "🚀 Optimized Vite + React 19 + TypeScript + Tailwind CSS 4 boilerplate template with modern tooling and best practices",
+  "version": "0.1.0",
+  "description": "Universal POS — Modern, data-driven Point of Sale platform for Formalwear and Retail.",
   "keywords": [
-    "vite",
-    "react",
-    "typescript",
-    "tailwind",
-    "template",
-    "boilerplate",
-    "starter",
-    "modern",
-    "optimized",
-    "tailwind-css-4",
-    "react-19",
-    "vitest",
-    "eslint"
+    "pos",
+    "retail",
+    "formalwear",
+    "tuxedo-rental",
+    "inventory-management"
   ],
-  "homepage": "https://github.com/asif7774/vital#readme",
+  "homepage": "https://github.com/asif7774/Universal-POS#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/asif7774/vital.git"
+    "url": "git+https://github.com/asif7774/Universal-POS.git"
   },
   "bugs": {
     "url": "https://github.com/asif7774/vital/issues"

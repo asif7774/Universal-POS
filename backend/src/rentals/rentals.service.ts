@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { db } from '../db';
-import { rentals, rentalItems } from '../db/schema';
+import { rentals, rentalItems, customers } from '../db/schema';
 import { eq, and, sql } from 'drizzle-orm';
 
 export interface RentalItem {
@@ -49,15 +49,43 @@ const getDaysOverdue = (returnDate: string) => {
 export class RentalsService {
   async findAll(tenantId: string, status?: string): Promise<Rental[]> {
     const conditions = status ? and(eq(rentals.tenantId, tenantId), eq(rentals.status, status)) : eq(rentals.tenantId, tenantId);
-    const res = await db.select().from(rentals).where(conditions).orderBy(rentals.returnDate);
-    return res as unknown as Rental[];
+    const res = await db.select({
+      rental: rentals,
+      customer: {
+        id: customers.id,
+        firstName: customers.firstName,
+        lastName: customers.lastName,
+        phone: customers.phone,
+        email: customers.email,
+      }
+    })
+    .from(rentals)
+    .leftJoin(customers, eq(rentals.customerId, customers.id))
+    .where(conditions)
+    .orderBy(rentals.returnDate);
+    
+    return res.map(row => ({ ...row.rental, customer: row.customer })) as unknown as Rental[];
   }
 
   async findById(id: string, tenantId: string): Promise<Rental> {
-    const res = await db.select().from(rentals).where(and(eq(rentals.id, id), eq(rentals.tenantId, tenantId))).limit(1);
+    const res = await db.select({
+      rental: rentals,
+      customer: {
+        id: customers.id,
+        firstName: customers.firstName,
+        lastName: customers.lastName,
+        phone: customers.phone,
+        email: customers.email,
+      }
+    })
+    .from(rentals)
+    .leftJoin(customers, eq(rentals.customerId, customers.id))
+    .where(and(eq(rentals.id, id), eq(rentals.tenantId, tenantId)))
+    .limit(1);
+
     if (!res[0]) throw new NotFoundException(`Rental ${id} not found`);
     const itemsRes = await db.select().from(rentalItems).where(eq(rentalItems.rentalId, id));
-    return { ...res[0], items: itemsRes } as unknown as Rental;
+    return { ...res[0].rental, customer: res[0].customer, items: itemsRes } as unknown as Rental;
   }
 
   async findByCustomer(customerId: string, tenantId: string): Promise<Rental[]> {
@@ -67,10 +95,27 @@ export class RentalsService {
 
   async findOverdue(tenantId: string): Promise<Array<Rental & { daysOverdue: number }>> {
     const today = new Date().toISOString().split('T')[0];
-    const res = await db.select().from(rentals).where(and(eq(rentals.tenantId, tenantId), eq(rentals.status, 'out')));
+    const res = await db.select({
+      rental: rentals,
+      customer: {
+        id: customers.id,
+        firstName: customers.firstName,
+        lastName: customers.lastName,
+        phone: customers.phone,
+        email: customers.email,
+      }
+    })
+    .from(rentals)
+    .leftJoin(customers, eq(rentals.customerId, customers.id))
+    .where(and(eq(rentals.tenantId, tenantId), eq(rentals.status, 'out')));
+
     return res
-      .filter(r => r.returnDate < today)
-      .map(r => ({ ...r, daysOverdue: getDaysOverdue(r.returnDate) }))
+      .filter(row => row.rental.returnDate < today)
+      .map(row => ({ 
+        ...row.rental, 
+        customer: row.customer, 
+        daysOverdue: getDaysOverdue(row.rental.returnDate) 
+      }))
       .sort((a, b) => b.daysOverdue - a.daysOverdue) as unknown as Array<Rental & { daysOverdue: number }>;
   }
 

@@ -17,27 +17,27 @@ export const InventoryCard = memo(({ item, onClick }: InventoryCardProps) => {
   const hasOut = Object.values(item.sizes).some(s => s.available === 0);
 
   return (
-    <div className="card" style={{ cursor: 'pointer' }} onClick={onClick}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14 }}>
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <div style={{ width: 42, height: 42, background: 'var(--surface-hover)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: 'var(--tux-navy)' }}>
+    <div className="card cursor-pointer" onClick={onClick}>
+      <div className="flex justify-between items-start mb-3.5">
+        <div className="flex gap-3 items-center">
+          <div className="w-[42px] h-[42px] bg-surface-hover rounded-[10px] flex items-center justify-center shrink-0 text-tux-navy">
             <SvgIcon name={item.category === 'Tuxedos' ? 'tuxedo' : item.category === 'Shoes' ? 'shoe' : item.category === 'Accessories' ? 'accessory' : 'inventory'} width="22" height="22" />
           </div>
           <div>
-            <div style={{ fontWeight: 700, fontSize: '.95rem' }}>{item.name}</div>
-            <div style={{ fontSize: '.78rem', color: 'var(--text-muted)' }}>
+            <div className="font-bold text-[0.95rem]">{item.name}</div>
+            <div className="text-[0.78rem] text-text-muted">
               {item.sku} · {item.location} · {item.condition}
             </div>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexShrink: 0 }}>
+        <div className="flex gap-1.5 items-center shrink-0">
           {hasLow && (
-            <span className="badge badge-yellow" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            <span className="badge badge-yellow inline-flex items-center gap-1">
               <SvgIcon name="warning" width="12" height="12" /> Low Stock
             </span>
           )}
           {hasOut && (
-            <span className="badge badge-red" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            <span className="badge badge-red inline-flex items-center gap-1">
               <SvgIcon name="warning" width="12" height="12" /> Out of Stock
             </span>
           )}
@@ -48,17 +48,22 @@ export const InventoryCard = memo(({ item, onClick }: InventoryCardProps) => {
       </div>
 
       {/* Size grid */}
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+      <div className="flex gap-2 flex-wrap">
         {Object.entries(item.sizes).map(([size, data]) => (
-          <div key={size} style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '.68rem', color: 'var(--text-muted)', marginBottom: 3, fontWeight: 600 }}>{size}</div>
+          <div key={size} className="text-center">
+            <div className="text-[0.68rem] text-text-muted mb-0.5 font-semibold">{size}</div>
             <SizeCell data={data} lowThreshold={item.lowStockThreshold} />
           </div>
         ))}
-        <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto', gap: 6 }}>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '.75rem', color: 'var(--text-muted)' }}>Total Available</div>
-            <div style={{ fontSize: '1.2rem', fontWeight: 900, color: 'var(--tux-navy)' }}>{totalAvail} / {totalAll}</div>
+        <div className="flex items-center ml-auto gap-1.5">
+          <div className="text-right">
+            <div className="text-[0.75rem] text-text-muted">Total Available</div>
+            <div 
+              className="text-[1.2rem] font-black"
+              style={{ color: totalAvail === 0 ? 'var(--status-error)' : totalAvail <= item.lowStockThreshold ? 'var(--status-warning)' : 'var(--status-success)' }}
+            >
+              {totalAvail} / {totalAll}
+            </div>
           </div>
         </div>
       </div>
