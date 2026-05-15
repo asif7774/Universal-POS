@@ -1,0 +1,62 @@
+import React from 'react';
+import { Modal } from 'components/atoms/modal/Modal';
+import { CartItem } from '../types';
+
+interface OrderCompleteModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  orderId: string;
+  cart: CartItem[];
+  total: number;
+  paymentMethod: string;
+  change: number;
+  onPrintReceipt: () => void;
+}
+
+const fmt = (n: number) => `$${n.toFixed(2)}`;
+
+export const OrderCompleteModal = ({
+  isOpen, onClose, orderId, cart, total, paymentMethod, change, onPrintReceipt
+}: OrderCompleteModalProps) => {
+
+  return (
+    <Modal 
+      isOpen={isOpen} 
+      onClose={onClose}
+      maxWidth={380}
+    >
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ fontSize: '3.5rem', marginBottom: 12 }}>✅</div>
+        <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.4rem', marginBottom: 6 }}>Sale Complete!</h3>
+        <code style={{ fontSize: '.85rem', color: 'var(--tux-navy)', fontWeight: 700 }}>{orderId}</code>
+
+        <div style={{ margin: '20px 0', padding: '14px', background: 'var(--surface-hover)', borderRadius: 'var(--radius-md)', textAlign: 'left', fontSize: '.85rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+            <span style={{ color: 'var(--text-muted)' }}>Items</span><span style={{ fontWeight: 600 }}>{cart.length}</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+            <span style={{ color: 'var(--text-muted)' }}>Total Charged</span><span style={{ fontWeight: 700, color: 'var(--tux-navy)' }}>{fmt(total)}</span>
+          </div>
+          {paymentMethod === 'cash' && change > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Change</span><span style={{ fontWeight: 700, color: 'var(--status-success)' }}>{fmt(change)}</span>
+            </div>
+          )}
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
+            <span style={{ color: 'var(--text-muted)' }}>Payment</span>
+            <span style={{ fontWeight: 600, textTransform: 'capitalize' }}>{paymentMethod}</span>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 8, flexDirection: 'column' }}>
+          <button className="btn btn-outline" style={{ width: '100%', fontSize: '.85rem' }} onClick={onPrintReceipt}>
+            🖨️ Print Receipt
+          </button>
+          <button className="btn btn-gold" style={{ width: '100%' }} onClick={onClose}>
+            + New Order
+          </button>
+        </div>
+      </div>
+    </Modal>
+  );
+};

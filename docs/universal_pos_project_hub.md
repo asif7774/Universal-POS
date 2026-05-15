@@ -322,6 +322,7 @@ gantt
     Stripe / Razorpay integration        :done, p5b, after p4d, 5d
     Advanced reporting                   :done, p5c, after p5b, 7d
     Hardware abstraction layer           :done, p5d, after p5a, 5d
+
     section Phase 6: Refactoring
     Decompose POS.tsx (God Component)    :p6a, after p5d, 4d
     Performance (React.memo & Lazy load) :p6b, after p6a, 3d
