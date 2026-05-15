@@ -1,7 +1,7 @@
 # TuxedoPOS — Project Hub
 
 > **Living document** — Single source of truth for all project decisions, progress, and tracking.
-> Last updated: 2026-05-14
+> Last updated: 2026-05-15
 > **Product:** TuxedoPOS — Vertical SaaS POS for Tuxedo & Formal Wear Businesses
 > **Deadline:** 1 week (by ~2026-05-21)
 > **Market:** 🇺🇸 US Only
@@ -261,8 +261,8 @@
 |---|---|---|
 | **Frontend** | React 19 + Vite 8 + TypeScript 5.9 | ✅ Confirmed (existing) |
 | **Styling** | Tailwind CSS 4 | ✅ Confirmed (existing) |
-| **Client State** | Zustand | 📋 Proposed |
-| **Server State** | TanStack Query v5 | 📋 Proposed |
+| **Client State** | Zustand | ✅ Confirmed |
+| **Server State** | TanStack Query v5 | ✅ Confirmed |
 | **Offline** | Dexie.js + Workbox | 📋 Proposed |
 | **Forms** | React Hook Form + Zod | 📋 Proposed |
 | **Backend** | NestJS 11 | ⏳ Awaiting confirmation |
@@ -340,7 +340,8 @@ gantt
 | **M3: Offline-First** | Week 9 | Works without internet, syncs on reconnect |
 | **M4: MVP** | Week 11 | Plugin system, retail domain, tenant config, admin panel | ✅ |
 | **M5: Scale** | Week 14+ | Restaurant domain, card payments, reporting, hardware | ✅ |
-| **M6: Refactoring & Polish** | Week 16 | Decomposed components, memoized renders, resolved coupling, prod-ready |
+| **M6: Modernization & Refactoring** | Week 16 | Tailwind CSS 4 migration, POS reactive sync, TableSkeletons, structural cleanup | ✅ |
+| **M7: Offline-First (Next)** | Week 18 | Dexie.js + Sync Engine (Phase 3) | 📋 |
 
 ---
 
@@ -382,6 +383,9 @@ gantt
 | Plugin Loader | Antigravity | ✅ Done | Phase 4 — Dynamic plugin architecture |
 | Tenant Config | Antigravity | ✅ Done | Phase 4 — Settings and configuration per tenant |
 | Admin Panel | Antigravity | ✅ Done | Phase 4 — Super-admin oversight |
+| **UI Modernization** | Antigravity | ✅ Done | Migrated to Tailwind CSS 4, integrated design system tokens |
+| **POS Stabilization** | Antigravity | ✅ Done | Reactive stock sync (useMemo), TableSkeletons, centered status indicators |
+| **IDE Optimization** | Antigravity | ✅ Done | Fixed @theme linter warnings via .vscode settings |
 
 ### Completed
 

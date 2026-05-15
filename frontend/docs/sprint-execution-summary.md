@@ -90,44 +90,38 @@
 
 ---
 
-## Files Modified (17)
+## ✅ Sprint 5 — UI Modernization & POS Stabilization
+
+### 5.1 POS Reactive Integrity
+- **Reactive Stock Sync**: Refactored `POS/index.tsx` to derive stock counts using `useMemo` from `products` and `inventory` queries. Resolves "0 stock" race conditions.
+- **Loading UX**: Implemented `TableSkeleton` with shimmer effect for the product grid.
+- **Visual Status**: Standardized stock indicators (Green/Yellow/Red) with center alignment across POS and Inventory.
+
+### 5.2 Tailwind CSS 4 Migration
+- **Design Tokens**: Defined `@theme` in `index.css` using custom brand variables.
+- **Core Refactors**: Migrated the following from inline styles to Tailwind:
+    - `Sidebar.tsx`
+    - `Dashboard/index.tsx`
+    - `ProductGrid.tsx`
+    - `CartSidebar.tsx`
+    - `StatCard.tsx`
+    - `KPICards.tsx`
+    - `InventoryCard.tsx`
+- **IDE Support**: Created `.vscode/settings.json` to suppress `@theme` lint warnings.
+
+---
+
+## Files Modified (25)
 
 | File | Change |
 |---|---|
-| `src/lib/queries.ts` | +25 hooks, +5 interfaces, +11 query keys |
-| `src/lib/apiClient.ts` | No changes needed — already had PUT/DELETE |
-| `src/pages/settings/index.tsx` | Full rewrite → API-driven |
-| `src/pages/settings/components/StaffTab.tsx` | Full rewrite → API-driven |
-| `src/pages/dashboard/index.tsx` | Replaced all 3 constant imports + store name |
-| `src/pages/dashboard/components/RecentOrders.tsx` | Inlined STATUS_BADGE |
-| `src/pages/reports/index.tsx` | Full rewrite → period-filtered API data |
-| `src/pages/reports/components/KPICards.tsx` | Removed hardcoded fallback values |
-| `src/pages/pos/index.tsx` | Dynamic tax, stock, store name |
-| `src/pages/appointments/components/NewApptModal.tsx` | Dynamic staff dropdown |
-| `src/pages/tailoring/index.tsx` | Wired "+ New Job Card" button |
-| `src/pages/admin/index.tsx` | Full rewrite → API-driven |
-| `src/pages/admin/components/GlobalStats.tsx` | Full rewrite → API-driven |
-| `src/plugins/retail/index.tsx` | Wired to ReturnsPage |
-
-## Files Created (5)
-
-| File | Purpose |
-|---|---|
-| `.env.development` | Dev environment config |
-| `.env.production` | Production environment config |
-| `.env.example` | Template for onboarding |
-| `src/pages/tailoring/components/NewTailoringJobModal.tsx` | Tailoring job creation form |
-| `src/plugins/retail/pages/ReturnsPage.tsx` | Returns & Exchanges table page |
-
-## Files Now Deletable (3)
-
-These constants files are no longer imported anywhere:
-
-| File | Former Contents |
-|---|---|
-| `src/constants/dashboard.ts` | `RECENT_ORDERS`, `UPCOMING_RENTALS`, `ALERTS`, `STATUS_BADGE` |
-| `src/constants/admin.ts` | `MOCK_TENANTS` |
-| `src/constants/settings.ts` | `STAFF`, `ROLE_BADGE` |
+| `src/index.css` | Added Tailwind 4 `@theme` configuration |
+| `src/pages/pos/index.tsx` | Reactive `useMemo` stock logic + Skeletons |
+| `src/pages/pos/components/ProductGrid.tsx` | Tailwind migration + Status color logic |
+| `src/components/organisms/sidebar/Sidebar.tsx` | Tailwind migration + Collapsed state logic |
+| `src/pages/dashboard/index.tsx` | Tailwind migration + Gradient headers |
+| `src/pages/dashboard/components/StatCard.tsx` | Tailwind migration + Hover effects |
+| `.vscode/settings.json` | Linter suppression |
 
 ## Compilation Status
 

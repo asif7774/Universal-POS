@@ -68,10 +68,7 @@ Universal-POS/
 
 ## 🏗️ Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 19, Vite, TypeScript, TanStack Query |
-| Styling | Vanilla CSS (Premium Custom Design System) |
+| Styling | Tailwind CSS 4 (Custom Premium Theme) |
 | Backend | NestJS 11, TypeScript |
 | Auth | JWT + Passport.js |
 | ORM | Drizzle ORM (PostgreSQL) |
@@ -99,22 +96,22 @@ npx ts-node src/db/seed.ts
 
 ### Phase 1: Foundation (Completed)
 - [x] Multi-tenant architecture & Store isolation
-- [x] Premium Custom Design System (Tuxedo Navy & Gold)
+- [x] Premium Design System (Tuxedo Navy & Gold)
 - [x] Secure JWT-based Authentication (Email & PIN)
 - [x] Basic CRUD for Products, Customers, and Orders
 
-### Phase 2: Modernization (Completed)
+### Phase 2: Modernization & Stabilization (Completed)
+- [x] **Tailwind CSS 4 Migration**: Global transition to utility-first styling.
+- [x] **Reactive Stock Sync**: Resolved POS inventory reporting race conditions.
 - [x] **Full API Synchronization**: Eliminated all mock data.
 - [x] **Reporting Suite**: Real-time revenue and sales analytics.
-- [x] **Inventory Grid**: Responsive size/stock management.
-- [x] **Rental Lifecycle**: Pickup, Return, and Overdue automation.
+- [x] **Loading States**: Integrated high-fidelity skeletons and shimmer effects.
 
 ### Phase 3: Advanced Features (Upcoming)
 - [ ] **Offline Mode**: Seamless operation during internet outages using IndexedDB (Dexie.js).
 - [ ] **Predictive Analytics**: Demand forecasting for rental inventory.
 - [ ] **Customer Portal**: Self-service measurements and booking tracking.
 - [ ] **Hardware Integration**: Direct printing (Zebra/Star) and Barcode scanner native support.
-- [ ] **Automated Marketing**: SMS/Email loyalty rewards and birthday campaigns.
 
 ---
 
@@ -123,8 +120,8 @@ npx ts-node src/db/seed.ts
 ### Frontend
 - **Framework**: React 19 (Stable)
 - **Tooling**: Vite 6, TypeScript 5.9
-- **State Management**: TanStack Query v5 (Server State) + React Context (Auth/UI)
-- **Styling**: Vanilla CSS with CSS Variables (BEM naming convention)
+- **Styling**: Tailwind CSS 4 with @theme directives
+- **State Management**: TanStack Query v5 + Zustand
 - **Charts**: Recharts (Optimized for performance)
 
 ### Backend
