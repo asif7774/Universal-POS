@@ -5,6 +5,7 @@ import { Modal } from 'components/atoms/modal/Modal';
 import { useSnackbar } from 'contexts/SnackbarContext';
 import { usePlugins } from 'contexts/PluginContext';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
+import { processCardPayment } from '../lib/payments';
 
 // ── Types ─────────────────────────────────────────────────────
 interface Product {
@@ -56,6 +57,7 @@ const POS: React.FC = () => {
   const [completedOrder, setCompletedOrder] = useState<any>(null);
   const [customerSearch, setCustomerSearch] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState<{id:string;firstName:string;lastName:string} | null>(null);
+  const [processingPayment, setProcessingPayment] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
 
   const { data: products = [] } = useQuery<Product[]>({
@@ -185,7 +187,19 @@ const POS: React.FC = () => {
     }
   });
 
-  const processOrder = () => {
+  const processOrder = async () => {
+    if (paymentMethod === 'card') {
+      setProcessingPayment(true);
+      const result = await processCardPayment(total);
+      setProcessingPayment(false);
+      
+      if (!result.success) {
+        showSnackbar(result.error || 'Card processing failed', 'error');
+        return;
+      }
+      showSnackbar('Card approved!', 'success');
+    }
+
     const orderData = {
       status: 'completed',
       type: cart.some(i => i.isRental) && cart.some(i => !i.isRental) ? 'mixed' : cart.some(i => i.isRental) ? 'rental' : 'sale',
@@ -481,13 +495,13 @@ const POS: React.FC = () => {
         maxWidth={420}
         footer={
           <>
-            <button className="btn btn-outline" onClick={() => setCheckoutOpen(false)}>Cancel</button>
+            <button className="btn btn-outline" onClick={() => setCheckoutOpen(false)} disabled={processingPayment || mutation.isPending}>Cancel</button>
             <button
               className="btn btn-gold"
               onClick={processOrder}
-              disabled={paymentMethod === 'cash' && (parseFloat(cashGiven) < total || !cashGiven)}
+              disabled={(paymentMethod === 'cash' && (parseFloat(cashGiven) < total || !cashGiven)) || processingPayment || mutation.isPending}
             >
-              ✓ Complete Sale
+              {processingPayment ? 'Processing Card...' : mutation.isPending ? 'Saving...' : '✓ Complete Sale'}
             </button>
           </>
         }

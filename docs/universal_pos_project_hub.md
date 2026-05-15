@@ -319,7 +319,7 @@ gantt
 
     section Phase 5: Scale
     Restaurant plugin                    :done, p5a, after p4d, 10d
-    Stripe / Razorpay integration        :p5b, after p4d, 5d
+    Stripe / Razorpay integration        :done, p5b, after p4d, 5d
     Advanced reporting                   :p5c, after p5b, 7d
     Hardware abstraction layer           :p5d, after p5a, 5d
 ```
