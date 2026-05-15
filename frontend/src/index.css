@@ -95,34 +95,35 @@
 
   /* ── Layout ─────────────────────────────── */
   .app-shell {
-    display: grid;
-    grid-template-columns: 260px 1fr;
-    grid-template-rows: 1fr;
+    display: flex;
     min-height: 100vh;
     background: var(--surface-bg);
   }
 
   @media (max-width: 1024px) {
-    .app-shell { grid-template-columns: 1fr; }
+    .app-shell { flex-direction: column; }
   }
 
   .main-content {
+    flex: 1;
+    min-width: 0;
     padding: 24px;
     overflow-y: auto;
     min-height: 100vh;
   }
 
-  /* ── Sidebar ─────────────────────────────── */
   .sidebar {
     background: var(--tux-navy);
     color: white;
     display: flex;
     flex-direction: column;
     height: 100vh;
-    position: sticky;
-    top: 0;
+    overflow-y: hidden; /* Hide scroll to prevent width jumping during transition */
+    overflow-x: hidden;
+  }
+  
+  .sidebar:hover {
     overflow-y: auto;
-    z-index: 40;
   }
 
   .sidebar-logo {
