@@ -37,7 +37,7 @@ interface TenantContextValue {
 const TenantContext = createContext<TenantContextValue | null>(null);
 
 export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [config, setConfig] = useState<TenantConfig>(DEFAULT_TENANT);
+  const [config, setConfig] = useState(DEFAULT_TENANT);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -86,6 +86,6 @@ export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
 export const useTenant = () => {
   const ctx = useContext(TenantContext);
-  if (!ctx) throw new Error('useTenant must be used within <TenantProvider>');
+  if (!ctx) {throw new Error('useTenant must be used within <TenantProvider>');}
   return ctx;
 };

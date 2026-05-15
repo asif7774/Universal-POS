@@ -1,21 +1,35 @@
 import React from 'react';
 import { StatProps } from 'types/dashboard';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 import { Sparkline } from './Sparkline';
 
 export const StatCard: React.FC<StatProps> = ({ label, value, change, positive, sparkData, color, icon }) => (
-  <div className="stat-card">
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+  <div className="card py-5 px-6 relative overflow-hidden transition-[transform,box-shadow] duration-200 cursor-default">
+    <div className="flex justify-between items-start mb-3">
       <div>
-        <div className="stat-label">{label}</div>
-        <div className="stat-value">{value}</div>
-        <div className={`stat-change ${positive ? 'positive' : 'negative'}`}>
-          {positive ? '↑' : '↓'} {change} vs last week
+        <div className="text-[0.7rem] font-bold text-[var(--text-muted)] uppercase tracking-tight mb-1">
+          {label}
+        </div>
+        <div className="text-[1.75rem] font-extrabold text-[var(--text-primary)] tracking-tight">
+          {value}
         </div>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
-        <span style={{ fontSize: '1.4rem' }}>{icon}</span>
+      <div className="w-10 h-10 rounded-[var(--radius-md)] flex items-center justify-center" style={{ background: `${color}10`, color }}>
+        <SvgIcon name={icon} width="20" height="20" />
+      </div>
+    </div>
+
+    <div className="flex items-end justify-between gap-3">
+      <div className={`text-[0.8rem] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 ${positive ? 'text-[var(--status-success)] bg-[rgba(16,185,129,0.1)]' : 'text-[var(--status-error)] bg-[rgba(239,68,68,0.1)]'}`}>
+        {positive ? '↑' : '↓'} {change}
+        <span className="font-normal opacity-80 text-[0.7rem]">vs last week</span>
+      </div>
+      <div className="flex-1 h-8 max-w-[100px]">
         <Sparkline data={sparkData} color={color} />
       </div>
     </div>
+    
+    {/* Subtle bottom border accent */}
+    <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(to right, ${color}, transparent)` }} />
   </div>
 );

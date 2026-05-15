@@ -14,7 +14,7 @@ const queryClient = new QueryClient({
     queries: {
       retry: (failureCount, _error: unknown) => {
         // Don't retry on offline — use cached data
-        if (!navigator.onLine) return false;
+        if (!navigator.onLine) {return false;}
         return failureCount < 2;
       },
       refetchOnWindowFocus: false,
@@ -26,7 +26,6 @@ const queryClient = new QueryClient({
 
 // ── Pages (lazy loaded) ───────────────────────────────────────
 const Login        = lazy(() => import('pages/login'));
-const Home         = lazy(() => import('pages/home'));
 const Dashboard    = lazy(() => import('pages/dashboard'));
 const POS          = lazy(() => import('pages/pos'));
 const Rentals      = lazy(() => import('pages/rentals'));
@@ -68,7 +67,7 @@ const AppRoutes = () => {
       navigate('/login', { replace: true });
     };
     window.addEventListener('auth:unauthorized', handleUnauthorized);
-    return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
+    return () => { window.removeEventListener('auth:unauthorized', handleUnauthorized); };
   }, [logout, showSnackbar, navigate]);
 
   return (
@@ -96,7 +95,7 @@ const AppRoutes = () => {
           <Route path="/admin"            element={<AdminPanel />} />
           
           {/* Plugin dynamic routes */}
-          {pluginRoutes.map((route) => (
+          {pluginRoutes?.map((route) => (
             <Route key={route.path} path={route.path} element={route.element} />
           ))}
         </Route>
@@ -113,7 +112,7 @@ const AppRoutes = () => {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <SvgSpriteLoader url="/sprites/app-icons.svg">
+      <SvgSpriteLoader url="/sprites/app-icons.svg?v=1.2.0" version="1.2.0">
         <SnackbarProvider>
           <OfflineProvider>
             <TenantProvider>

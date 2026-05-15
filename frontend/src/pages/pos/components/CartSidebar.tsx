@@ -37,7 +37,7 @@ export const CartSidebar = memo(({
           Cart {cart.length > 0 && <span className="badge badge-navy" style={{ marginLeft: 6 }}>{cart.length}</span>}
         </span>
         {cart.length > 0 && (
-          <button className="btn btn-ghost btn-sm" onClick={() => setCart([])} style={{ color: 'var(--status-error)', fontSize: '.75rem' }}>
+          <button className="btn btn-ghost btn-sm" onClick={() => { setCart([]); }} style={{ color: 'var(--status-error)', fontSize: '.75rem' }}>
             Clear all
           </button>
         )}
@@ -47,7 +47,7 @@ export const CartSidebar = memo(({
       <div style={{ flex: 1, overflowY: 'auto', padding: '8px 12px' }}>
         {cart.length === 0 ? (
           <div className="empty-state" style={{ padding: '40px 16px' }}>
-            <div style={{ marginBottom: 12 }}>
+            <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'center' }}>
               <SvgIcon name="pos" width="48" height="48" style={{ opacity: 0.1 }} />
             </div>
             <p style={{ fontSize: '.85rem' }}>Click a product to add it to the cart</p>
@@ -75,9 +75,9 @@ export const CartSidebar = memo(({
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                   {/* Qty controls */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 0, background: 'var(--surface-card)', borderRadius: 8, border: '1px solid var(--surface-border)', overflow: 'hidden' }}>
-                    <button onClick={() => updateQty(idx, -1)} style={{ width: 28, height: 28, border: 'none', background: 'none', cursor: 'pointer', fontWeight: 700, fontSize: '1rem', color: 'var(--text-secondary)' }}>−</button>
+                    <button onClick={() => { updateQty(idx, -1); }} style={{ width: 28, height: 28, border: 'none', background: 'none', cursor: 'pointer', fontWeight: 700, fontSize: '1rem', color: 'var(--text-secondary)' }}>−</button>
                     <span style={{ minWidth: 24, textAlign: 'center', fontSize: '.85rem', fontWeight: 700 }}>{item.qty}</span>
-                    <button onClick={() => updateQty(idx, 1)} style={{ width: 28, height: 28, border: 'none', background: 'none', cursor: 'pointer', fontWeight: 700, fontSize: '1rem', color: 'var(--text-secondary)' }}>+</button>
+                    <button onClick={() => { updateQty(idx, 1); }} style={{ width: 28, height: 28, border: 'none', background: 'none', cursor: 'pointer', fontWeight: 700, fontSize: '1rem', color: 'var(--text-secondary)' }}>+</button>
                   </div>
 
                   {/* Days for rental */}
@@ -85,14 +85,14 @@ export const CartSidebar = memo(({
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                       <span style={{ fontSize: '.75rem', color: 'var(--text-muted)' }}>Days:</span>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 0, background: 'var(--surface-card)', borderRadius: 8, border: '1px solid var(--tux-gold)', overflow: 'hidden' }}>
-                        <button onClick={() => updateDays(idx, (item.days ?? 1) - 1)} style={{ width: 26, height: 26, border: 'none', background: 'none', cursor: 'pointer', fontWeight: 700, color: 'var(--tux-gold-dark)' }}>−</button>
+                        <button onClick={() => { updateDays(idx, (item.days ?? 1) - 1); }} style={{ width: 26, height: 26, border: 'none', background: 'none', cursor: 'pointer', fontWeight: 700, color: 'var(--tux-gold-dark)' }}>−</button>
                         <span style={{ minWidth: 22, textAlign: 'center', fontSize: '.82rem', fontWeight: 700, color: 'var(--tux-gold-dark)' }}>{item.days}</span>
-                        <button onClick={() => updateDays(idx, (item.days ?? 1) + 1)} style={{ width: 26, height: 26, border: 'none', background: 'none', cursor: 'pointer', fontWeight: 700, color: 'var(--tux-gold-dark)' }}>+</button>
+                        <button onClick={() => { updateDays(idx, (item.days ?? 1) + 1); }} style={{ width: 26, height: 26, border: 'none', background: 'none', cursor: 'pointer', fontWeight: 700, color: 'var(--tux-gold-dark)' }}>+</button>
                       </div>
                     </div>
                   )}
 
-                  <button onClick={() => updateQty(idx, -item.qty)} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--status-error)', fontSize: '.7rem', fontWeight: 600 }}>
+                  <button onClick={() => { updateQty(idx, -item.qty); }} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--status-error)', fontSize: '.7rem', fontWeight: 600 }}>
                     Remove
                   </button>
                 </div>
@@ -110,7 +110,7 @@ export const CartSidebar = memo(({
             <span style={{ fontSize: '.8rem', color: 'var(--text-secondary)', flex: 1 }}>Discount %</span>
             <div style={{ display: 'flex', gap: 4 }}>
               {[0, 5, 10, 15].map(d => (
-                <button key={d} onClick={() => setDiscount(d)}
+                <button key={d} onClick={() => { setDiscount(d); }}
                   style={{
                     padding: '3px 8px', borderRadius: 6, border: '1.5px solid',
                     borderColor: discount === d ? 'var(--tux-navy)' : 'var(--surface-border)',

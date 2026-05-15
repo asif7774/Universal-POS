@@ -1,9 +1,13 @@
 import React from 'react';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 export const SecurityTab: React.FC = () => (
   <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
     <div className="card">
-      <div className="card-header"><span className="card-title">🔐 Session & Access</span></div>
+      <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <SvgIcon name="lock" width="16" height="16" style={{ color: 'var(--tux-navy)' }} />
+        <span className="card-title">Session & Access</span>
+      </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         {[
           { label: 'Require PIN for all cashier actions', defaultChecked: true },
@@ -22,7 +26,10 @@ export const SecurityTab: React.FC = () => (
     </div>
 
     <div className="card">
-      <div className="card-header"><span className="card-title">🔑 Change Password</span></div>
+      <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <SvgIcon name="key" width="16" height="16" style={{ color: 'var(--tux-navy)' }} />
+        <span className="card-title">Change Password</span>
+      </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
         <div className="input-group" style={{ gridColumn: '1/-1' }}>
           <label className="input-label">Current Password</label>
@@ -43,7 +50,10 @@ export const SecurityTab: React.FC = () => (
     </div>
 
     <div className="card" style={{ border: '1px solid #FECACA' }}>
-      <div className="card-header"><span className="card-title" style={{ color: 'var(--status-error)' }}>⚠️ Danger Zone</span></div>
+      <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <SvgIcon name="warning" width="16" height="16" style={{ color: 'var(--status-error)' }} />
+        <span className="card-title" style={{ color: 'var(--status-error)' }}>Danger Zone</span>
+      </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {[
           { label: 'Export All Data', desc: 'Download a CSV export of all orders, customers, and inventory.' },

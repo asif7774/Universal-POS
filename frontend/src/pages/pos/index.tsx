@@ -17,7 +17,7 @@ const POS: React.FC = () => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
   const { getCheckoutExtensions } = usePlugins();
-  
+
   // -- State --
   const [cart, setCart] = useState<CartItem[]>([]);
   const [search, setSearch] = useState('');
@@ -30,7 +30,7 @@ const POS: React.FC = () => {
   const [orderId, setOrderId] = useState('');
   const [completedOrder, setCompletedOrder] = useState<any>(null);
   const [customerSearch, setCustomerSearch] = useState('');
-  const [selectedCustomer, setSelectedCustomer] = useState<{id:string;firstName:string;lastName:string} | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<{ id: string; firstName: string; lastName: string } | null>(null);
   const [processingPayment, setProcessingPayment] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -52,7 +52,7 @@ const POS: React.FC = () => {
     }
   });
 
-  const { data: customers = [] } = useQuery<{id:string;firstName:string;lastName:string}[]>({
+  const { data: customers = [] } = useQuery<{ id: string; firstName: string; lastName: string }[]>({
     queryKey: ['customers-list'],
     queryFn: () => apiClient.get('/customers'),
   });
@@ -82,7 +82,7 @@ const POS: React.FC = () => {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
-        if ((e.target as HTMLInputElement).id !== 'pos-search') return;
+        if ((e.target as HTMLInputElement).id !== 'pos-search') { return; }
       }
       clearTimeout(barcodeTimer.current);
       if (e.key === 'Enter' && barcodeBuffer.current.length > 3) {
@@ -101,7 +101,7 @@ const POS: React.FC = () => {
       }
     };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    return () => { window.removeEventListener('keydown', onKey); };
   }, [addToCart, products]);
 
   // -- Cart Mutators --
@@ -151,7 +151,7 @@ const POS: React.FC = () => {
       setOrderComplete(true);
       queryClient.invalidateQueries({ queryKey: ['orders'] });
       showSnackbar(`Order ${data.orderNo} completed!`, 'success');
-      
+
       if (paymentMethod === 'cash') {
         await HAL.openCashDrawer();
       }
@@ -163,7 +163,7 @@ const POS: React.FC = () => {
       setProcessingPayment(true);
       const result = await processCardPayment(total);
       setProcessingPayment(false);
-      
+
       if (!result.success) {
         showSnackbar(result.error || 'Card processing failed', 'error');
         return;
@@ -242,8 +242,8 @@ const POS: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: cart.length > 0 ? '1fr 360px' : '1fr', height: 'calc(100vh - 48px)', gap: 0, margin: '-24px', overflow: 'hidden', transition: 'grid-template-columns 0.3s ease' }}>
-      <ProductGrid 
+    <div className={`grid h-screen gap-0 -mx-6 -mb-6 overflow-hidden transition-[grid-template-columns] duration-300 ease-in-out ${cart.length > 0 ? 'grid-cols-[1fr_360px]' : 'grid-cols-1'}`}>
+      <ProductGrid
         products={products}
         search={search}
         setSearch={setSearch}
@@ -253,9 +253,9 @@ const POS: React.FC = () => {
         onAddToCart={addToCart}
         searchRef={searchRef}
       />
-      
+
       {cart.length > 0 && (
-        <CartSidebar 
+        <CartSidebar
           cart={cart}
           setCart={setCart}
           updateQty={updateQty}
@@ -266,13 +266,13 @@ const POS: React.FC = () => {
           discountAmt={discountAmt}
           tax={tax}
           total={total}
-          onCheckout={() => setCheckoutOpen(true)}
+          onCheckout={() => { setCheckoutOpen(true); }}
         />
       )}
 
-      <CheckoutModal 
+      <CheckoutModal
         isOpen={checkoutOpen && !orderComplete}
-        onClose={() => setCheckoutOpen(false)}
+        onClose={() => { setCheckoutOpen(false); }}
         total={total}
         paymentMethod={paymentMethod}
         setPaymentMethod={setPaymentMethod}
@@ -290,7 +290,7 @@ const POS: React.FC = () => {
         checkoutExtensions={getCheckoutExtensions('before-payment')}
       />
 
-      <OrderCompleteModal 
+      <OrderCompleteModal
         isOpen={orderComplete}
         onClose={newOrder}
         orderId={orderId}

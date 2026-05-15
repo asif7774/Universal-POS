@@ -84,11 +84,10 @@ const Reports: React.FC = () => {
             Live analytics · {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
           </p>
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div className="flex gap-2">
           {(['today', 'week', 'month'] as const).map(p => (
-            <button key={p} onClick={() => setPeriod(p)}
-              className={`btn btn-sm ${period === p ? 'btn-primary' : 'btn-outline'}`}
-              style={{ textTransform: 'capitalize' }}>
+            <button key={p} onClick={() => { setPeriod(p); }}
+              className={`btn btn-sm capitalize ${period === p ? 'btn-primary' : 'btn-outline'}`}>
               {p}
             </button>
           ))}
@@ -106,13 +105,13 @@ const Reports: React.FC = () => {
       />
 
       {/* Main Charts Area */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 20, marginBottom: 20 }}>
+      <div className="grid grid-cols-[2fr_1fr] gap-5 mb-5">
         <RevenueChart data={last7DaysData} />
         <PaymentMethodsChart data={paymentData} />
       </div>
 
       {/* Secondary Charts Area */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+      <div className="grid grid-cols-2 gap-5">
         <CategorySalesChart data={categoryData} />
         <RecentTransactions orders={recentOrders} />
       </div>

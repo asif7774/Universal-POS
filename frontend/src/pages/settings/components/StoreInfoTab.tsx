@@ -23,7 +23,7 @@ export const StoreInfoTab: React.FC<StoreInfoTabProps> = ({ store, set }) => (
           style={f.span ? { gridColumn: '1/-1' } : {}}>
           <label className="input-label">{f.label}</label>
           <input className="input" value={(store as Record<string,string>)[f.key]}
-            onChange={e => set(f.key, e.target.value)} />
+            onChange={e => { set(f.key, e.target.value); }} />
         </div>
       ))}
     </div>
@@ -31,14 +31,14 @@ export const StoreInfoTab: React.FC<StoreInfoTabProps> = ({ store, set }) => (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
       <div className="input-group">
         <label className="input-label">Currency</label>
-        <select className="input" value={store.currency} onChange={e => set('currency', e.target.value)}>
+        <select className="input" value={store.currency} onChange={e => { set('currency', e.target.value); }}>
           <option value="USD">USD — US Dollar</option>
           <option value="CAD">CAD — Canadian Dollar</option>
         </select>
       </div>
       <div className="input-group">
         <label className="input-label">Timezone</label>
-        <select className="input" value={store.timezone} onChange={e => set('timezone', e.target.value)}>
+        <select className="input" value={store.timezone} onChange={e => { set('timezone', e.target.value); }}>
           {['America/New_York','America/Chicago','America/Denver','America/Los_Angeles','America/Phoenix'].map(tz => (
             <option key={tz} value={tz}>{tz.replace('America/','').replace('_',' ')}</option>
           ))}

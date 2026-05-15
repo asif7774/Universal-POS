@@ -31,7 +31,7 @@ const Customers: React.FC = () => {
   const createCustomer = useMutation({
     mutationFn: (data: Partial<Customer>) => apiClient.post<Customer>('/customers', data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['customers'] });
+      void queryClient.invalidateQueries({ queryKey: ['customers'] });
       showSnackbar('Customer added successfully!', 'success');
       setIsAdding(false);
     }
@@ -40,7 +40,7 @@ const Customers: React.FC = () => {
   const filtered = customers.filter(c => {
     const fullName = `${c.firstName} ${c.lastName}`.toLowerCase();
     const q = search.toLowerCase();
-    return fullName.includes(q) || (c.email || '').toLowerCase().includes(q) || (c.phone || '').includes(search);
+    return fullName.includes(q) || (c.email ?? '').toLowerCase().includes(q) || (c.phone ?? '').includes(search);
   });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -59,33 +59,43 @@ const Customers: React.FC = () => {
   return (
     <div className="animate-fade-in">
       <div className="page-header">
-        <div>
-          <h1 className="page-title">Customers</h1>
-          <p className="page-subtitle">{customers.length} customers · {customers.filter(c => c.tags?.includes('VIP')).length} VIP</p>
+        <div className="flex items-center gap-4">
+          {isAdding && (
+            <button onClick={() => { setIsAdding(false); }} className="btn btn-icon btn-ghost -ml-2">
+              <SvgIcon name="arrow-left" width="22" height="22" />
+            </button>
+          )}
+          <div>
+            <h1 className="page-title">{isAdding ? 'Add Customer' : 'Customers'}</h1>
+            <p className="page-subtitle">{isAdding ? 'Register a new customer profile' : `${customers.length} customers · ${customers.filter(c => c.tags.includes('VIP')).length} VIP`}</p>
+          </div>
         </div>
-        {!isAdding && <button className="btn btn-gold" onClick={() => setIsAdding(true)}>+ Add Customer</button>}
+        {!isAdding && <button className="btn btn-gold" onClick={() => { setIsAdding(true); }}>+ Add Customer</button>}
       </div>
+
+      {!isAdding && (
+        <div className="search-container">
+          <div className="search-input-wrapper input-with-icon">
+            <span className="input-icon">
+              <SvgIcon name="search" width="18" height="18" />
+            </span>
+            <input className="input" placeholder="Search by name, email, phone..." value={search} onChange={e => { setSearch(e.target.value); }} />
+          </div>
+        </div>
+      )}
 
       {isAdding ? (
         <NewCustomerForm 
           onSubmit={handleSubmit}
           isPending={createCustomer.isPending}
-          onCancel={() => setIsAdding(false)}
+          onCancel={() => { setIsAdding(false); }}
         />
       ) : (
         <>
-          {/* Search */}
-          <div className="input-with-icon" style={{ marginBottom: 20, maxWidth: 420 }}>
-            <span className="input-icon">
-              <SvgIcon name="search" width="15" height="15" />
-            </span>
-            <input className="input" placeholder="Search by name, email, phone..." value={search} onChange={e => setSearch(e.target.value)} style={{ paddingLeft: 36 }} />
-          </div>
-
           {isLoading ? (
-            <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>Loading customers...</div>
+            <div className="p-10 text-center text-[var(--text-muted)]">Loading customers...</div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
               {filtered.map(c => (
                 <CustomerCard 
                   key={c.id}
@@ -98,7 +108,9 @@ const Customers: React.FC = () => {
 
           {!isLoading && filtered.length === 0 && (
             <div className="empty-state">
-              <div className="empty-state-icon">👤</div>
+              <div className="empty-state-icon">
+                <SvgIcon name="user" width="48" height="48" className="opacity-30" />
+              </div>
               <p>No customers found</p>
             </div>
           )}

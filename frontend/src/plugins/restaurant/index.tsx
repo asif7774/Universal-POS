@@ -42,18 +42,12 @@ const KDSPage = () => (
 const RestaurantPlugin: PluginModule = {
   id: 'restaurant',
   name: 'Restaurant & F&B',
-  description: 'Floor plans, kitchen display system (KDS), and tipping.',
+  description: 'Tipping and hospitality extensions.',
   version: '1.0.0',
   
-  routes: [
-    { path: '/tables', element: <TablesPage /> },
-    { path: '/kds', element: <KDSPage /> }
-  ],
+  routes: [],
   
-  navItems: [
-    { id: 'nav-tables', label: 'Floor Plan', icon: '🍽️', path: '/tables', roles: ['owner', 'manager', 'cashier'] },
-    { id: 'nav-kds', label: 'Kitchen (KDS)', icon: '🔥', path: '/kds', roles: ['owner', 'manager', 'cashier'] }
-  ],
+  navItems: [],
   
   checkoutExtensions: [
     {

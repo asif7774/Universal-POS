@@ -1,5 +1,6 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { Customer } from 'types/customers';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 interface CustomerCardProps {
   c: Customer;
@@ -54,8 +55,8 @@ export const CustomerCard = memo(({ c, onClick }: CustomerCardProps) => (
     )}
 
     {c.notes && (
-      <div style={{ marginTop: 8, fontSize: '.75rem', color: 'var(--status-warning)', borderTop: '1px solid var(--surface-border)', paddingTop: 8 }}>
-        ⚠️ {c.notes}
+      <div style={{ marginTop: 8, fontSize: '.75rem', color: 'var(--status-warning)', borderTop: '1px solid var(--surface-border)', paddingTop: 8, display: 'flex', gap: 6, alignItems: 'center' }}>
+        <SvgIcon name="warning" width="12" height="12" /> {c.notes}
       </div>
     )}
   </div>

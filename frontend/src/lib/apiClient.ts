@@ -8,7 +8,7 @@ const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api/v1';
 function getToken(): string | null {
   try {
     const session = localStorage.getItem('tuxedopos_session');
-    if (!session) return null;
+    if (!session) {return null;}
     const parsed = JSON.parse(session) as { access_token?: string };
     return parsed.access_token ?? null;
   } catch {
@@ -38,7 +38,7 @@ async function request<T>(
     throw new Error(err.message ?? `HTTP ${res.status}`);
   }
 
-  if (res.status === 204) return undefined as T;
+  if (res.status === 204) {return undefined as T;}
   return res.json() as Promise<T>;
 }
 

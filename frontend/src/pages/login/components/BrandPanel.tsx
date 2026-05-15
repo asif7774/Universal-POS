@@ -23,10 +23,10 @@ export const BrandPanel: React.FC = () => (
 
       <div style={{ marginTop: 48, display: 'flex', flexDirection: 'column', gap: 16 }}>
         {[
-          { icon: '🎩', text: 'Rental booking & tracking' },
-          { icon: '📐', text: 'Customer measurement profiles' },
-          { icon: '🧵', text: 'Tailoring workflow management' },
-          { icon: '📊', text: 'Real-time sales analytics' },
+          { icon: 'tuxedo', text: 'Rental booking & tracking' },
+          { icon: 'measurements', text: 'Customer measurement profiles' },
+          { icon: 'tailoring', text: 'Tailoring workflow management' },
+          { icon: 'reports', text: 'Real-time sales analytics' },
         ].map(f => (
           <div key={f.text} style={{
             display: 'flex', alignItems: 'center', gap: 12,
@@ -34,7 +34,9 @@ export const BrandPanel: React.FC = () => (
             borderRadius: 10, padding: '10px 14px',
             border: '1px solid rgba(255,255,255,.08)',
           }}>
-            <span style={{ fontSize: '1.1rem' }}>{f.icon}</span>
+            <span style={{ color: 'rgba(255,255,255,.6)', display: 'flex' }}>
+              <SvgIcon name={f.icon} width="20" height="20" />
+            </span>
             <span style={{ color: 'rgba(255,255,255,.8)', fontSize: '.875rem' }}>{f.text}</span>
           </div>
         ))}

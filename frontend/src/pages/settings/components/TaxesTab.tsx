@@ -20,7 +20,7 @@ export const TaxesTab: React.FC<TaxesTabProps> = ({ store, set }) => (
           <label className="input-label">{f.label}</label>
           <input className="input" type="number" step="0.001"
             value={(store as Record<string,string>)[f.key]}
-            onChange={e => set(f.key, e.target.value)} />
+            onChange={e => { set(f.key, e.target.value); }} />
           <p style={{ fontSize: '.72rem', color: 'var(--text-muted)', marginTop: 4 }}>{f.hint}</p>
         </div>
       ))}

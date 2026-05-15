@@ -18,8 +18,8 @@ const Inventory: React.FC = () => {
     queryFn: async () => await apiClient.get<InventoryItem[]>('/inventory'),
   });
 
-  if (isLoading) return <div className="page-header"><h1 className="page-title">Loading...</h1></div>;
-  if (error) return <div className="page-header"><h1 className="page-title" style={{ color: 'red' }}>Error loading inventory</h1></div>;
+  if (isLoading) {return <div className="page-header"><h1 className="page-title">Loading...</h1></div>;}
+  if (error) {return <div className="page-header"><h1 className="page-title text-red-500">Error loading inventory</h1></div>;}
 
   const CATEGORIES = ['All', ...Array.from(new Set(inventory.map(i => i.category)))];
 
@@ -43,64 +43,70 @@ const Inventory: React.FC = () => {
       <div className="page-header">
         <div>
           <h1 className="page-title">Inventory</h1>
-          <p className="page-subtitle">{totalItems} total items · {totalOut} currently out · {lowStockItems} low stock · {outOfStock} sizes out of stock</p>
+          <p className="page-subtitle">{totalItems} items · {lowStockItems} low stock</p>
         </div>
-        <button className="btn btn-gold" onClick={() => setIsAdding(true)}>+ Add Item</button>
+        <button className="btn btn-gold" onClick={() => { setIsAdding(true); }}>+ Add Item</button>
       </div>
 
-      {isAdding && <AddItemModal onClose={() => setIsAdding(false)} />}
-
-      {/* Summary stat cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 24 }}>
-        {[
-          { label: 'Total Items', value: totalItems, color: 'var(--tux-navy)', icon: '📦' },
-          { label: 'Out on Rental', value: totalOut, color: 'var(--tux-navy-light)', icon: '🚗' },
-          { label: 'Low Stock', value: lowStockItems, color: 'var(--status-warning)', icon: '⚠️' },
-          { label: 'Out of Stock', value: outOfStock, color: 'var(--status-error)', icon: '🔴' },
-        ].map(s => (
-          <div key={s.label} className="stat-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <div className="stat-label">{s.label}</div>
-                <div className="stat-value" style={{ color: s.color }}>{s.value}</div>
+      <div className="search-container">
+        {/* Summary stat cards */}
+        <div className="grid grid-cols-4 gap-[14px] w-full mb-2.5">
+          {[
+            { label: 'Total Items', value: totalItems, color: 'var(--tux-navy)', icon: 'inventory' },
+            { label: 'Out on Rental', value: totalOut, color: 'var(--tux-navy-light)', icon: 'rental' },
+            { label: 'Low Stock', value: lowStockItems, color: 'var(--status-warning)', icon: 'warning' },
+            { label: 'Out of Stock', value: outOfStock, color: 'var(--status-error)', icon: 'warning' },
+          ].map(s => (
+            <div key={s.label} className="stat-card p-3 px-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <div className="stat-label text-[0.65rem] mb-0.5">{s.label}</div>
+                  <div className="stat-value text-xl" style={{ color: s.color }}>{s.value}</div>
+                </div>
+                <div className="opacity-60" style={{ color: s.color }}>
+                  <SvgIcon name={s.icon} width="20" height="20" />
+                </div>
               </div>
-              <span style={{ fontSize: '1.6rem' }}>{s.icon}</span>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      {/* Filters */}
-      <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
-        <div className="input-with-icon" style={{ maxWidth: 300 }}>
+        {/* Filters */}
+        <div className="search-input-wrapper input-with-icon">
           <span className="input-icon">
-            <SvgIcon name="search" width="15" height="15" />
+            <SvgIcon name="search" width="18" height="18" />
           </span>
           <input className="input" placeholder="Search SKU or name..." value={search}
-            onChange={e => setSearch(e.target.value)} style={{ paddingLeft: 36 }} />
+            onChange={e => { setSearch(e.target.value); }} />
         </div>
-        {CATEGORIES.map(cat => (
-          <button key={cat} onClick={() => setCategory(cat)}
-            className={`btn btn-sm ${category === cat ? 'btn-primary' : 'btn-outline'}`}>
-            {cat}
-          </button>
-        ))}
+        <div className="filter-group">
+          {CATEGORIES.map(cat => (
+            <button key={cat} onClick={() => { setCategory(cat); }}
+              className={`btn btn-sm ${category === cat ? 'btn-primary' : 'btn-outline'}`}>
+              {cat}
+            </button>
+          ))}
+        </div>
       </div>
 
+      {isAdding && <AddItemModal onClose={() => { setIsAdding(false); }} />}
+
       {/* Inventory cards */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      <div className="flex flex-col gap-[14px]">
         {filtered.map(item => (
           <InventoryCard 
             key={item.id} 
             item={item} 
-            onClick={() => setSelected(item)} 
+            onClick={() => { setSelected(item); }} 
           />
         ))}
       </div>
 
       {filtered.length === 0 && (
         <div className="empty-state">
-          <div className="empty-state-icon">📦</div>
+          <div className="empty-state-icon">
+            <SvgIcon name="inventory" width="48" height="48" className="opacity-30" />
+          </div>
           <p>No inventory items found</p>
         </div>
       )}

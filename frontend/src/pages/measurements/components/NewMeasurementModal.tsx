@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../../lib/apiClient';
 import { Modal } from 'components/atoms/modal/Modal';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 import { useSnackbar } from 'contexts/SnackbarContext';
 import { MeasurementRecord } from 'types/measurements';
 
@@ -9,7 +10,7 @@ export const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
   const [form, setForm] = useState<Partial<MeasurementRecord>>({});
-  const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
+  const set = (k: string, v: string) => { setForm(f => ({ ...f, [k]: v })); };
 
   const { data: customers = [] } = useQuery<{id: string, firstName: string, lastName: string}[]>({
     queryKey: ['customers'],
@@ -19,7 +20,7 @@ export const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose
   const mutation = useMutation({
     mutationFn: async (data: Partial<MeasurementRecord>) => {
       const customerId = data.customerId;
-      if (!customerId) throw new Error("Customer ID is required");
+      if (!customerId) {throw new Error("Customer ID is required");}
       return await apiClient.post(`/customers/${customerId}/measurements`, data);
     },
     onSuccess: () => {
@@ -48,12 +49,17 @@ export const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose
     <Modal
       isOpen={true}
       onClose={onClose}
-      title="📐 New Measurement Record"
+      title={(
+        <>
+          <SvgIcon name="measurements" width="20" height="20" style={{ color: 'var(--tux-gold)' }} />
+          New Measurement Record
+        </>
+      )}
       maxWidth={560}
       footer={
         <>
           <button className="btn btn-outline" onClick={onClose} disabled={mutation.isPending}>Cancel</button>
-          <button className="btn btn-gold" onClick={() => mutation.mutate(form)} disabled={mutation.isPending}>
+          <button className="btn btn-gold" onClick={() => { mutation.mutate(form); }} disabled={mutation.isPending}>
             {mutation.isPending ? 'Saving...' : 'Save Measurements'}
           </button>
         </>
@@ -62,7 +68,7 @@ export const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         <div className="input-group" style={{ gridColumn: '1 / -1' }}>
           <label className="input-label">Select Customer</label>
-          <select className="input" value={form.customerId ?? ''} onChange={e => set('customerId', e.target.value)}>
+          <select className="input" value={form.customerId ?? ''} onChange={e => { set('customerId', e.target.value); }}>
             <option value="" disabled>Select a customer...</option>
             {customers.map(c => (
               <option key={c.id} value={c.id}>{c.firstName} {c.lastName}</option>
@@ -75,7 +81,7 @@ export const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose
             <input
               className="input" type={f.type} placeholder={f.placeholder}
               value={(form as Record<string, string>)[f.key] ?? ''}
-              onChange={e => set(f.key, e.target.value)}
+              onChange={e => { set(f.key, e.target.value); }}
             />
           </div>
         ))}
@@ -85,7 +91,7 @@ export const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose
             className="input" placeholder="Any special notes about fit, alterations needed, etc."
             rows={3} style={{ resize: 'vertical' }}
             value={form.fittingNotes ?? ''}
-            onChange={e => set('fittingNotes', e.target.value)}
+            onChange={e => { set('fittingNotes', e.target.value); }}
           />
         </div>
       </div>

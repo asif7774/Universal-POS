@@ -1,12 +1,13 @@
 import React, { memo } from 'react';
 import { Rental, RentalStatus } from 'types/rentals';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 export const STATUS_CONFIG: Record<RentalStatus, { cls: string; icon: string }> = {
-  booked:    { cls: 'rental-booked',    icon: '📅' },
-  out:       { cls: 'rental-out',       icon: '🚗' },
-  returned:  { cls: 'rental-available', icon: '✅' },
-  overdue:   { cls: 'rental-overdue',   icon: '⚠️' },
-  cancelled: { cls: 'badge-gray',       icon: '✕' },
+  booked:    { cls: 'rental-booked',    icon: 'calendar' },
+  out:       { cls: 'rental-out',       icon: 'pos' },
+  returned:  { cls: 'rental-available', icon: 'check-circle' },
+  overdue:   { cls: 'rental-overdue',   icon: 'warning' },
+  cancelled: { cls: 'badge-gray',       icon: 'close' },
 };
 
 export const fmt = (n: number | string | null | undefined) => `$${parseFloat((n as string) ?? '0').toFixed(2)}`;
@@ -45,7 +46,7 @@ export const RentalTable = memo(({ filtered, setSelected }: RentalTableProps) =>
             const phone = r.customer ? r.customer.phone : '';
             
             return (
-              <tr key={r.id} onClick={() => setSelected(r)}>
+              <tr key={r.id} onClick={() => { setSelected(r); }}>
                 <td><code style={{ fontSize: '.8rem', color: 'var(--tux-navy)', fontWeight: 700 }}>{r.rentalNo}</code></td>
                 <td>
                   <div style={{ fontWeight: 600, fontSize: '.875rem' }}>{customerName}</div>
@@ -70,8 +71,14 @@ export const RentalTable = memo(({ filtered, setSelected }: RentalTableProps) =>
                 </td>
                 <td style={{ fontWeight: 600 }}>{fmt(r.depositPaid)}</td>
                 <td>
-                  <span className={`badge ${cfg.cls}`} style={{ textTransform: 'capitalize' }}>{cfg.icon} {computedStatus}</span>
-                  {r.notes && <div style={{ fontSize: '.7rem', color: 'var(--status-warning)', marginTop: 2 }}>⚠ Note</div>}
+                  <span className={`badge ${cfg.cls}`} style={{ textTransform: 'capitalize', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                    <SvgIcon name={cfg.icon} width="12" height="12" /> {computedStatus}
+                  </span>
+                  {r.notes && (
+                    <div style={{ fontSize: '.7rem', color: 'var(--status-warning)', marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <SvgIcon name="warning" width="10" height="10" /> Note
+                    </div>
+                  )}
                 </td>
                 <td>
                   <button className="btn btn-outline btn-sm" onClick={e => { e.stopPropagation(); setSelected(r); }}>View</button>
@@ -84,7 +91,9 @@ export const RentalTable = memo(({ filtered, setSelected }: RentalTableProps) =>
 
       {filtered.length === 0 && (
         <div className="empty-state">
-          <div className="empty-state-icon">🎩</div>
+          <div className="empty-state-icon">
+            <SvgIcon name="rentals" width="48" height="48" style={{ opacity: 0.3 }} />
+          </div>
           <p>No rentals found</p>
         </div>
       )}

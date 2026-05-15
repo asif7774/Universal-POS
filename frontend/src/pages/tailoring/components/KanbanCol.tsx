@@ -1,5 +1,6 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { JobStatus, TailoringJob } from 'types/tailoring';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 import { STATUS_COLOR, TYPE_BADGE, isOverdue, fmtDate, fmt } from 'constants/tailoring';
 
 interface KanbanColProps {
@@ -19,7 +20,7 @@ export const KanbanCol = memo(({ status, jobs, onSelect }: KanbanColProps) => (
     </div>
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       {jobs.map(job => (
-        <div key={job.id} onClick={() => onSelect(job)}
+        <div key={job.id} onClick={() => { onSelect(job); }}
           style={{
             background: 'var(--surface-card)', borderRadius: 'var(--radius-md)',
             padding: '10px 12px', cursor: 'pointer', transition: 'all .15s',
@@ -36,12 +37,14 @@ export const KanbanCol = memo(({ status, jobs, onSelect }: KanbanColProps) => (
           <div style={{ fontWeight: 700, fontSize: '.82rem', marginBottom: 2 }}>{job.customerName}</div>
           <div style={{ fontSize: '.75rem', color: 'var(--text-secondary)', marginBottom: 6 }}>{job.garment}</div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '.72rem', color: isOverdue(job.dueDate, job.status) ? 'var(--status-error)' : 'var(--text-muted)', fontWeight: isOverdue(job.dueDate, job.status) ? 700 : 400 }}>
-              {isOverdue(job.dueDate, job.status) ? '⚠️ ' : '📅 '}Due {fmtDate(job.dueDate)}
+            <span style={{ fontSize: '.72rem', color: isOverdue(job.dueDate, job.status) ? 'var(--status-error)' : 'var(--text-muted)', fontWeight: isOverdue(job.dueDate, job.status) ? 700 : 400, display: 'flex', alignItems: 'center', gap: 4 }}>
+              <SvgIcon name={isOverdue(job.dueDate, job.status) ? 'warning' : 'calendar'} width="12" height="12" /> Due {fmtDate(job.dueDate)}
             </span>
             <span style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--tux-navy)' }}>{fmt(job.price)}</span>
           </div>
-          <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', marginTop: 4 }}>👤 {job.assignedToName}</div>
+          <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+            <SvgIcon name="user" width="10" height="10" /> {job.assignedToName}
+          </div>
         </div>
       ))}
       {jobs.length === 0 && (

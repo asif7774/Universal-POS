@@ -22,7 +22,7 @@ export function useNetworkStatus(): NetworkStatus {
     setIsOnline(true);
     if (wasOffline) {
       setJustReconnected(true);
-      setTimeout(() => setJustReconnected(false), 3000);
+      setTimeout(() => { setJustReconnected(false); }, 3000);
     }
     setWasOffline(false);
   }, [wasOffline]);

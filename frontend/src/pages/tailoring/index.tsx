@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../lib/apiClient';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 import { TailoringJob, JobStatus } from 'types/tailoring';
-import { STAGES, STATUS_COLOR, TYPE_BADGE, fmt, fmtDate, isOverdue } from 'constants/tailoring';
+import { STATUS_COLOR, TYPE_BADGE, fmt, fmtDate, isOverdue } from 'constants/tailoring';
 import { StatusPipeline } from './components/StatusPipeline';
 import { KanbanCol } from './components/KanbanCol';
 import { TailoringDetailModal } from './components/TailoringDetailModal';
@@ -23,7 +23,7 @@ const Tailoring: React.FC = () => {
   const updateStatus = useMutation({
     mutationFn: ({ id, status }: { id: string, status: string }) => apiClient.put(`/tailoring/${id}/status`, { status }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tailoring'] });
+      void queryClient.invalidateQueries({ queryKey: ['tailoring'] });
       setSelected(null);
     }
   });
@@ -35,7 +35,7 @@ const Tailoring: React.FC = () => {
   );
 
   const activeStages: JobStatus[] = ['Pending', 'Cutting', 'Stitching', 'Finishing', 'Quality Check', 'Ready'];
-  const totalRevenue = jobs.reduce((s, j) => s + Number(j.price), 0);
+  const totalRevenue = jobs.reduce((s, j) => s + j.price, 0);
   const overdueCount = jobs.filter(j => isOverdue(j.dueDate, j.status)).length;
 
   return (
@@ -43,37 +43,48 @@ const Tailoring: React.FC = () => {
       <div className="page-header">
         <div>
           <h1 className="page-title">Tailoring Jobs</h1>
-          <p className="page-subtitle">{jobs.length} active jobs · {overdueCount > 0 ? `⚠️ ${overdueCount} overdue · ` : ''}{fmt(totalRevenue)} pending revenue</p>
+          <p className="page-subtitle">
+            {jobs.length} active jobs · 
+            {overdueCount > 0 && (
+              <span className="text-[var(--status-error)] font-bold">
+                {overdueCount} overdue · 
+              </span>
+            )}
+            {fmt(totalRevenue)} revenue
+          </p>
         </div>
-        <div style={{ display: 'flex', gap: 10 }}>
+        <div className="flex gap-3 items-center">
           {/* View toggle */}
-          <div style={{ display: 'flex', background: 'var(--surface-hover)', borderRadius: 8, padding: 3, gap: 2 }}>
+          <div className="flex bg-[var(--surface-hover)] rounded-[10px] p-[3px]">
             {(['kanban', 'list'] as const).map(v => (
-              <button key={v} onClick={() => setView(v)}
-                style={{ padding: '5px 12px', borderRadius: 6, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '.78rem', background: view === v ? 'var(--surface-card)' : 'transparent', color: view === v ? 'var(--tux-navy)' : 'var(--text-muted)', transition: 'all .15s', boxShadow: view === v ? 'var(--shadow-sm)' : 'none' }}>
-                {v === 'kanban' ? '⬛ Kanban' : '☰ List'}
+              <button key={v} onClick={() => { setView(v); }}
+                className={`btn btn-sm px-3 py-1.5 text-[0.75rem] rounded-lg ${view === v ? 'btn-primary' : 'btn-ghost'}`}>
+                <SvgIcon name={v === 'kanban' ? 'chart-bar' : 'clipboard'} width="14" height="14" />
+                {v === 'kanban' ? 'Kanban' : 'List'}
               </button>
             ))}
           </div>
           <button className="btn btn-gold">+ New Job Card</button>
         </div>
       </div>
-
-      <div className="input-with-icon" style={{ marginBottom: 20, maxWidth: 400 }}>
-        <span className="input-icon">
-          <SvgIcon name="search" width="15" height="15" />
-        </span>
-        <input className="input" placeholder="Search by customer, job no, garment..." value={search}
-          onChange={e => setSearch(e.target.value)} style={{ paddingLeft: 36 }} />
+      
+      <div className="search-container">
+        <div className="search-input-wrapper input-with-icon">
+          <span className="input-icon">
+            <SvgIcon name="search" width="18" height="18" />
+          </span>
+          <input className="input" placeholder="Search by customer, job no, garment..." value={search}
+            onChange={e => { setSearch(e.target.value); }} />
+        </div>
       </div>
       
       {isLoading ? (
-        <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>Loading jobs...</div>
+        <div className="p-10 text-center text-[var(--text-muted)]">Loading jobs...</div>
       ) : (
         <>
           {/* Kanban View */}
           {view === 'kanban' && (
-            <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 16 }}>
+            <div className="flex gap-3 overflow-x-auto pb-4">
               {activeStages.map(status => (
                 <KanbanCol key={status} status={status}
                   jobs={filtered.filter(j => j.status === status)}
@@ -85,7 +96,7 @@ const Tailoring: React.FC = () => {
 
           {/* List View */}
           {view === 'list' && (
-            <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+            <div className="card p-0 overflow-hidden">
               <table className="data-table">
                 <thead>
                   <tr>
@@ -102,19 +113,20 @@ const Tailoring: React.FC = () => {
                 </thead>
                 <tbody>
                   {filtered.map(j => (
-                    <tr key={j.id} onClick={() => setSelected(j)}>
-                      <td><code style={{ fontSize: '.8rem', color: 'var(--tux-navy)', fontWeight: 700 }}>{j.jobNo}</code></td>
-                      <td style={{ fontWeight: 600, fontSize: '.875rem' }}>{j.customerName}</td>
-                      <td style={{ color: 'var(--text-secondary)', fontSize: '.85rem' }}>{j.garment}</td>
+                    <tr key={j.id} onClick={() => { setSelected(j); }}>
+                      <td><code className="text-[0.8rem] text-[var(--tux-navy)] font-bold">{j.jobNo}</code></td>
+                      <td className="font-semibold text-[0.875rem]">{j.customerName}</td>
+                      <td className="text-[var(--text-secondary)] text-[0.85rem]">{j.garment}</td>
                       <td><span className={`badge ${TYPE_BADGE[j.type] || 'badge-gray'}`}>{j.type}</span></td>
-                      <td style={{ fontSize: '.85rem' }}>{j.assignedToName}</td>
-                      <td style={{ fontSize: '.82rem', color: isOverdue(j.dueDate, j.status) ? 'var(--status-error)' : 'var(--text-primary)', fontWeight: isOverdue(j.dueDate, j.status) ? 700 : 400 }}>
-                        {isOverdue(j.dueDate, j.status) ? '⚠️ ' : ''}{fmtDate(j.dueDate)}
+                      <td className="text-[0.85rem]">{j.assignedToName}</td>
+                      <td className={`text-[0.82rem] flex items-center gap-1.5 ${isOverdue(j.dueDate, j.status) ? 'text-[var(--status-error)] font-bold' : 'text-[var(--text-primary)]'}`}>
+                        {isOverdue(j.dueDate, j.status) && <SvgIcon name="warning" width="12" height="12" />}
+                        {fmtDate(j.dueDate)}
                       </td>
-                      <td style={{ fontWeight: 700, color: 'var(--tux-navy)' }}>{fmt(j.price)}</td>
+                      <td className="font-bold text-[var(--tux-navy)]">{fmt(j.price)}</td>
                       <td>
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 8px', borderRadius: 999, background: `${STATUS_COLOR[j.status] || '#94A3B8'}18`, color: STATUS_COLOR[j.status] || '#94A3B8', fontSize: '.75rem', fontWeight: 600 }}>
-                          <span style={{ width: 6, height: 6, borderRadius: '50%', background: STATUS_COLOR[j.status] || '#94A3B8' }} />
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.75rem] font-semibold" style={{ background: `${STATUS_COLOR[j.status] || '#94A3B8'}18`, color: STATUS_COLOR[j.status] || '#94A3B8' }}>
+                          <span className="w-1.5 h-1.5 rounded-full" style={{ background: STATUS_COLOR[j.status] || '#94A3B8' }} />
                           {j.status}
                         </span>
                       </td>
@@ -124,7 +136,7 @@ const Tailoring: React.FC = () => {
                 </tbody>
               </table>
               {filtered.length === 0 && (
-                <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>No jobs found</div>
+                <div className="text-center p-10 text-[var(--text-muted)]">No jobs found</div>
               )}
             </div>
           )}

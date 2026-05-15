@@ -1,4 +1,3 @@
-import React from 'react';
 import { Modal } from 'components/atoms/modal/Modal';
 import { CartItem } from 'types/pos';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';

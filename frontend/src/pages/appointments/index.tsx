@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../lib/apiClient';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 import { Appointment } from 'types/appointments';
 import { TODAY, DAYS, HOURS, TYPE_CONFIG, STATUS_CONFIG, fmtDay } from 'constants/appointments';
 import { NewApptModal } from './components/NewApptModal';
@@ -30,8 +31,8 @@ const Appointments: React.FC = () => {
     }
   });
 
-  if (isLoading) return <div className="page-header"><h1 className="page-title">Loading Appointments...</h1></div>;
-  if (error) return <div className="page-header"><h1 className="page-title" style={{ color: 'red' }}>Error loading appointments</h1></div>;
+  if (isLoading) {return <div className="page-header"><h1 className="page-title">Loading Appointments...</h1></div>;}
+  if (error) {return <div className="page-header"><h1 className="page-title" style={{ color: 'red' }}>Error loading appointments</h1></div>;}
 
   const dayAppts = appointments.filter(a => a.date === selectedDay).sort((a, b) => a.time.localeCompare(b.time));
   const todayCount = appointments.filter(a => a.date === TODAY && a.status !== 'Cancelled').length;
@@ -47,43 +48,37 @@ const Appointments: React.FC = () => {
           <h1 className="page-title">Appointments</h1>
           <p className="page-subtitle">{todayCount} today · {confirmedToday} confirmed · {appointments.filter(a => a.status === 'No-Show').length} no-shows this week</p>
         </div>
-        <div style={{ display: 'flex', gap: 10 }}>
-          <div style={{ display: 'flex', background: 'var(--surface-hover)', borderRadius: 8, padding: 3 }}>
+        <div className="flex gap-2.5">
+          <div className="flex bg-[var(--surface-hover)] rounded-lg p-[3px]">
             {(['week','list'] as const).map(v => (
-              <button key={v} onClick={() => setView(v)}
-                style={{ padding: '5px 14px', borderRadius: 6, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '.78rem', background: view === v ? 'var(--surface-card)' : 'transparent', color: view === v ? 'var(--tux-navy)' : 'var(--text-muted)', transition: 'all .15s', boxShadow: view === v ? 'var(--shadow-sm)' : 'none' }}>
-                {v === 'week' ? '📅 Week' : '☰ List'}
+              <button key={v} onClick={() => { setView(v); }}
+                className={`flex items-center gap-1.5 px-3.5 py-1.25 rounded-md border-none cursor-pointer font-semibold text-[0.78rem] transition-all duration-150 ${view === v ? 'bg-[var(--surface-card)] text-[var(--tux-navy)] shadow-[var(--shadow-sm)]' : 'bg-transparent text-[var(--text-muted)]'}`}>
+                <SvgIcon name={v === 'week' ? 'appointments' : 'menu'} width="14" height="14" />
+                {v === 'week' ? 'Week' : 'List'}
               </button>
             ))}
           </div>
-          <button className="btn btn-gold" onClick={() => setShowNew(true)}>+ New Appointment</button>
+          <button className="btn btn-gold" onClick={() => { setShowNew(true); }}>+ New Appointment</button>
         </div>
       </div>
 
       {/* Week strip */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 24, overflowX: 'auto', paddingBottom: 4 }}>
+      <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
         {DAYS.map(d => {
           const info = fmtDay(d);
           const count = apptsByDay[d]?.filter(a => a.status !== 'Cancelled').length ?? 0;
           const isSelected = d === selectedDay;
           return (
-            <button key={d} onClick={() => setSelectedDay(d)}
-              style={{
-                minWidth: 72, padding: '10px 8px', borderRadius: 'var(--radius-lg)',
-                border: `2px solid ${isSelected ? 'var(--tux-navy)' : info.isToday ? 'var(--tux-gold)' : 'var(--surface-border)'}`,
-                background: isSelected ? 'var(--tux-navy)' : info.isToday ? '#FDF8E7' : 'var(--surface-card)',
-                color: isSelected ? 'white' : info.isPast && !info.isToday ? 'var(--text-muted)' : 'var(--text-primary)',
-                cursor: 'pointer', textAlign: 'center', transition: 'all .15s',
-                opacity: info.isPast && !info.isToday ? 0.6 : 1,
-              }}>
-              <div style={{ fontSize: '.7rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 2 }}>
+            <button key={d} onClick={() => { setSelectedDay(d); }}
+              className={`min-w-[72px] p-2.5 px-2 rounded-[var(--radius-lg)] border-2 text-center transition-all duration-150 cursor-pointer ${isSelected ? 'border-[var(--tux-navy)] bg-[var(--tux-navy)] text-white' : info.isToday ? 'border-[var(--tux-gold)] bg-[#FDF8E7] text-[var(--text-primary)]' : 'border-[var(--surface-border)] bg-[var(--surface-card)] text-[var(--text-primary)]'} ${info.isPast && !info.isToday ? 'opacity-60 text-[var(--text-muted)]' : 'opacity-100'}`}>
+              <div className="text-[0.7rem] font-bold uppercase tracking-tight mb-0.5">
                 {info.weekday}
               </div>
-              <div style={{ fontSize: '1.2rem', fontWeight: 900, lineHeight: 1 }}>{info.day}</div>
-              <div style={{ fontSize: '.68rem', marginTop: 2 }}>{info.month}</div>
+              <div className="text-[1.2rem] font-black leading-none">{info.day}</div>
+              <div className="text-[0.68rem] mt-0.5">{info.month}</div>
               {count > 0 && (
-                <div style={{ marginTop: 4, display: 'flex', justifyContent: 'center' }}>
-                  <div style={{ width: 18, height: 18, borderRadius: '50%', background: isSelected ? 'rgba(255,255,255,.3)' : info.isToday ? 'var(--tux-gold)' : 'var(--surface-hover)', fontSize: '.65rem', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', color: isSelected ? 'white' : 'var(--text-secondary)' }}>{count}</div>
+                <div className="mt-1 flex justify-center">
+                  <div className={`w-[18px] h-[18px] rounded-full text-[0.65rem] font-bold flex items-center justify-center ${isSelected ? 'bg-white/30 text-white' : info.isToday ? 'bg-[var(--tux-gold)] text-[var(--text-secondary)]' : 'bg-[var(--surface-hover)] text-[var(--text-secondary)]'}`}>{count}</div>
                 </div>
               )}
             </button>
@@ -92,19 +87,19 @@ const Appointments: React.FC = () => {
       </div>
 
       {view === 'week' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr', gap: 0 }}>
+        <div className="grid grid-cols-[80px_1fr] gap-0">
           {/* Time grid */}
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div className="flex flex-col">
             {HOURS.map(h => (
-              <div key={h} style={{ height: 60, display: 'flex', alignItems: 'flex-start', paddingTop: 6, justifyContent: 'flex-end', paddingRight: 12, fontSize: '.72rem', color: 'var(--text-muted)', fontWeight: 500 }}>{h}</div>
+              <div key={h} className="h-[60px] flex items-start pt-1.5 justify-end pr-3 text-[0.72rem] text-[var(--text-muted)] font-medium">{h}</div>
             ))}
           </div>
 
           {/* Appointment slots */}
-          <div style={{ position: 'relative', background: 'var(--surface-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--surface-border)', overflow: 'hidden' }}>
+          <div className="relative bg-[var(--surface-card)] rounded-[var(--radius-lg)] border border-[var(--surface-border)] overflow-hidden">
             {/* Hour dividers */}
             {HOURS.map((h, i) => (
-              <div key={h} style={{ position: 'absolute', top: i * 60, left: 0, right: 0, height: 60, borderTop: i > 0 ? '1px solid var(--surface-border)' : 'none', borderTopStyle: i % 2 === 0 ? 'solid' : 'dashed' }} />
+              <div key={h} className={`absolute left-0 right-0 h-[60px] ${i > 0 ? 'border-t border-[var(--surface-border)]' : 'border-none'} ${i % 2 === 0 ? 'border-solid' : 'border-dashed'}`} style={{ top: i * 60 }} />
             ))}
 
             {/* Current time indicator (today only) */}
@@ -112,10 +107,10 @@ const Appointments: React.FC = () => {
               const now = new Date();
               const startH = 9, endH = 18;
               const pct = ((now.getHours() - startH) * 60 + now.getMinutes()) / ((endH - startH) * 60);
-              if (pct < 0 || pct > 1) return null;
+              if (pct < 0 || pct > 1) {return null;}
               return (
-                <div style={{ position: 'absolute', top: pct * HOURS.length * 60, left: 0, right: 0, height: 2, background: 'var(--status-error)', zIndex: 10 }}>
-                  <div style={{ position: 'absolute', left: -5, top: -4, width: 10, height: 10, borderRadius: '50%', background: 'var(--status-error)' }} />
+                <div className="absolute left-0 right-0 h-[2px] bg-[var(--status-error)] z-10" style={{ top: pct * HOURS.length * 60 }}>
+                  <div className="absolute left-[-5px] top-[-4px] w-[10px] h-[10px] rounded-full bg-[var(--status-error)]" />
                 </div>
               );
             })()}
@@ -128,43 +123,35 @@ const Appointments: React.FC = () => {
               const cancelled = appt.status === 'Cancelled';
               return (
                 <div key={appt.id}
-                  onClick={() => setSelected(appt)}
+                  onClick={() => { setSelected(appt); }}
+                  className={`absolute left-2 right-2 rounded-lg py-1.25 px-2.5 cursor-pointer z-[5] transition-all duration-150 overflow-hidden border-[1.5px] border-l-[3px] hover:shadow-md ${cancelled ? 'bg-[var(--surface-hover)] border-[var(--surface-border)] opacity-50' : 'opacity-100'}`}
                   style={{
-                    position: 'absolute',
                     top: (startMin / 30) * 30,
-                    left: 8, right: 8,
                     height: Math.max((appt.duration / 30) * 30 - 4, 28),
-                    background: cancelled ? 'var(--surface-hover)' : cfg.bg,
-                    border: `1.5px solid ${cancelled ? 'var(--surface-border)' : cfg.color}22`,
-                    borderLeft: `3px solid ${cancelled ? 'var(--text-muted)' : cfg.color}`,
-                    borderRadius: 8,
-                    padding: '5px 10px',
-                    cursor: 'pointer',
-                    opacity: cancelled ? 0.5 : 1,
-                    zIndex: 5,
-                    transition: 'all .15s',
-                    overflow: 'hidden',
+                    background: cancelled ? undefined : cfg.bg,
+                    borderColor: cancelled ? undefined : `${cfg.color}22`,
+                    borderLeftColor: cancelled ? undefined : cfg.color,
                   }}
-                  onMouseEnter={e => (e.currentTarget.style.boxShadow = 'var(--shadow-md)')}
-                  onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                    <span style={{ fontSize: '.75rem' }}>{cfg.icon}</span>
-                    <span style={{ fontWeight: 700, fontSize: '.78rem', color: cfg.color, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{appt.customer}</span>
-                    <span className={`badge ${STATUS_CONFIG[appt.status].cls}`} style={{ fontSize: '.6rem', marginLeft: 'auto', flexShrink: 0 }}>{appt.status}</span>
+                  <div className="flex items-center gap-1.25">
+                    <span style={{ color: cfg.color, opacity: 0.8 }}>
+                      <SvgIcon name={cfg.icon} width="14" height="14" />
+                    </span>
+                    <span className="font-bold text-[0.78rem] whitespace-nowrap overflow-hidden text-ellipsis" style={{ color: cfg.color }}>{appt.customer}</span>
+                    <span className={`badge ${STATUS_CONFIG[appt.status].cls} text-[0.6rem] ml-auto shrink-0`}>{appt.status}</span>
                   </div>
                   {appt.duration >= 30 && (
-                    <div style={{ fontSize: '.7rem', color: 'var(--text-secondary)', marginTop: 2 }}>{appt.type} · {appt.time} · {appt.duration}min</div>
+                    <div className="text-[0.7rem] text-[var(--text-secondary)] mt-0.5">{appt.type} · {appt.time} · {appt.duration}min</div>
                   )}
                 </div>
               );
             })}
 
             {dayAppts.length === 0 && (
-              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 8, color: 'var(--text-muted)' }}>
-                <div style={{ fontSize: '2rem' }}>📅</div>
-                <div style={{ fontSize: '.9rem' }}>No appointments</div>
-                <button className="btn btn-outline btn-sm" onClick={() => setShowNew(true)}>+ Add Appointment</button>
+              <div className="absolute inset-0 flex items-center justify-center flex-col gap-2 text-[var(--text-muted)]">
+                <SvgIcon name="appointments" width="48" height="48" className="opacity-20" />
+                <div className="text-[0.9rem]">No appointments</div>
+                <button className="btn btn-outline btn-sm" onClick={() => { setShowNew(true); }}>+ Add Appointment</button>
               </div>
             )}
           </div>
@@ -173,7 +160,7 @@ const Appointments: React.FC = () => {
 
       {/* List view */}
       {view === 'list' && (
-        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+        <div className="card p-0 overflow-hidden">
           <table className="data-table">
             <thead>
               <tr><th>Date</th><th>Time</th><th>Customer</th><th>Type</th><th>Duration</th><th>Assigned</th><th>Status</th><th>Notes</th><th></th></tr>
@@ -184,20 +171,25 @@ const Appointments: React.FC = () => {
                 const scfg = STATUS_CONFIG[appt.status];
                 const dInfo = fmtDay(appt.date);
                 return (
-                  <tr key={appt.id} onClick={() => setSelected(appt)} style={{ opacity: appt.status === 'Cancelled' ? 0.5 : 1 }}>
-                    <td style={{ fontWeight: 600, fontSize: '.85rem', whiteSpace: 'nowrap' }}>
-                      {appt.date === TODAY ? <span style={{ color: 'var(--tux-gold)', fontWeight: 700 }}>Today</span> : `${dInfo.weekday} ${dInfo.day} ${dInfo.month}`}
+                  <tr key={appt.id} onClick={() => { setSelected(appt); }} className={appt.status === 'Cancelled' ? 'opacity-50' : 'opacity-100'}>
+                    <td className="font-semibold text-[0.85rem] whitespace-nowrap">
+                      {appt.date === TODAY ? <span className="text-[var(--tux-gold)] font-bold">Today</span> : `${dInfo.weekday} ${dInfo.day} ${dInfo.month}`}
                     </td>
-                    <td style={{ fontWeight: 700, fontSize: '.85rem', color: 'var(--tux-navy)', whiteSpace: 'nowrap' }}>{appt.time}</td>
+                    <td className="font-bold text-[0.85rem] text-[var(--tux-navy)] whitespace-nowrap">{appt.time}</td>
                     <td>
-                      <div style={{ fontWeight: 600, fontSize: '.875rem' }}>{appt.customer}</div>
-                      <div style={{ fontSize: '.72rem', color: 'var(--text-muted)' }}>{appt.phone}</div>
+                      <div className="font-semibold text-[0.875rem]">{appt.customer}</div>
+                      <div className="text-[0.72rem] text-[var(--text-muted)]">{appt.phone}</div>
                     </td>
-                    <td><span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 8px', borderRadius: 999, background: cfg.bg, color: cfg.color, fontSize: '.78rem', fontWeight: 600 }}>{cfg.icon} {appt.type}</span></td>
-                    <td style={{ fontSize: '.85rem', color: 'var(--text-secondary)' }}>{appt.duration}min</td>
-                    <td style={{ fontSize: '.82rem' }}>{appt.assignedTo}</td>
+                    <td>
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[0.75rem] font-bold" style={{ background: cfg.bg, color: cfg.color }}>
+                        <SvgIcon name={cfg.icon} width="14" height="14" />
+                        {appt.type}
+                      </span>
+                    </td>
+                    <td className="text-[0.85rem] text-[var(--text-secondary)]">{appt.duration}min</td>
+                    <td className="text-[0.82rem]">{appt.assignedTo}</td>
                     <td><span className={`badge ${scfg.cls}`}>{appt.status}</span></td>
-                    <td style={{ maxWidth: 180 }}><span style={{ fontSize: '.75rem', color: 'var(--text-muted)', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{appt.notes ?? '—'}</span></td>
+                    <td className="max-w-[180px]"><span className="text-[0.75rem] text-[var(--text-muted)] line-clamp-1">{appt.notes ?? '—'}</span></td>
                     <td><button className="btn btn-outline btn-sm" onClick={e => { e.stopPropagation(); setSelected(appt); }}>View</button></td>
                   </tr>
                 );
@@ -214,7 +206,7 @@ const Appointments: React.FC = () => {
         updateMutation={updateMutation} 
       />
 
-      {showNew && <NewApptModal onClose={() => setShowNew(false)} defaultDate={selectedDay} />}
+      {showNew && <NewApptModal onClose={() => { setShowNew(false); }} defaultDate={selectedDay} />}
     </div>
   );
 };

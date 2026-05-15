@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { InventoryItem } from 'types/inventory';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 import { SizeCell } from './SizeCell';
 
 interface InventoryCardProps {
@@ -19,8 +20,8 @@ export const InventoryCard = memo(({ item, onClick }: InventoryCardProps) => {
     <div className="card" style={{ cursor: 'pointer' }} onClick={onClick}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14 }}>
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <div style={{ width: 42, height: 42, background: 'var(--surface-hover)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem', flexShrink: 0 }}>
-            {item.category === 'Tuxedos' ? '🎩' : item.category === 'Shoes' ? '👞' : item.category === 'Accessories' ? '🎀' : '📦'}
+          <div style={{ width: 42, height: 42, background: 'var(--surface-hover)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: 'var(--tux-navy)' }}>
+            <SvgIcon name={item.category === 'Tuxedos' ? 'tuxedo' : item.category === 'Shoes' ? 'shoe' : item.category === 'Accessories' ? 'accessory' : 'inventory'} width="22" height="22" />
           </div>
           <div>
             <div style={{ fontWeight: 700, fontSize: '.95rem' }}>{item.name}</div>
@@ -30,8 +31,16 @@ export const InventoryCard = memo(({ item, onClick }: InventoryCardProps) => {
           </div>
         </div>
         <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexShrink: 0 }}>
-          {hasLow && <span className="badge badge-yellow">⚠ Low Stock</span>}
-          {hasOut && <span className="badge badge-red">● Out of Stock</span>}
+          {hasLow && (
+            <span className="badge badge-yellow" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <SvgIcon name="warning" width="12" height="12" /> Low Stock
+            </span>
+          )}
+          {hasOut && (
+            <span className="badge badge-red" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <SvgIcon name="warning" width="12" height="12" /> Out of Stock
+            </span>
+          )}
           <span className={`badge ${item.type === 'rental' ? 'badge-gold' : 'badge-navy'}`}>
             {item.type === 'rental' ? `Rental ${fmt(item.rentalRate ?? 0)}/day` : `Sale ${fmt(item.salePrice ?? 0)}`}
           </span>

@@ -23,7 +23,7 @@ const AppSkeleton = () => (
 const OfflineBanner: React.FC = () => {
   const { isOnline, queuedItems } = useOffline();
 
-  if (isOnline && queuedItems === 0) return null;
+  if (isOnline && queuedItems === 0) {return null;}
 
   return (
     <div style={{
@@ -35,7 +35,9 @@ const OfflineBanner: React.FC = () => {
       fontSize: '.82rem', fontWeight: 600,
       animation: 'slideDown .25s ease',
     }}>
-      <span style={{ fontSize: '1rem' }}>{isOnline ? '✅' : '📡'}</span>
+      <span>
+        <SvgIcon name={isOnline ? 'check-circle' : 'warning'} width="18" height="18" />
+      </span>
       {isOnline
         ? `Back online — syncing ${queuedItems} queued item${queuedItems !== 1 ? 's' : ''}...`
         : `You're offline — orders will be queued and synced when connected${queuedItems > 0 ? ` (${queuedItems} pending)` : ''}`
@@ -48,8 +50,8 @@ const AppLayout: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
   const { isOnline } = useOffline();
 
-  if (loading) return <AppSkeleton />;
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (loading) {return <AppSkeleton />;}
+  if (!isAuthenticated) {return <Navigate to="/login" replace />;}
 
   return (
     <>

@@ -1,6 +1,7 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { MeasurementRecord } from 'types/measurements';
 import { fmtDate } from 'constants/measurements';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 interface MeasurementCardProps {
   r: MeasurementRecord;
@@ -8,7 +9,7 @@ interface MeasurementCardProps {
 }
 
 export const MeasurementCard = memo(({ r, onClick }: MeasurementCardProps) => (
-  <div className="card" style={{ cursor: 'pointer' }} onClick={() => onClick(r)}
+  <div className="card" style={{ cursor: 'pointer' }} onClick={() => { onClick(r); }}
     onMouseEnter={e => (e.currentTarget.style.transform = 'translateY(-2px)')}
     onMouseLeave={e => (e.currentTarget.style.transform = 'none')}>
     <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 14 }}>
@@ -38,8 +39,8 @@ export const MeasurementCard = memo(({ r, onClick }: MeasurementCardProps) => (
     </div>
 
     {r.notes && (
-      <div style={{ fontSize: '.78rem', color: 'var(--text-secondary)', borderTop: '1px solid var(--surface-border)', paddingTop: 10, lineHeight: 1.4 }}>
-        📝 {r.notes}
+      <div style={{ fontSize: '.78rem', color: 'var(--text-secondary)', borderTop: '1px solid var(--surface-border)', paddingTop: 10, lineHeight: 1.4, display: 'flex', gap: 6 }}>
+        <SvgIcon name="tailoring" width="14" height="14" style={{ marginTop: 2 }} /> {r.notes}
       </div>
     )}
   </div>

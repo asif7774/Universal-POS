@@ -29,7 +29,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within AuthProvider');
+  if (!context) {throw new Error('useAuth must be used within AuthProvider');}
   return context;
 };
 
@@ -67,7 +67,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         body: JSON.stringify(body),
       });
 
-      if (!res.ok) return false;
+      if (!res.ok) {return false;}
 
       const data = await res.json() as { access_token: string; user: Record<string, unknown> };
       const sessionUser: User = {

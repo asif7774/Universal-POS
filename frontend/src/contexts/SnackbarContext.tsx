@@ -17,7 +17,7 @@ const SnackbarContext = createContext<SnackbarContextType | undefined>(undefined
 
 export const useSnackbar = () => {
   const context = useContext(SnackbarContext);
-  if (!context) throw new Error('useSnackbar must be used within SnackbarProvider');
+  if (!context) {throw new Error('useSnackbar must be used within SnackbarProvider');}
   return context;
 };
 
@@ -52,7 +52,7 @@ export const SnackbarProvider: React.FC<{ children: ReactNode }> = ({ children }
               width="18" height="18" 
             />
             <span style={{ flex: 1 }}>{s.message}</span>
-            <button onClick={() => removeSnackbar(s.id)} style={{ marginLeft: 8, background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+            <button onClick={() => { removeSnackbar(s.id); }} style={{ marginLeft: 8, background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
           </div>
         ))}
       </div>

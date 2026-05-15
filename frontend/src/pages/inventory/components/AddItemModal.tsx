@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../../lib/apiClient';
 import { useSnackbar } from 'contexts/SnackbarContext';
 import { Modal } from 'components/atoms/modal/Modal';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 export const AddItemModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const queryClient = useQueryClient();
@@ -33,7 +34,17 @@ export const AddItemModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
   };
 
   return (
-    <Modal isOpen={true} onClose={onClose} title="📦 Add New Product" maxWidth={500}>
+    <Modal 
+      isOpen={true} 
+      onClose={onClose} 
+      title={(
+        <>
+          <SvgIcon name="inventory" width="20" height="20" style={{ color: 'var(--tux-gold)' }} />
+          Add New Product
+        </>
+      )} 
+      maxWidth={500}
+    >
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
           <div>

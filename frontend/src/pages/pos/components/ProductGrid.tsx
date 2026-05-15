@@ -29,27 +29,26 @@ export const ProductGrid = memo(({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', background: 'var(--surface-bg)', overflow: 'hidden', height: '100%' }}>
       {/* Search + category bar */}
-      <div style={{ padding: '14px 16px', background: 'var(--surface-card)', borderBottom: '1px solid var(--surface-border)', display: 'flex', gap: 10, alignItems: 'center' }}>
-        <div className="input-with-icon" style={{ flex: 1 }}>
+      <div className="search-container" style={{ padding: '14px 16px', background: 'var(--surface-card)', borderBottom: '1px solid var(--surface-border)', margin: 0, gap: 12 }}>
+        <div className="search-input-wrapper input-with-icon" style={{ flex: 1, minWidth: 0, maxWidth: 'none' }}>
           <span className="input-icon">
-            <SvgIcon name="search" width="15" height="15" />
+            <SvgIcon name="search" width="18" height="18" />
           </span>
           <input
             id="pos-search"
             ref={searchRef}
             className="input"
-            placeholder="Search products or scan barcode..."
+            placeholder="Search products or scan..."
             value={search}
-            onChange={e => setSearch(e.target.value)}
+            onChange={e => { setSearch(e.target.value); }}
             autoFocus
-            style={{ paddingLeft: 36 }}
           />
         </div>
-        <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+        <div className="filter-group" style={{ flexShrink: 0 }}>
           {categories.map(cat => (
             <button
               key={cat}
-              onClick={() => setCategory(cat)}
+              onClick={() => { setCategory(cat); }}
               className={`btn btn-sm ${category === cat ? 'btn-primary' : 'btn-outline'}`}
               style={{ fontSize: '.75rem' }}
             >
@@ -74,12 +73,12 @@ export const ProductGrid = memo(({
               <div
                 key={product.id}
                 className="pos-product-card"
-                onClick={() => onAddToCart(product, product.type === 'rental')}
+                onClick={() => { onAddToCart(product, product.type === 'rental'); }}
                 role="button"
                 tabIndex={0}
                 onKeyDown={e => e.key === 'Enter' && onAddToCart(product, product.type === 'rental')}
               >
-                <div style={{ marginBottom: 12, color: 'var(--tux-navy)', opacity: 0.8 }}>
+                <div style={{ marginBottom: 12, color: 'var(--tux-navy)', opacity: 0.8, display: 'flex', justifyContent: 'center' }}>
                   <SvgIcon 
                     name={
                       product.category === 'Tuxedos' ? 'tuxedo' :

@@ -40,7 +40,7 @@ export const OfflineProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // On reconnect: flush queue + resync
   useEffect(() => {
-    if (!justReconnected) return;
+    if (!justReconnected) {return;}
     (async () => {
       await flushQueue();
       await resyncAll();
@@ -71,6 +71,6 @@ export const OfflineProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
 export function useOffline(): OfflineContextValue {
   const ctx = useContext(OfflineContext);
-  if (!ctx) throw new Error('useOffline must be used within <OfflineProvider>');
+  if (!ctx) {throw new Error('useOffline must be used within <OfflineProvider>');}
   return ctx;
 }

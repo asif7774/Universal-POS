@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useTenant } from './TenantContext';
-import { PluginModule } from '../plugins/types';
+import { PluginModule, RouteConfig, NavItemConfig } from '../plugins/types';
 
 // The plugin registry. We define all possible plugins here, but they are
 // only downloaded/loaded if the tenant config says they should be.
@@ -15,8 +15,8 @@ interface PluginContextValue {
   isLoadingPlugins: boolean;
   
   // Helper methods to extract specific features from all loaded plugins
-  getNavItems: () => PluginModule['navItems'];
-  getRoutes: () => PluginModule['routes'];
+  getNavItems: () => NavItemConfig[];
+  getRoutes: () => RouteConfig[];
   getCheckoutExtensions: (position: string) => NonNullable<PluginModule['checkoutExtensions']>;
   getSettingsPages: () => NonNullable<PluginModule['settingsPages']>;
 }
@@ -29,7 +29,7 @@ export const PluginProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isLoadingPlugins, setIsLoadingPlugins] = useState(true);
 
   useEffect(() => {
-    if (tenantLoading) return;
+    if (tenantLoading) {return;}
 
     const loadPlugins = async () => {
       setIsLoadingPlugins(true);
@@ -101,6 +101,6 @@ export const PluginProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
 export const usePlugins = () => {
   const ctx = useContext(PluginContext);
-  if (!ctx) throw new Error('usePlugins must be used within <PluginProvider>');
+  if (!ctx) {throw new Error('usePlugins must be used within <PluginProvider>');}
   return ctx;
 };

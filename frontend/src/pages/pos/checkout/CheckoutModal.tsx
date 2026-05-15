@@ -1,4 +1,3 @@
-import React from 'react';
 import { Modal } from 'components/atoms/modal/Modal';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
@@ -49,8 +48,13 @@ export const CheckoutModal = ({
             className="btn btn-gold"
             onClick={processOrder}
             disabled={(paymentMethod === 'cash' && (parseFloat(cashGiven) < total || !cashGiven)) || processingPayment || isPending}
+            style={{ display: 'flex', alignItems: 'center', gap: 6 }}
           >
-            {processingPayment ? 'Processing Card...' : isPending ? 'Saving...' : '✓ Complete Sale'}
+            {processingPayment ? 'Processing Card...' : isPending ? 'Saving...' : (
+              <>
+                <SvgIcon name="check-circle" width="16" height="16" /> Complete Sale
+              </>
+            )}
           </button>
         </>
       }
@@ -71,12 +75,14 @@ export const CheckoutModal = ({
                 {selectedCustomer.firstName[0]}{selectedCustomer.lastName[0]}
               </div>
               <span style={{ flex: 1, fontWeight: 600, fontSize: '.85rem' }}>{selectedCustomer.firstName} {selectedCustomer.lastName}</span>
-              <button onClick={() => setSelectedCustomer(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: '1rem' }}>✕</button>
+              <button onClick={() => { setSelectedCustomer(null); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex' }}>
+                <SvgIcon name="close" width="14" height="14" />
+              </button>
             </div>
           ) : (
             <div>
               <input className="input" placeholder="Search customer..." value={customerSearch}
-                onChange={e => setCustomerSearch(e.target.value)} style={{ marginBottom: 4 }} />
+                onChange={e => { setCustomerSearch(e.target.value); }} style={{ marginBottom: 4 }} />
               {customerSearch && (
                 <div style={{ border: '1px solid var(--surface-border)', borderRadius: 8, background: 'var(--surface-card)', maxHeight: 120, overflowY: 'auto' }}>
                   {customers.filter(c => `${c.firstName} ${c.lastName}`.toLowerCase().includes(customerSearch.toLowerCase())).slice(0, 5).map(c => (
@@ -110,14 +116,14 @@ export const CheckoutModal = ({
           <div className="input-label" style={{ marginBottom: 8 }}>Payment Method</div>
           <div style={{ display: 'flex', gap: 8 }}>
             {PAYMENT_METHODS.map(m => (
-              <button key={m.id} onClick={() => setPaymentMethod(m.id)}
+              <button key={m.id} onClick={() => { setPaymentMethod(m.id); }}
                 style={{
                   flex: 1, padding: '10px 6px', borderRadius: 'var(--radius-md)',
                   border: `2px solid ${paymentMethod === m.id ? 'var(--tux-navy)' : 'var(--surface-border)'}`,
                   background: paymentMethod === m.id ? '#EEF2F8' : 'var(--surface-card)',
                   cursor: 'pointer', textAlign: 'center', transition: 'all .15s',
                 }}>
-                <div style={{ marginBottom: 6, color: paymentMethod === m.id ? 'var(--tux-navy)' : 'var(--text-muted)' }}>
+                <div style={{ marginBottom: 6, color: paymentMethod === m.id ? 'var(--tux-navy)' : 'var(--text-muted)', display: 'flex', justifyContent: 'center' }}>
                   <SvgIcon name={m.icon} width="24" height="24" />
                 </div>
                 <div style={{ fontSize: '.75rem', fontWeight: 600, color: paymentMethod === m.id ? 'var(--tux-navy)' : 'var(--text-secondary)' }}>{m.label}</div>
@@ -132,7 +138,7 @@ export const CheckoutModal = ({
             <label className="input-label">Cash Tendered</label>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 6 }}>
               {[Math.ceil(total), Math.ceil(total / 10) * 10, Math.ceil(total / 20) * 20, Math.ceil(total / 50) * 50].filter((v, i, a) => a.indexOf(v) === i).map(v => (
-                <button key={v} onClick={() => setCashGiven(v.toString())}
+                <button key={v} onClick={() => { setCashGiven(v.toString()); }}
                   className="btn btn-outline btn-sm">
                   {fmt(v)}
                 </button>
@@ -140,7 +146,7 @@ export const CheckoutModal = ({
             </div>
             <input
               type="number" className="input" placeholder="0.00"
-              value={cashGiven} onChange={e => setCashGiven(e.target.value)}
+              value={cashGiven} onChange={e => { setCashGiven(e.target.value); }}
               min={0} step="0.01"
             />
             {parseFloat(cashGiven) > 0 && (

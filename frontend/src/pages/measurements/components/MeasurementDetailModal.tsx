@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal } from 'components/atoms/modal/Modal';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 import { MeasurementRecord } from 'types/measurements';
 import { FIELDS, fmtDate } from 'constants/measurements';
 
@@ -12,14 +13,18 @@ export const MeasurementDetailModal: React.FC<MeasurementDetailModalProps> = ({ 
   return (
     <Modal
       isOpen={!!selected}
-      onClose={() => setSelected(null)}
+      onClose={() => { setSelected(null); }}
       maxWidth={560}
       title={selected?.customerName}
       footer={
         <>
-          <button className="btn btn-outline">✏️ Edit</button>
-          <button className="btn btn-primary">🖨️ Print Card</button>
-          <button className="btn btn-ghost btn-sm" onClick={() => setSelected(null)}>Close</button>
+          <button className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <SvgIcon name="tailoring" width="14" height="14" /> Edit
+          </button>
+          <button className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <SvgIcon name="printer" width="14" height="14" /> Print Card
+          </button>
+          <button className="btn btn-ghost btn-sm" onClick={() => { setSelected(null); }}>Close</button>
         </>
       }
     >
@@ -30,10 +35,10 @@ export const MeasurementDetailModal: React.FC<MeasurementDetailModalProps> = ({ 
           </div>
           {/* Measurement grid */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 32px' }}>
-            {FIELDS.filter(f => selected[f.key as keyof MeasurementRecord]).map(f => (
+            {FIELDS.filter(f => selected[f.key]).map(f => (
               <div key={f.key} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--surface-border)', fontSize: '.875rem' }}>
                 <span style={{ color: 'var(--text-secondary)' }}>{f.label}</span>
-                <span style={{ fontWeight: 700 }}>{String(selected[f.key as keyof MeasurementRecord])}</span>
+                <span style={{ fontWeight: 700 }}>{String(selected[f.key])}</span>
               </div>
             ))}
           </div>

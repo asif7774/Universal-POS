@@ -4,6 +4,7 @@ import { useAuth } from 'contexts/AuthContext';
 import { BrandPanel } from './components/BrandPanel';
 import { EmailForm } from './components/EmailForm';
 import { PinForm } from './components/PinForm';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 const Login: React.FC = () => {
   const { login, loading } = useAuth();
@@ -21,8 +22,8 @@ const Login: React.FC = () => {
     return await login('', pin, true);
   };
 
-  const onSuccess = () => navigate('/dashboard');
-  const onError = (msg: string) => setError(msg);
+  const onSuccess = () => { navigate('/dashboard'); };
+  const onError = (msg: string) => { setError(msg); };
 
   return (
     <main className="login-page" id="main-content">
@@ -70,9 +71,14 @@ const Login: React.FC = () => {
                   background: tab === t ? 'var(--surface-card)' : 'transparent',
                   color: tab === t ? 'var(--tux-navy)' : 'var(--text-muted)',
                   boxShadow: tab === t ? 'var(--shadow-sm)' : 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8,
                 }}
               >
-                {t === 'email' ? '📧 Email Login' : '🔢 PIN Login'}
+                <SvgIcon name={t === 'email' ? 'mail' : 'lock'} width="16" height="16" />
+                {t === 'email' ? 'Email Login' : 'PIN Login'}
               </button>
             ))}
           </div>
@@ -85,7 +91,7 @@ const Login: React.FC = () => {
               color: 'var(--status-error)', fontSize: '.85rem',
               marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8,
             }}>
-              <span>⚠️</span> {error}
+              <SvgIcon name="warning" width="16" height="16" /> {error}
             </div>
           )}
 

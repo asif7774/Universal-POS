@@ -17,8 +17,8 @@ const Measurements: React.FC = () => {
     queryFn: async () => await apiClient.get<MeasurementRecord[]>('/customers/measurements/all'),
   });
 
-  if (isLoading) return <div className="page-header"><h1 className="page-title">Loading...</h1></div>;
-  if (error) return <div className="page-header"><h1 className="page-title" style={{ color: 'red' }}>Error loading measurements</h1></div>;
+  if (isLoading) {return <div className="page-header"><h1 className="page-title">Loading...</h1></div>;}
+  if (error) {return <div className="page-header"><h1 className="page-title text-red-500">Error loading measurements</h1></div>;}
 
   const filtered = records.filter(r =>
     r.customerName.toLowerCase().includes(search.toLowerCase())
@@ -31,18 +31,20 @@ const Measurements: React.FC = () => {
           <h1 className="page-title">Measurements</h1>
           <p className="page-subtitle">Digital measurement book · {records.length} profiles on file</p>
         </div>
-        <button className="btn btn-gold" onClick={() => setShowNew(true)}>+ Take Measurement</button>
+        <button className="btn btn-gold" onClick={() => { setShowNew(true); }}>+ Take Measurement</button>
       </div>
 
-      <div className="input-with-icon" style={{ marginBottom: 20, maxWidth: 400 }}>
-        <span className="input-icon">
-          <SvgIcon name="search" width="15" height="15" />
-        </span>
-        <input className="input" placeholder="Search customer..." value={search}
-          onChange={e => setSearch(e.target.value)} style={{ paddingLeft: 36 }} />
+      <div className="search-container">
+        <div className="search-input-wrapper input-with-icon">
+          <span className="input-icon">
+            <SvgIcon name="search" width="18" height="18" />
+          </span>
+          <input className="input" placeholder="Search customer..." value={search}
+            onChange={e => { setSearch(e.target.value); }} />
+        </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 16 }}>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(340px,1fr))] gap-4">
         {filtered.map(r => (
           <MeasurementCard 
             key={r.id} 
@@ -54,7 +56,9 @@ const Measurements: React.FC = () => {
 
       {filtered.length === 0 && (
         <div className="empty-state">
-          <div className="empty-state-icon">📐</div>
+          <div className="empty-state-icon">
+            <SvgIcon name="measurements" width="48" height="48" className="opacity-30" />
+          </div>
           <p>No measurement records found</p>
         </div>
       )}
@@ -66,7 +70,7 @@ const Measurements: React.FC = () => {
       />
 
       {/* New Measurement Form */}
-      {showNew && <NewMeasurementModal onClose={() => setShowNew(false)} />}
+      {showNew && <NewMeasurementModal onClose={() => { setShowNew(false); }} />}
     </div>
   );
 };

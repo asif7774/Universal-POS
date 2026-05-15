@@ -21,7 +21,7 @@ function isStale(cachedAt: number): boolean {
 export async function seedProducts(force = false): Promise<void> {
   try {
     const first = await posDb.products.toCollection().first();
-    if (!force && first && !isStale(first.cachedAt)) return;
+    if (!force && first && !isStale(first.cachedAt)) {return;}
 
     const products = await apiClient.get<any[]>('/products');
     const now = Date.now();
@@ -35,7 +35,7 @@ export async function seedProducts(force = false): Promise<void> {
 export async function seedCustomers(force = false): Promise<void> {
   try {
     const first = await posDb.customers.toCollection().first();
-    if (!force && first && !isStale(first.cachedAt)) return;
+    if (!force && first && !isStale(first.cachedAt)) {return;}
 
     const customers = await apiClient.get<any[]>('/customers');
     const now = Date.now();
@@ -49,7 +49,7 @@ export async function seedCustomers(force = false): Promise<void> {
 export async function seedOrders(force = false): Promise<void> {
   try {
     const first = await posDb.orders.orderBy('createdAt').last();
-    if (!force && first && !isStale(first.cachedAt)) return;
+    if (!force && first && !isStale(first.cachedAt)) {return;}
 
     const orders = await apiClient.get<any[]>('/orders?limit=100');
     const now = Date.now();

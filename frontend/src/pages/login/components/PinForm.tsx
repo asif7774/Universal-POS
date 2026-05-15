@@ -25,7 +25,7 @@ export const PinForm: React.FC<PinFormProps> = ({ loading, onLogin, onSuccess, o
     }
   };
 
-  const handlePinDelete = () => setPin(p => p.slice(0, -1));
+  const handlePinDelete = () => { setPin(p => p.slice(0, -1)); };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24 }}>
@@ -54,8 +54,8 @@ export const PinForm: React.FC<PinFormProps> = ({ loading, onLogin, onSuccess, o
           <button
             key={i}
             onClick={() => {
-              if (key === '⌫') handlePinDelete();
-              else if (key !== '') handlePinInput(key);
+              if (key === '⌫') {handlePinDelete();}
+              else if (key !== '') {handlePinInput(key);}
             }}
             disabled={key === '' || loading}
             style={{

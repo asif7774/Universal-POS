@@ -74,7 +74,7 @@ class HardwareAbstractionLayer {
 
     console.log('[HAL] Sending ESC/POS commands to printer...');
     console.log(text);
-    return new Promise(resolve => setTimeout(() => resolve(true), 1000));
+    return new Promise(resolve => setTimeout(() => { resolve(true); }, 1000));
   }
 
   /**
@@ -103,7 +103,7 @@ class HardwareAbstractionLayer {
    */
   public simulateBarcodeScan(code: string) {
     if (this._scanner.connected) {
-      this._onBarcodeListeners.forEach(fn => fn(code));
+      this._onBarcodeListeners.forEach(fn => { fn(code); });
     }
   }
 
@@ -128,7 +128,7 @@ class HardwareAbstractionLayer {
 
   private fallbackBrowserPrint(text: string) {
     const w = window.open('', '_blank', 'width=380,height=600');
-    if (!w) return;
+    if (!w) {return;}
     w.document.write(`<html><head><title>Receipt</title><style>
       body{font-family:monospace;font-size:13px;padding:20px;white-space:pre;}
     </style></head><body>${text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}<script>window.print();window.close();<\/script></body></html>`);

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { usePlugins } from 'contexts/PluginContext';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 import { SettingsTabType, StoreSettings } from 'types/settings';
 import { StoreInfoTab } from './components/StoreInfoTab';
 import { StaffTab } from './components/StaffTab';
@@ -9,9 +10,9 @@ import { SecurityTab } from './components/SecurityTab';
 
 const Settings: React.FC = () => {
   const { getSettingsPages } = usePlugins();
-  const [tab, setTab] = useState<SettingsTabType>('store');
+  const [tab, setTab] = useState('store');
   const [saved, setSaved] = useState(false);
-  const [store, setStore] = useState<StoreSettings>({
+  const [store, setStore] = useState({
     name: 'TuxedoPOS HQ',
     address: '123 Fifth Avenue',
     city: 'New York', state: 'NY', zip: '10001',
@@ -25,19 +26,19 @@ const Settings: React.FC = () => {
     rentalBuffer: '1',
   });
 
-  const set = (k: string, v: string) => setStore(s => ({ ...s, [k]: v }));
-  const save = () => { setSaved(true); setTimeout(() => setSaved(false), 2500); };
+  const set = (k: string, v: string) => { setStore(s => ({ ...s, [k]: v })); };
+  const save = () => { setSaved(true); setTimeout(() => { setSaved(false); }, 2500); };
 
   const TABS: { id: SettingsTabType; label: string; icon: string }[] = [
-    { id: 'store',    label: 'Store Info',  icon: '🏪' },
-    { id: 'staff',    label: 'Staff',       icon: '👥' },
-    { id: 'taxes',    label: 'Taxes & Fees',icon: '💰' },
-    { id: 'receipts', label: 'Receipts',    icon: '🖨️'  },
-    { id: 'security', label: 'Security',    icon: '🔐' },
+    { id: 'store',    label: 'Store Info',  icon: 'home' },
+    { id: 'staff',    label: 'Staff',       icon: 'users' },
+    { id: 'taxes',    label: 'Taxes & Fees',icon: 'banknote' },
+    { id: 'receipts', label: 'Receipts',    icon: 'printer'  },
+    { id: 'security', label: 'Security',    icon: 'lock' },
     ...getSettingsPages().map(page => ({
       id: page.id,
       label: page.title,
-      icon: '🔌' // Default icon for plugins
+      icon: 'settings' // Default icon for plugins
     }))
   ];
 
@@ -51,8 +52,12 @@ const Settings: React.FC = () => {
           <p className="page-subtitle">TuxedoPOS HQ · Configure your store</p>
         </div>
         {tab !== 'staff' && (
-          <button className="btn btn-gold" onClick={save}>
-            {saved ? '✓ Saved!' : 'Save Changes'}
+          <button className="btn btn-gold" onClick={save} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            {saved ? (
+              <>
+                <SvgIcon name="check-circle" width="14" height="14" /> Saved!
+              </>
+            ) : 'Save Changes'}
           </button>
         )}
       </div>
@@ -61,7 +66,7 @@ const Settings: React.FC = () => {
         {/* Sidebar nav */}
         <div className="card" style={{ padding: 8, alignSelf: 'start' }}>
           {TABS.map(t => (
-            <button key={t.id} onClick={() => setTab(t.id)}
+            <button key={t.id} onClick={() => { setTab(t.id); }}
               style={{
                 display: 'flex', alignItems: 'center', gap: 10, width: '100%',
                 padding: '10px 12px', border: 'none', borderRadius: 'var(--radius-md)',
@@ -70,7 +75,7 @@ const Settings: React.FC = () => {
                 cursor: 'pointer', fontSize: '.875rem', fontWeight: tab === t.id ? 700 : 500,
                 transition: 'all .15s', textAlign: 'left', marginBottom: 2,
               }}>
-              <span>{t.icon}</span> {t.label}
+              <SvgIcon name={t.icon} width="16" height="16" /> {t.label}
             </button>
           ))}
         </div>
@@ -86,7 +91,10 @@ const Settings: React.FC = () => {
           {/* ── Plugin Settings ── */}
           {activePluginPage && (
             <div className="card">
-              <div className="card-header"><span className="card-title">🔌 {activePluginPage.title}</span></div>
+              <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <SvgIcon name="settings" width="18" height="18" style={{ color: 'var(--tux-gold)' }} />
+                <span className="card-title">{activePluginPage.title}</span>
+              </div>
               {activePluginPage.component}
             </div>
           )}

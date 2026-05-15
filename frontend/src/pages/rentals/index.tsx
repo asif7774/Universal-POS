@@ -8,7 +8,7 @@ import { RentalDetailModal } from './components/RentalDetailModal';
 import { NewRentalForm } from './components/NewRentalForm';
 
 const Rentals: React.FC = () => {
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<Rental | null>(null);
   const [isAdding, setIsAdding] = useState(false);
@@ -29,7 +29,7 @@ const Rentals: React.FC = () => {
   const createRental = useMutation({
     mutationFn: (data: Partial<Rental>) => apiClient.post<Rental>('/rentals', data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['rentals'] });
+      void queryClient.invalidateQueries({ queryKey: ['rentals'] });
       setIsAdding(false);
     }
   });
@@ -43,16 +43,16 @@ const Rentals: React.FC = () => {
     const customerName = r.customer ? `${r.customer.firstName} ${r.customer.lastName}`.toLowerCase() : '';
     const matchSearch = customerName.includes(search.toLowerCase()) ||
       r.rentalNo.toLowerCase().includes(search.toLowerCase()) ||
-      (r.eventName || '').toLowerCase().includes(search.toLowerCase());
+      (r.eventName ?? '').toLowerCase().includes(search.toLowerCase());
     return matchStatus && matchSearch;
   });
 
-  const counts = rentals.reduce((acc, r) => {
+  const counts = rentals.reduce<Record<string, number>>((acc, r) => {
     const isOverdue = r.status === 'out' && daysLeft(r.returnDate) < 0;
     const stat = isOverdue ? 'overdue' : r.status;
     acc[stat] = (acc[stat] ?? 0) + 1;
     return acc;
-  }, {} as Record<string, number>);
+  }, {});
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -76,42 +76,33 @@ const Rentals: React.FC = () => {
     <div className="animate-fade-in">
       {/* Header */}
       <div className="page-header">
-        <div>
-          <h1 className="page-title">Rental Management</h1>
-          <p className="page-subtitle">{rentals.length} active rentals · {counts['overdue'] ?? 0} overdue</p>
+        <div className="flex items-center gap-4">
+          {isAdding && (
+            <button onClick={() => { setIsAdding(false); }} className="btn btn-icon btn-ghost -ml-2">
+              <SvgIcon name="arrow-left" width="22" height="22" />
+            </button>
+          )}
+          <div>
+            <h1 className="page-title">{isAdding ? 'New Rental' : 'Rental Management'}</h1>
+            <p className="page-subtitle">{isAdding ? 'Create a new rental booking' : `${rentals.length} active rentals · ${counts['overdue'] ?? 0} overdue`}</p>
+          </div>
         </div>
-        {!isAdding && <button className="btn btn-gold" onClick={() => setIsAdding(true)}>+ New Rental Booking</button>}
+        {!isAdding && <button className="btn btn-gold" onClick={() => { setIsAdding(true); }}>+ New Rental Booking</button>}
       </div>
 
-      {isAdding ? (
-        <NewRentalForm 
-          customers={customers}
-          onSubmit={handleSubmit}
-          isPending={createRental.isPending}
-          onCancel={() => setIsAdding(false)}
-        />
-      ) : (
-        <>
-          {/* Status tabs */}
-          <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
+      {!isAdding && (
+        <div className="search-container">
+          {/* Status filters */}
+          <div className="filter-group">
             {statuses.map(s => {
               const count = s === 'all' ? rentals.length : (counts[s] ?? 0);
               return (
-                <button key={s} onClick={() => setStatusFilter(s)}
-                  style={{
-                    padding: '6px 14px', borderRadius: 999, border: '1.5px solid',
-                    borderColor: statusFilter === s ? 'var(--tux-navy)' : 'var(--surface-border)',
-                    background: statusFilter === s ? 'var(--tux-navy)' : 'var(--surface-card)',
-                    color: statusFilter === s ? 'white' : 'var(--text-secondary)',
-                    cursor: 'pointer', fontSize: '.8rem', fontWeight: 600,
-                    display: 'flex', alignItems: 'center', gap: 6, textTransform: 'capitalize'
-                  }}>
-                  {s === 'overdue' ? '⚠️ ' : ''}{s}
+                <button key={s} onClick={() => { setStatusFilter(s); }}
+                  className={`btn btn-sm capitalize rounded-full ${statusFilter === s ? 'btn-primary' : 'btn-outline'}`}>
+                  {s === 'overdue' && <SvgIcon name="warning" width="14" height="14" />}
+                  {s}
                   {count > 0 && (
-                    <span style={{
-                      background: statusFilter === s ? 'rgba(255,255,255,.25)' : 'var(--surface-hover)',
-                      padding: '1px 6px', borderRadius: 999, fontSize: '.7rem', color: statusFilter === s ? 'white' : 'var(--text-primary)'
-                    }}>
+                    <span className={`ml-1.5 opacity-80 rounded-full px-1.5 py-0.5 text-[0.7rem] ${statusFilter === s ? 'bg-white/20' : 'bg-[var(--surface-hover)]'}`}>
                       {count}
                     </span>
                   )}
@@ -121,15 +112,26 @@ const Rentals: React.FC = () => {
           </div>
 
           {/* Search */}
-          <div className="input-with-icon" style={{ marginBottom: 16, maxWidth: 400 }}>
+          <div className="search-input-wrapper input-with-icon">
             <span className="input-icon">
-              <SvgIcon name="search" width="15" height="15" />
+              <SvgIcon name="search" width="18" height="18" />
             </span>
-            <input className="input" placeholder="Search by customer, order, event..." value={search} onChange={e => setSearch(e.target.value)} style={{ paddingLeft: 36 }} />
+            <input className="input" placeholder="Search by customer, order, event..." value={search} onChange={e => { setSearch(e.target.value); }} />
           </div>
+        </div>
+      )}
 
+      {isAdding ? (
+        <NewRentalForm 
+          customers={customers}
+          onSubmit={handleSubmit}
+          isPending={createRental.isPending}
+          onCancel={() => { setIsAdding(false); }}
+        />
+      ) : (
+        <>
           {isLoading ? (
-            <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>Loading rentals...</div>
+            <div className="p-10 text-center text-[var(--text-muted)]">Loading rentals...</div>
           ) : (
             <RentalTable filtered={filtered} setSelected={setSelected} />
           )}

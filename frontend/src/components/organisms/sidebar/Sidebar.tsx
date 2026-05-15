@@ -62,7 +62,7 @@ const Sidebar: React.FC = () => {
   // Theme state
   const [isDark, setIsDark] = useState(() => {
     const saved = localStorage.getItem('theme');
-    if (saved) return saved === 'dark';
+    if (saved) {return saved === 'dark';}
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
@@ -79,9 +79,9 @@ const Sidebar: React.FC = () => {
   useEffect(() => {
     const mediaQuery = window.matchMedia('(pointer: fine)');
     setIsPointerFine(mediaQuery.matches);
-    const handler = (e: MediaQueryListEvent) => setIsPointerFine(e.matches);
+    const handler = (e: MediaQueryListEvent) => { setIsPointerFine(e.matches); };
     mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
+    return () => { mediaQuery.removeEventListener('change', handler); };
   }, []);
 
   const pluginNavItems = getNavItems() || [];
@@ -117,8 +117,8 @@ const Sidebar: React.FC = () => {
       <nav
         className="sidebar"
         aria-label="Main navigation"
-        onMouseEnter={isPointerFine ? () => setIsHovered(true) : undefined}
-        onMouseLeave={isPointerFine ? () => setIsHovered(false) : undefined}
+        onMouseEnter={isPointerFine ? () => { setIsHovered(true); } : undefined}
+        onMouseLeave={isPointerFine ? () => { setIsHovered(false); } : undefined}
         style={{
           width: isEffectivelyExpanded ? 260 : 68,
           transition: 'width .2s ease',
@@ -144,7 +144,7 @@ const Sidebar: React.FC = () => {
             </span>
           )}
           <button
-            onClick={() => setCollapsed(c => !c)}
+            onClick={() => { setCollapsed(c => !c); }}
             style={{
               marginLeft: isEffectivelyExpanded ? 'auto' : 0,
               background: 'rgba(255,255,255,.1)',
@@ -165,12 +165,12 @@ const Sidebar: React.FC = () => {
           {activeNavSections.map(section => {
             const visibleItems = section.items.filter(
               item => {
-                if (!item.roles) return true;
-                if (item.roles.includes('superadmin') && user?.email === 'admin@tuxedopos.com') return true;
+                if (!item.roles) {return true;}
+                if (item.roles.includes('superadmin') && user?.email === 'admin@tuxedopos.com') {return true;}
                 return user && item.roles.includes(user.role);
               }
             );
-            if (!visibleItems.length) return null;
+            if (!visibleItems.length) {return null;}
             return (
               <div key={section.section}>
                 {isEffectivelyExpanded && (
@@ -206,7 +206,7 @@ const Sidebar: React.FC = () => {
           {isEffectivelyExpanded && user ? (
             <>
               <button 
-                onClick={() => setIsUserMenuOpen(prev => !prev)}
+                onClick={() => { setIsUserMenuOpen(prev => !prev); }}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 10,
                   padding: '10px 12px', marginBottom: 0,
@@ -268,7 +268,7 @@ const Sidebar: React.FC = () => {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <button
-                onClick={() => setIsDark(d => !d)}
+                onClick={() => { setIsDark(d => !d); }}
                 className="nav-item"
                 style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', justifyContent: 'center', color: 'rgba(255,255,255,.8)', whiteSpace: 'nowrap' }}
                 title="Toggle theme"

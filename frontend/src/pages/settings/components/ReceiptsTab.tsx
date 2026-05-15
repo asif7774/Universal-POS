@@ -1,8 +1,12 @@
 import React from 'react';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 export const ReceiptsTab: React.FC = () => (
   <div className="card">
-    <div className="card-header"><span className="card-title">🖨️ Receipt Configuration</span></div>
+    <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+      <SvgIcon name="printer" width="16" height="16" style={{ color: 'var(--tux-navy)' }} />
+      <span className="card-title">Receipt Configuration</span>
+    </div>
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
       {[
         { label: 'Print receipt after every sale', defaultChecked: true },

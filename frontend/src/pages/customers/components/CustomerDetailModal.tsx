@@ -1,5 +1,6 @@
-import React from 'react';
 import { Customer, Measurement } from 'types/customers';
+import { Modal } from 'components/atoms/modal/Modal';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 interface CustomerDetailModalProps {
   selected: Customer | null;
@@ -20,44 +21,55 @@ const MeasurementRow = ({ label, value }: { label: string; value: string | null 
 );
 
 export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiveTab, measurements }: CustomerDetailModalProps) => {
-  if (!selected) return null;
+  if (!selected) {return null;}
 
   return (
-    <div className="modal-overlay" onClick={() => setSelected(null)}>
-      <div className="modal animate-slide-up" onClick={e => e.stopPropagation()} style={{ maxWidth: 580 }}>
-        <div className="modal-header">
-          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-            <div className="avatar" style={{ width: 48, height: 48, fontSize: '1rem', background: selected.tags?.includes('VIP') ? 'var(--tux-gold)' : 'var(--tux-navy)', color: selected.tags?.includes('VIP') ? 'var(--tux-navy-dark)' : 'white' }}>
-              {selected.firstName[0]}{selected.lastName[0]}
-            </div>
-            <div>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.15rem' }}>{selected.firstName} {selected.lastName}</h3>
-              <div style={{ fontSize: '.82rem', color: 'var(--text-secondary)' }}>
-                {selected.email} · {selected.phone}
-              </div>
+    <Modal
+      isOpen={!!selected}
+      onClose={() => { setSelected(null); }}
+      maxWidth={580}
+      title={(
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+          <div className="avatar" style={{ width: 40, height: 40, fontSize: '.9rem', background: selected.tags?.includes('VIP') ? 'var(--tux-gold)' : 'var(--tux-navy)', color: selected.tags?.includes('VIP') ? 'var(--tux-navy-dark)' : 'white' }}>
+            {selected.firstName[0]}{selected.lastName[0]}
+          </div>
+          <div style={{ textAlign: 'left' }}>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.1rem', lineHeight: 1.2 }}>{selected.firstName} {selected.lastName}</div>
+            <div style={{ fontSize: '.75rem', color: 'var(--text-secondary)', fontWeight: 400 }}>
+              {selected.email} · {selected.phone}
             </div>
           </div>
-          <button className="btn btn-ghost btn-icon" onClick={() => setSelected(null)}>✕</button>
         </div>
-
+      )}
+      footer={
+        <>
+          <button className="btn btn-outline">Edit Customer</button>
+          <button className="btn btn-gold">+ New Rental</button>
+          <button className="btn btn-ghost btn-sm" onClick={() => { setSelected(null); }}>Close</button>
+        </>
+      }
+    >
+      <div style={{ margin: '-16px -20px 0' }}>
         {/* Tabs */}
-        <div style={{ display: 'flex', borderBottom: '1px solid var(--surface-border)' }}>
+        <div style={{ display: 'flex', borderBottom: '1px solid var(--surface-border)', background: 'var(--surface-hover)' }}>
           {(['profile', 'measurements', 'history'] as const).map(tab => (
-            <button key={tab} onClick={() => setActiveTab(tab)}
+            <button key={tab} onClick={() => { setActiveTab(tab); }}
               style={{
-                flex: 1, padding: '10px', border: 'none', background: 'none',
-                cursor: 'pointer', fontWeight: 600, fontSize: '.82rem',
+                flex: 1, padding: '12px 10px', border: 'none', background: 'none',
+                cursor: 'pointer', fontWeight: 600, fontSize: '.8rem',
                 textTransform: 'capitalize', letterSpacing: '.02em',
                 color: activeTab === tab ? 'var(--tux-navy)' : 'var(--text-muted)',
                 borderBottom: activeTab === tab ? '2px solid var(--tux-navy)' : '2px solid transparent',
                 transition: 'all .15s',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6
               }}>
-              {tab === 'measurements' ? '📐 ' : tab === 'history' ? '📋 ' : '👤 '}{tab}
+              <SvgIcon name={tab === 'measurements' ? 'measurements' : tab === 'history' ? 'clipboard' : 'user'} width="14" height="14" />
+              {tab}
             </button>
           ))}
         </div>
 
-        <div className="modal-body">
+        <div style={{ padding: '20px' }}>
           {activeTab === 'profile' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
@@ -86,8 +98,8 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
                 </div>
               )}
               {selected.notes && (
-                <div style={{ padding: '10px 12px', background: '#FFFBEB', borderRadius: 'var(--radius-sm)', border: '1px solid #FDE68A', fontSize: '.85rem', color: '#92400E' }}>
-                  ⚠️ {selected.notes}
+                <div style={{ padding: '10px 12px', background: '#FFFBEB', borderRadius: 'var(--radius-sm)', border: '1px solid #FDE68A', fontSize: '.85rem', color: '#92400E', display: 'flex', gap: 8 }}>
+                  <SvgIcon name="warning" width="16" height="16" style={{ marginTop: 2 }} /> {selected.notes}
                 </div>
               )}
             </div>
@@ -113,17 +125,19 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
                   </div>
                 </div>
                 {measurements[0].notes && (
-                  <div style={{ marginTop: 14, padding: '10px 12px', background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', fontSize: '.82rem', color: 'var(--text-secondary)' }}>
-                    📝 {measurements[0].notes}
+                  <div style={{ marginTop: 14, padding: '10px 12px', background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', fontSize: '.82rem', color: 'var(--text-secondary)', display: 'flex', gap: 8 }}>
+                    <SvgIcon name="tailoring" width="16" height="16" style={{ marginTop: 2 }} /> {measurements[0].notes}
                   </div>
                 )}
-                <button className="btn btn-outline" style={{ marginTop: 16, width: '100%' }}>
-                  ✏️ Edit Measurements
+                <button className="btn btn-outline" style={{ marginTop: 16, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                  <SvgIcon name="scissors" width="14" height="14" /> Edit Measurements
                 </button>
               </div>
             ) : (
               <div className="empty-state">
-                <div className="empty-state-icon">📐</div>
+                <div className="empty-state-icon">
+                  <SvgIcon name="measurements" width="48" height="48" style={{ opacity: 0.3 }} />
+                </div>
                 <p>No measurements on file</p>
                 <button className="btn btn-gold" style={{ marginTop: 12 }}>Add Measurements</button>
               </div>
@@ -132,18 +146,15 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
 
           {activeTab === 'history' && (
             <div className="empty-state">
-              <div className="empty-state-icon">📋</div>
+              <div className="empty-state-icon">
+                <SvgIcon name="clipboard" width="48" height="48" style={{ opacity: 0.3 }} />
+              </div>
               <p style={{ marginBottom: 4 }}>{selected.totalOrders} orders total</p>
               <p style={{ fontSize: '.8rem' }}>Full order history coming with API integration</p>
             </div>
           )}
         </div>
-
-        <div className="modal-footer">
-          <button className="btn btn-outline">Edit Customer</button>
-          <button className="btn btn-gold">+ New Rental</button>
-        </div>
       </div>
-    </div>
+    </Modal>
   );
 };
