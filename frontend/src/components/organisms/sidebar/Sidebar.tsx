@@ -57,6 +57,7 @@ const Sidebar: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isPointerFine, setIsPointerFine] = useState(true);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   
   // Theme state
   const [isDark, setIsDark] = useState(() => {
@@ -201,47 +202,90 @@ const Sidebar: React.FC = () => {
         </div>
 
         {/* Footer — user info + logout */}
-        <div className="sidebar-footer" style={{ overflow: 'hidden' }}>
-          {isEffectivelyExpanded && user && (
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: 10,
-              padding: '10px 12px', marginBottom: 6,
-              background: 'rgba(255,255,255,.06)', borderRadius: 10,
-              whiteSpace: 'nowrap'
-            }}>
-              <div className="avatar avatar-gold" style={{ fontSize: '.7rem', flexShrink: 0 }}>
-                {user.name.split(' ').map(n => n[0]).join('')}
-              </div>
-              <div style={{ overflow: 'hidden' }}>
-                <div style={{ fontSize: '.82rem', fontWeight: 600, color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {user.name}
+        <div className="sidebar-footer" style={{ overflow: 'visible', position: 'relative' }}>
+          {isEffectivelyExpanded && user ? (
+            <>
+              <button 
+                onClick={() => setIsUserMenuOpen(prev => !prev)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 10,
+                  padding: '10px 12px', marginBottom: 0,
+                  background: isUserMenuOpen ? 'rgba(255,255,255,.1)' : 'rgba(255,255,255,.06)', 
+                  borderRadius: 10,
+                  whiteSpace: 'nowrap', width: '100%', border: 'none', cursor: 'pointer', textAlign: 'left'
+                }}
+              >
+                <div className="avatar avatar-gold" style={{ fontSize: '.7rem', flexShrink: 0 }}>
+                  {user.name.split(' ').map(n => n[0]).join('')}
                 </div>
-                <div style={{ fontSize: '.7rem', color: 'rgba(255,255,255,.5)', textTransform: 'capitalize' }}>
-                  {roleInitial(user.role)}{user.role.slice(1)}
+                <div style={{ overflow: 'hidden', flex: 1 }}>
+                  <div style={{ fontSize: '.82rem', fontWeight: 600, color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {user.name}
+                  </div>
+                  <div style={{ fontSize: '.7rem', color: 'rgba(255,255,255,.5)', textTransform: 'capitalize' }}>
+                    {roleInitial(user.role)}{user.role.slice(1)}
+                  </div>
                 </div>
-              </div>
+                <SvgIcon name="chevron-collapse" width="12" height="12" style={{ transform: isUserMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', opacity: 0.5, color: 'white' }} />
+              </button>
+              
+              {isUserMenuOpen && (
+                <div style={{
+                  position: 'absolute',
+                  bottom: 'calc(100% + 8px)',
+                  left: 12,
+                  right: 12,
+                  background: 'var(--surface-card)',
+                  borderRadius: 10,
+                  padding: 8,
+                  boxShadow: 'var(--shadow-lg)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 4,
+                  zIndex: 100,
+                  border: '1px solid var(--surface-border)'
+                }}>
+                  <button
+                    onClick={() => { setIsDark(d => !d); setIsUserMenuOpen(false); }}
+                    className="nav-item"
+                    style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', justifyContent: 'flex-start', color: 'var(--text-primary)', whiteSpace: 'nowrap', padding: '8px 12px' }}
+                  >
+                    <SvgIcon name={isDark ? 'moon' : 'sun'} width="18" height="18" className="nav-icon" style={{ flexShrink: 0, color: 'var(--text-secondary)' }} />
+                    <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
+                  </button>
+
+                  <button
+                    onClick={handleLogout}
+                    className="nav-item"
+                    style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', justifyContent: 'flex-start', color: 'rgba(255,69,58,.9)', whiteSpace: 'nowrap', padding: '8px 12px' }}
+                  >
+                    <SvgIcon name="logout" width="18" height="18" className="nav-icon" style={{ flexShrink: 0 }} />
+                    <span>Sign out</span>
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <button
+                onClick={() => setIsDark(d => !d)}
+                className="nav-item"
+                style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', justifyContent: 'center', color: 'rgba(255,255,255,.8)', whiteSpace: 'nowrap' }}
+                title="Toggle theme"
+              >
+                <SvgIcon name={isDark ? 'moon' : 'sun'} width="18" height="18" className="nav-icon" style={{ flexShrink: 0 }} />
+              </button>
+
+              <button
+                onClick={handleLogout}
+                className="nav-item"
+                style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', justifyContent: 'center', color: 'rgba(255,69,58,.8)', whiteSpace: 'nowrap' }}
+                title="Sign out"
+              >
+                <SvgIcon name="logout" width="18" height="18" className="nav-icon" style={{ flexShrink: 0 }} />
+              </button>
             </div>
           )}
-          
-          <button
-            onClick={() => setIsDark(d => !d)}
-            className="nav-item"
-            style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', justifyContent: isEffectivelyExpanded ? 'flex-start' : 'center', color: 'rgba(255,255,255,.8)', whiteSpace: 'nowrap' }}
-            title={!isEffectivelyExpanded ? 'Toggle theme' : undefined}
-          >
-            <SvgIcon name={isDark ? 'moon' : 'sun'} width="18" height="18" className="nav-icon" style={{ flexShrink: 0 }} />
-            {isEffectivelyExpanded && <span>{isDark ? 'Dark Mode' : 'Light Mode'}</span>}
-          </button>
-
-          <button
-            onClick={handleLogout}
-            className="nav-item"
-            style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', justifyContent: isEffectivelyExpanded ? 'flex-start' : 'center', color: 'rgba(255,69,58,.8)', whiteSpace: 'nowrap' }}
-            title={!isEffectivelyExpanded ? 'Sign out' : undefined}
-          >
-            <SvgIcon name="logout" width="18" height="18" className="nav-icon" style={{ flexShrink: 0 }} />
-            {isEffectivelyExpanded && <span>Sign out</span>}
-          </button>
         </div>
       </nav>
     </>
