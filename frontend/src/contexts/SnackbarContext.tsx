@@ -40,7 +40,7 @@ export const SnackbarProvider: React.FC<{ children: ReactNode }> = ({ children }
     <SnackbarContext.Provider value={{ showSnackbar }}>
       {children}
       <div style={{
-        position: 'fixed', bottom: 24, right: 24,
+        position: 'fixed', top: 24, right: 24,
         display: 'flex', flexDirection: 'column', gap: 8, zIndex: 9999,
         pointerEvents: 'none'
       }}>

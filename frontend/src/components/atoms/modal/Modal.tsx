@@ -29,12 +29,12 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal animate-slide-up" style={{ maxWidth }} onClick={e => e.stopPropagation()}>
-        {title && (
-          <div className="modal-header">
+        <div className="modal-header" style={!title ? { borderBottom: 'none', paddingBottom: 0 } : {}}>
+          {title ? (
             <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.2rem', margin: 0 }}>{title}</h3>
-            <button className="btn btn-ghost btn-icon" onClick={onClose}>✕</button>
-          </div>
-        )}
+          ) : <div />}
+          <button className="btn btn-ghost btn-icon" onClick={onClose} aria-label="Close modal">✕</button>
+        </div>
         <div className="modal-body">
           {children}
         </div>
