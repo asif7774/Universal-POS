@@ -6,6 +6,7 @@ import { useSnackbar } from 'contexts/SnackbarContext';
 import { usePlugins } from 'contexts/PluginContext';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 import { processCardPayment } from '../lib/payments';
+import { HAL } from '../lib/hardware';
 
 // ── Types ─────────────────────────────────────────────────────
 interface Product {
@@ -178,12 +179,16 @@ const POS: React.FC = () => {
     mutationFn: async (orderData: any) => {
       return await apiClient.post('/orders', orderData);
     },
-    onSuccess: (data: any) => {
+    onSuccess: async (data: any) => {
       setOrderId(data.orderNo);
       setCompletedOrder(data);
       setOrderComplete(true);
       queryClient.invalidateQueries({ queryKey: ['orders'] });
       showSnackbar(`✅ Order ${data.orderNo} completed!`, 'success');
+      
+      if (paymentMethod === 'cash') {
+        await HAL.openCashDrawer();
+      }
     }
   });
 
@@ -239,7 +244,7 @@ const POS: React.FC = () => {
     searchRef.current?.focus();
   };
 
-  const printReceipt = () => {
+  const printReceipt = async () => {
     const storeName = 'TuxedoPOS';
     const receiptItems = (completedOrder?.items ?? cart).map((i: any) => {
       const name = i.name ?? i.product?.name;
@@ -268,12 +273,7 @@ const POS: React.FC = () => {
       'Thank you for choosing TuxedoPOS!',
     ].filter(Boolean).join('\n');
 
-    const w = window.open('', '_blank', 'width=380,height=600');
-    if (!w) return;
-    w.document.write(`<html><head><title>Receipt ${orderId}</title><style>
-      body{font-family:monospace;font-size:13px;padding:20px;white-space:pre;}
-    </style></head><body>${receiptText.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}<script>window.print();window.close();<\/script></body></html>`);
-    w.document.close();
+    await HAL.printReceipt(receiptText);
   };
 
   return (

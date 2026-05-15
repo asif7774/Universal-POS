@@ -320,8 +320,8 @@ gantt
     section Phase 5: Scale
     Restaurant plugin                    :done, p5a, after p4d, 10d
     Stripe / Razorpay integration        :done, p5b, after p4d, 5d
-    Advanced reporting                   :p5c, after p5b, 7d
-    Hardware abstraction layer           :p5d, after p5a, 5d
+    Advanced reporting                   :done, p5c, after p5b, 7d
+    Hardware abstraction layer           :done, p5d, after p5a, 5d
 ```
 
 ### Milestone Summary
@@ -331,8 +331,8 @@ gantt
 | **M1: Foundation** | Week 3 | Auth working, DB schema live, app shell rendered |
 | **M2: Core POS** | Week 7 | Can scan products, checkout, take cash payment, generate receipt |
 | **M3: Offline-First** | Week 9 | Works without internet, syncs on reconnect |
-| **M4: MVP** | Week 11 | Plugin system, retail domain, tenant config, admin panel |
-| **M5: Scale** | Week 14+ | Restaurant domain, card payments, reporting, hardware |
+| **M4: MVP** | Week 11 | Plugin system, retail domain, tenant config, admin panel | ✅ |
+| **M5: Scale** | Week 14+ | Restaurant domain, card payments, reporting, hardware | ✅ |
 
 ---
 
