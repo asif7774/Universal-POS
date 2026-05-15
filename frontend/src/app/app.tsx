@@ -25,8 +25,9 @@ const queryClient = new QueryClient({
 });
 
 // ── Pages (lazy loaded) ───────────────────────────────────────
-const Login        = lazy(() => import('pages/Login'));
-const Dashboard    = lazy(() => import('pages/Dashboard'));
+const Login        = lazy(() => import('pages/login'));
+const Home         = lazy(() => import('pages/home'));
+const Dashboard    = lazy(() => import('pages/dashboard'));
 const POS          = lazy(() => import('pages/pos'));
 const Rentals      = lazy(() => import('pages/rentals'));
 const Customers    = lazy(() => import('pages/customers'));
