@@ -57,6 +57,23 @@ const Sidebar: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isPointerFine, setIsPointerFine] = useState(true);
+  
+  // Theme state
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved) return saved === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDark]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(pointer: fine)');
@@ -205,6 +222,17 @@ const Sidebar: React.FC = () => {
               </div>
             </div>
           )}
+          
+          <button
+            onClick={() => setIsDark(d => !d)}
+            className="nav-item"
+            style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', justifyContent: isEffectivelyExpanded ? 'flex-start' : 'center', color: 'rgba(255,255,255,.8)', whiteSpace: 'nowrap' }}
+            title={!isEffectivelyExpanded ? 'Toggle theme' : undefined}
+          >
+            <SvgIcon name={isDark ? 'moon' : 'sun'} width="18" height="18" className="nav-icon" style={{ flexShrink: 0 }} />
+            {isEffectivelyExpanded && <span>{isDark ? 'Dark Mode' : 'Light Mode'}</span>}
+          </button>
+
           <button
             onClick={handleLogout}
             className="nav-item"
