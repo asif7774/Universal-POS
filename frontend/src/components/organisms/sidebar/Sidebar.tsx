@@ -66,7 +66,7 @@ const Sidebar: React.FC = () => {
     return () => mediaQuery.removeEventListener('change', handler);
   }, []);
 
-  const pluginNavItems = getNavItems();
+  const pluginNavItems = getNavItems() || [];
   
   // Dynamically add a "Plugins" section if any plugins have nav items
   const activeNavSections = [...NAV_SECTIONS];
