@@ -32,7 +32,7 @@ const Rentals      = lazy(() => import('pages/rentals'));
 const Customers    = lazy(() => import('pages/customers'));
 const Measurements = lazy(() => import('pages/Measurements'));
 const Tailoring    = lazy(() => import('pages/Tailoring'));
-const Inventory    = lazy(() => import('pages/Inventory'));
+const Inventory    = lazy(() => import('pages/inventory'));
 const Appointments = lazy(() => import('pages/Appointments'));
 const Reports      = lazy(() => import('pages/Reports'));
 const Settings     = lazy(() => import('pages/Settings'));
