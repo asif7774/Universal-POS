@@ -1,5 +1,5 @@
 import React from 'react';
-import { Customer, Measurement } from '../types';
+import { Customer, Measurement } from 'types/customers';
 
 interface CustomerDetailModalProps {
   selected: Customer | null;

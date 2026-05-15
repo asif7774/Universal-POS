@@ -5,7 +5,7 @@ import { useSnackbar } from 'contexts/SnackbarContext';
 import { usePlugins } from 'contexts/PluginContext';
 import { processCardPayment } from '../../lib/payments';
 import { HAL } from '../../lib/hardware';
-import { Product, CartItem } from './types';
+import { Product, CartItem } from 'types/pos';
 import { ProductGrid } from './components/ProductGrid';
 import { CartSidebar } from './components/CartSidebar';
 import { CheckoutModal } from './checkout/CheckoutModal';

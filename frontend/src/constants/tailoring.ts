@@ -1,4 +1,4 @@
-import { JobStatus } from './types';
+import { JobStatus } from 'types/tailoring';
 
 export const STAGES: JobStatus[] = ['Pending', 'Cutting', 'Stitching', 'Finishing', 'Quality Check', 'Ready', 'Delivered'];
 

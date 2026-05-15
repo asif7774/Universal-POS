@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import { JobStatus, TailoringJob } from '../types';
-import { STATUS_COLOR, TYPE_BADGE, isOverdue, fmtDate, fmt } from '../constants';
+import { JobStatus, TailoringJob } from 'types/tailoring';
+import { STATUS_COLOR, TYPE_BADGE, isOverdue, fmtDate, fmt } from 'constants/tailoring';
 
 interface KanbanColProps {
   status: JobStatus;

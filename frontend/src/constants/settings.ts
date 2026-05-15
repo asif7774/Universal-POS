@@ -1,4 +1,4 @@
-import { StaffMember } from './types';
+import { StaffMember } from 'types/settings';
 
 export const STAFF: StaffMember[] = [
   { id: 'u1', name: 'James Miller',  email: 'admin@tuxedopos.com',   role: 'owner',   isActive: true, lastLogin: 'Today 3:47 AM' },

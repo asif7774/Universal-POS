@@ -1,5 +1,5 @@
 import React from 'react';
-import { RentalFleetItem } from '../types';
+import { RentalFleetItem } from 'types/dashboard';
 
 export const RentalFleetStatus: React.FC<{ fleet: RentalFleetItem[] }> = ({ fleet }) => (
   <div className="card">

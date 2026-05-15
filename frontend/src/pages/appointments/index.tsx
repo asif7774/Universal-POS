@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../lib/apiClient';
-import { Appointment } from './types';
-import { TODAY, DAYS, HOURS, TYPE_CONFIG, STATUS_CONFIG, fmtDay } from './constants';
+import { Appointment } from 'types/appointments';
+import { TODAY, DAYS, HOURS, TYPE_CONFIG, STATUS_CONFIG, fmtDay } from 'constants/appointments';
 import { NewApptModal } from './components/NewApptModal';
 import { AppointmentDetailModal } from './components/AppointmentDetailModal';
 

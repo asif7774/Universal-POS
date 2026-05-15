@@ -1,6 +1,6 @@
 import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
-import { fmt } from '../constants';
+import { fmt } from 'constants/reports';
 
 interface RevenueChartProps {
   data: Array<{ label: string; revenue: number }>;

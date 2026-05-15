@@ -1,6 +1,6 @@
 import React from 'react';
 import { PieChart, Pie, Cell, Legend, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
-import { fmt, COLORS } from '../constants';
+import { fmt, COLORS } from 'constants/reports';
 
 interface PaymentMethodsChartProps {
   data: Array<{ name: string; value: number }>;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal } from 'components/atoms/modal/Modal';
-import { CartItem } from '../types';
+import { CartItem } from 'types/pos';
 
 interface OrderCompleteModalProps {
   isOpen: boolean;

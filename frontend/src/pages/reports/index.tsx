@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../lib/apiClient';
-import { Order, DailySummary } from './types';
+import { Order, DailySummary } from 'types/reports';
 import { KPICards } from './components/KPICards';
 import { RevenueChart } from './components/RevenueChart';
 import { PaymentMethodsChart } from './components/PaymentMethodsChart';

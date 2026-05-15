@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import { JobStatus } from '../types';
-import { STAGES, STATUS_COLOR } from '../constants';
+import { JobStatus } from 'types/tailoring';
+import { STAGES, STATUS_COLOR } from 'constants/tailoring';
 
 interface StatusPipelineProps {
   current: JobStatus;

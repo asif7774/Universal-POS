@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Rental, RentalStatus } from '../types';
+import { Rental, RentalStatus } from 'types/rentals';
 
 export const STATUS_CONFIG: Record<RentalStatus, { cls: string; icon: string }> = {
   booked:    { cls: 'rental-booked',    icon: '📅' },

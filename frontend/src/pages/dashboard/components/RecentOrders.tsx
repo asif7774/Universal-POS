@@ -1,6 +1,6 @@
 import React from 'react';
-import { RecentOrder } from '../types';
-import { STATUS_BADGE } from '../constants';
+import { RecentOrder } from 'types/dashboard';
+import { STATUS_BADGE } from 'constants/dashboard';
 
 export const RecentOrders: React.FC<{ orders: RecentOrder[] }> = ({ orders }) => (
   <div className="card" style={{ padding: 0, overflow: 'hidden' }}>

@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { CartItem } from '../types';
+import { CartItem } from 'types/pos';
 
 interface CartSidebarProps {
   cart: CartItem[];

@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import { MeasurementRecord } from '../types';
-import { fmtDate } from '../constants';
+import { MeasurementRecord } from 'types/measurements';
+import { fmtDate } from 'constants/measurements';
 
 interface MeasurementCardProps {
   r: MeasurementRecord;

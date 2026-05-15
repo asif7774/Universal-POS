@@ -1,5 +1,5 @@
 import React from 'react';
-import { StoreSettings } from '../types';
+import { StoreSettings } from 'types/settings';
 
 interface TaxesTabProps {
   store: StoreSettings;

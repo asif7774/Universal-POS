@@ -1,5 +1,5 @@
 import React from 'react';
-import { STAFF, ROLE_BADGE } from '../constants';
+import { STAFF, ROLE_BADGE } from 'constants/settings';
 
 export const StaffTab: React.FC = () => (
   <div className="card" style={{ padding: 0, overflow: 'hidden' }}>

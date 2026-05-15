@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { features } from './constants';
+import { features } from 'constants/home';
 import { Header } from './components/Header';
 import { FeatureGrid } from './components/FeatureGrid';
 

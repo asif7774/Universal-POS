@@ -1,4 +1,4 @@
-import { AppointmentType, AppointmentStatus } from './types';
+import { AppointmentType, AppointmentStatus } from 'types/appointments';
 
 export const TODAY = new Date().toISOString().split('T')[0];
 

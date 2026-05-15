@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../lib/apiClient';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
-import { MeasurementRecord } from './types';
+import { MeasurementRecord } from 'types/measurements';
 import { MeasurementCard } from './components/MeasurementCard';
 import { NewMeasurementModal } from './components/NewMeasurementModal';
 import { MeasurementDetailModal } from './components/MeasurementDetailModal';

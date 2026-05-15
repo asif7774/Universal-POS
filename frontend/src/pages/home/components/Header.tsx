@@ -1,7 +1,7 @@
 import React, { useState, lazy, Suspense } from 'react';
 import Logos from 'components/atoms/logos';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
-import { techBadges, COMMAND } from '../constants';
+import { techBadges, COMMAND } from 'constants/home';
 
 const Button = lazy(() => import('components/atoms/button'));
 const ComponentLoader = () => <div className="animate-pulse bg-gray-200 rounded h-10 w-20" />;

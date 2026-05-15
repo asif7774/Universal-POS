@@ -1,5 +1,5 @@
 import React from 'react';
-import { fmt } from '../constants';
+import { fmt } from 'constants/reports';
 
 interface KPICardsProps {
   isLoading: boolean;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal } from 'components/atoms/modal/Modal';
-import { MeasurementRecord } from '../types';
-import { FIELDS, fmtDate } from '../constants';
+import { MeasurementRecord } from 'types/measurements';
+import { FIELDS, fmtDate } from 'constants/measurements';
 
 interface MeasurementDetailModalProps {
   selected: MeasurementRecord | null;

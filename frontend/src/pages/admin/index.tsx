@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from 'contexts/AuthContext';
 import { Navigate } from 'react-router-dom';
-import { MOCK_TENANTS } from './constants';
+import { MOCK_TENANTS } from 'constants/admin';
 import { GlobalStats } from './components/GlobalStats';
 import { TenantList } from './components/TenantList';
 

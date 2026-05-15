@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatProps } from '../types';
+import { StatProps } from 'types/dashboard';
 import { Sparkline } from './Sparkline';
 
 export const StatCard: React.FC<StatProps> = ({ label, value, change, positive, sparkData, color, icon }) => (

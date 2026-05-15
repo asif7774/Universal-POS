@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../lib/apiClient';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 import { useSnackbar } from 'contexts/SnackbarContext';
-import { Customer, Measurement } from './types';
+import { Customer, Measurement } from 'types/customers';
 import { CustomerCard } from './components/CustomerCard';
 import { NewCustomerForm } from './components/NewCustomerForm';
 import { CustomerDetailModal } from './components/CustomerDetailModal';

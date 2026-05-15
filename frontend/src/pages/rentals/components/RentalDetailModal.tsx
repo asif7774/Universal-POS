@@ -1,5 +1,5 @@
 import React from 'react';
-import { Rental } from '../types';
+import { Rental } from 'types/rentals';
 import { STATUS_CONFIG, fmt, fmtDate, daysLeft } from './RentalTable';
 
 interface RentalDetailModalProps {

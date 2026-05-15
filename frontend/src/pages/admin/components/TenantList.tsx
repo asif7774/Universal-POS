@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tenant } from '../types';
+import { Tenant } from 'types/admin';
 
 interface TenantListProps {
   tenants: Tenant[];

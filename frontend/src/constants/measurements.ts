@@ -1,4 +1,4 @@
-import { MeasurementRecord } from './types';
+import { MeasurementRecord } from 'types/measurements';
 
 export const FIELDS: Array<{ key: keyof MeasurementRecord; label: string; unit?: string }> = [
   { key: 'jacketSize', label: 'Jacket Size' },

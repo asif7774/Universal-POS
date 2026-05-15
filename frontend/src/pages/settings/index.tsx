@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { usePlugins } from 'contexts/PluginContext';
-import { SettingsTabType, StoreSettings } from './types';
+import { SettingsTabType, StoreSettings } from 'types/settings';
 import { StoreInfoTab } from './components/StoreInfoTab';
 import { StaffTab } from './components/StaffTab';
 import { TaxesTab } from './components/TaxesTab';

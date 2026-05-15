@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { InventoryItem } from '../types';
+import { InventoryItem } from 'types/inventory';
 import { SizeCell } from './SizeCell';
 
 interface InventoryCardProps {

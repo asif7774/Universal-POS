@@ -1,4 +1,4 @@
-import { Tenant } from './types';
+import { Tenant } from 'types/admin';
 
 export const MOCK_TENANTS: Tenant[] = [
   { id: 't1', name: 'TuxedoPOS HQ', domain: 'tuxedo', status: 'active', users: 4, revenue: 15400, created: '2025-10-12' },

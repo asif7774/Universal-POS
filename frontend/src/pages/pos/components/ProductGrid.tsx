@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Product } from '../types';
+import { Product } from 'types/pos';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 interface ProductGridProps {

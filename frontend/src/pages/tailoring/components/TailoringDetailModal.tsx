@@ -1,6 +1,6 @@
 import React from 'react';
-import { TailoringJob } from '../types';
-import { STATUS_COLOR, TYPE_BADGE, fmtDate, fmt, STAGES } from '../constants';
+import { TailoringJob } from 'types/tailoring';
+import { STATUS_COLOR, TYPE_BADGE, fmtDate, fmt, STAGES } from 'constants/tailoring';
 import { StatusPipeline } from './StatusPipeline';
 import { UseMutationResult } from '@tanstack/react-query';
 

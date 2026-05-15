@@ -1,4 +1,4 @@
-import { RecentOrder, UpcomingRental, Alert } from './types';
+import { RecentOrder, UpcomingRental, Alert } from 'types/dashboard';
 
 export const RECENT_ORDERS: RecentOrder[] = [
   { id: 'ORD-1024', customer: 'Marcus Johnson', type: 'Rental + Tailoring', total: '$340', status: 'Completed', time: '2 min ago' },

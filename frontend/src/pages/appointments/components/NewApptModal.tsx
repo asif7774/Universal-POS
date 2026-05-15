@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../../lib/apiClient';
-import { AppointmentType } from '../types';
-import { TODAY, HOURS } from '../constants';
+import { AppointmentType } from 'types/appointments';
+import { TODAY, HOURS } from 'constants/appointments';
 
 export const NewApptModal: React.FC<{ onClose: () => void; defaultDate?: string }> = ({ onClose, defaultDate }) => {
   const queryClient = useQueryClient();

@@ -29,7 +29,9 @@
       "hooks/*": ["src/hooks/*"],
       "contexts/*": ["src/contexts/*"],
       "layouts/*": ["src/layouts/*"],
-      "pages/*": ["src/pages/*"]
+      "pages/*": ["src/pages/*"],
+      "types/*": ["src/types/*"],
+      "constants/*": ["src/constants/*"]
     }
   },
   "include": ["src"]

@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../../lib/apiClient';
 import { Modal } from 'components/atoms/modal/Modal';
 import { useSnackbar } from 'contexts/SnackbarContext';
-import { MeasurementRecord } from '../types';
+import { MeasurementRecord } from 'types/measurements';
 
 export const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const queryClient = useQueryClient();

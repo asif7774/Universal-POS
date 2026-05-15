@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../lib/apiClient';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
-import { Rental } from './types';
+import { Rental } from 'types/rentals';
 import { RentalTable, daysLeft } from './components/RentalTable';
 import { RentalDetailModal } from './components/RentalDetailModal';
 import { NewRentalForm } from './components/NewRentalForm';

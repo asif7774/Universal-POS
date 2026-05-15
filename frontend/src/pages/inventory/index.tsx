@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../lib/apiClient';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
-import { InventoryItem } from './types';
+import { InventoryItem } from 'types/inventory';
 import { AddItemModal } from './components/AddItemModal';
 import { InventoryCard } from './components/InventoryCard';
 import { InventoryDetailModal } from './components/InventoryDetailModal';

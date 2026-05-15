@@ -1,7 +1,7 @@
 import React from 'react';
 import { UseMutationResult } from '@tanstack/react-query';
-import { Appointment } from '../types';
-import { TYPE_CONFIG, STATUS_CONFIG, fmtDay } from '../constants';
+import { Appointment } from 'types/appointments';
+import { TYPE_CONFIG, STATUS_CONFIG, fmtDay } from 'constants/appointments';
 
 interface AppointmentDetailModalProps {
   selected: Appointment | null;

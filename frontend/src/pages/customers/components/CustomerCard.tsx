@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Customer } from '../types';
+import { Customer } from 'types/customers';
 
 interface CustomerCardProps {
   c: Customer;
