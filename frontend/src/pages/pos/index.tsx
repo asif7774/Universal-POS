@@ -242,7 +242,7 @@ const POS: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', height: 'calc(100vh - 48px)', gap: 0, margin: '-24px', overflow: 'hidden' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: cart.length > 0 ? '1fr 360px' : '1fr', height: 'calc(100vh - 48px)', gap: 0, margin: '-24px', overflow: 'hidden', transition: 'grid-template-columns 0.3s ease' }}>
       <ProductGrid 
         products={products}
         search={search}
@@ -254,19 +254,21 @@ const POS: React.FC = () => {
         searchRef={searchRef}
       />
       
-      <CartSidebar 
-        cart={cart}
-        setCart={setCart}
-        updateQty={updateQty}
-        updateDays={updateDays}
-        discount={discount}
-        setDiscount={setDiscount}
-        subtotal={subtotal}
-        discountAmt={discountAmt}
-        tax={tax}
-        total={total}
-        onCheckout={() => setCheckoutOpen(true)}
-      />
+      {cart.length > 0 && (
+        <CartSidebar 
+          cart={cart}
+          setCart={setCart}
+          updateQty={updateQty}
+          updateDays={updateDays}
+          discount={discount}
+          setDiscount={setDiscount}
+          subtotal={subtotal}
+          discountAmt={discountAmt}
+          tax={tax}
+          total={total}
+          onCheckout={() => setCheckoutOpen(true)}
+        />
+      )}
 
       <CheckoutModal 
         isOpen={checkoutOpen && !orderComplete}
