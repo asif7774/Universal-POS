@@ -162,7 +162,8 @@ const Dashboard: React.FC = () => {
       <div className="grid grid-cols-[1fr_340px] gap-5 items-start">
         <RecentOrders orders={recentOrders.map((o: any) => ({
           id: o.id,
-          customer: o.customer ? `${o.customer.firstName} ${o.customer.lastName}` : 'Guest',
+          orderNo: o.orderNo,
+          customer: o.customerName || 'Guest',
           type: o.type,
           total: o.total,
           status: o.status,

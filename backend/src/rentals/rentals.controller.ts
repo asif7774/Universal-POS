@@ -22,6 +22,11 @@ export class RentalsController {
     return this.svc.getStats(req.user.tenantId);
   }
 
+  @Get('upcoming')
+  findUpcoming(@Request() req: any, @Query('limit') limit = '5') {
+    return this.svc.findUpcoming(req.user.tenantId, +limit);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string, @Request() req: any) {
     return this.svc.findById(id, req.user.tenantId);

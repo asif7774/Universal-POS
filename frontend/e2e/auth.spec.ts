@@ -5,8 +5,8 @@ test.describe('Authentication Flow', () => {
     await page.goto('/login');
 
     // Fill in login form
-    await page.fill('input[name="email"]', 'admin@tuxedopos.com');
-    await page.fill('input[name="password"]', 'password123');
+    await page.fill('input[name="email"]', 'james@tuxedopos.com');
+    await page.fill('input[name="password"]', 'pass');
     
     // Click login button
     await page.click('button[type="submit"]');
@@ -23,6 +23,6 @@ test.describe('Authentication Flow', () => {
     await page.click('button[type="submit"]');
 
     // Should show error snackbar or message
-    await expect(page.locator('.snackbar-error, [role="alert"]')).toBeVisible();
+    await expect(page.locator('.toast-error, [role="alert"]')).toBeVisible();
   });
 });

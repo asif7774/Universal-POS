@@ -116,7 +116,7 @@ const AppRoutes = () => {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <SvgSpriteLoader url="/sprites/app-icons.svg?v=1.2.1" version="1.2.1">
+      <SvgSpriteLoader url="/sprites/app-icons.svg?v=1.2.2" version="1.2.2">
         <SnackbarProvider>
           <OfflineProvider>
             <TenantProvider>

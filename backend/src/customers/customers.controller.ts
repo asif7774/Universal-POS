@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Param, Body, Query, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Query, UseGuards, Request } from '@nestjs/common';
 import { JwtAuthGuard } from '../common/guards';
 import { CustomersService } from './customers.service';
 
@@ -35,6 +35,16 @@ export class CustomersController {
   @Post(':id/measurements')
   saveMeasurement(@Param('id') id: string, @Request() req: any, @Body() body: any) {
     return this.svc.saveMeasurement(id, req.user.tenantId, req.user.id, body);
+  }
+
+  @Put(':id/measurements/:mid')
+  updateMeasurement(@Param('id') id: string, @Param('mid') mid: string, @Request() req: any, @Body() body: any) {
+    return this.svc.updateMeasurement(mid, id, req.user.tenantId, body);
+  }
+
+  @Delete(':id/measurements/:mid')
+  deleteMeasurement(@Param('id') id: string, @Param('mid') mid: string, @Request() req: any) {
+    return this.svc.deleteMeasurement(mid, id, req.user.tenantId);
   }
 
   @Put(':id')

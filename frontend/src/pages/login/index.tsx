@@ -113,9 +113,9 @@ const Login: React.FC = () => {
               DEMO CREDENTIALS
             </p>
             <p style={{ fontSize: '.8rem', color: 'var(--text-secondary)' }}>
-              Email: <code style={{ color: 'var(--tux-navy)', fontWeight: 600 }}>admin@tuxedopos.com</code>
+              Email: <code style={{ color: 'var(--tux-navy)', fontWeight: 600 }}>james@tuxedopos.com</code>
               <br />
-              Password: <code style={{ color: 'var(--tux-navy)', fontWeight: 600 }}>password</code>
+              Password: <code style={{ color: 'var(--tux-navy)', fontWeight: 600 }}>pass</code>
             </p>
           </div>
         </div>

@@ -123,4 +123,24 @@ export class OrdersService {
     
     return { date, revenue, count, rentalCount, orders: dayOrders };
   }
+
+  async findRecent(tenantId: string, limit = 5): Promise<Order[]> {
+    const res = await db.select({
+      order: orders,
+      customer: {
+        firstName: customers.firstName,
+        lastName: customers.lastName,
+      }
+    })
+    .from(orders)
+    .leftJoin(customers, eq(orders.customerId, customers.id))
+    .where(eq(orders.tenantId, tenantId))
+    .orderBy(desc(orders.createdAt))
+    .limit(limit);
+
+    return res.map(row => ({ 
+      ...row.order, 
+      customerName: row.customer?.firstName ? `${row.customer.firstName} ${row.customer.lastName || ''}`.trim() : 'Guest'
+    })) as any;
+  }
 }

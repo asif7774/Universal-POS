@@ -1,5 +1,7 @@
 import { Rental } from 'types/rentals';
 import { STATUS_CONFIG, fmt, fmtDate, daysLeft } from './RentalTable';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiClient } from '../../../lib/apiClient';
 import { Modal } from 'components/atoms/modal/Modal';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
@@ -9,6 +11,23 @@ interface RentalDetailModalProps {
 }
 
 export const RentalDetailModal = ({ selected, setSelected }: RentalDetailModalProps) => {
+  const queryClient = useQueryClient();
+  const checkout = useMutation({
+    mutationFn: () => apiClient.patch(`/rentals/${selected?.id}/checkout`, {}),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['rentals'] });
+      setSelected(null);
+    }
+  });
+
+  const checkin = useMutation({
+    mutationFn: () => apiClient.patch(`/rentals/${selected?.id}/checkin`, { condition: 'good', damageFee: 0 }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['rentals'] });
+      setSelected(null);
+    }
+  });
+
   if (!selected) {return null;}
 
   const currentStatus = daysLeft(selected.returnDate) < 0 && selected.status === 'out' ? 'overdue' : selected.status;
@@ -29,8 +48,24 @@ export const RentalDetailModal = ({ selected, setSelected }: RentalDetailModalPr
       )}
       footer={
         <>
-          {selected.status === 'out' && <button className="btn btn-primary">Mark as Returned</button>}
-          {selected.status === 'booked' && <button className="btn btn-gold">Check Out Items</button>}
+          {selected.status === 'out' && (
+            <button 
+              className="btn btn-primary" 
+              onClick={() => { checkin.mutate(); }}
+              disabled={checkin.isPending}
+            >
+              {checkin.isPending ? 'Processing...' : 'Mark as Returned'}
+            </button>
+          )}
+          {selected.status === 'booked' && (
+            <button 
+              className="btn btn-gold" 
+              onClick={() => { checkout.mutate(); }}
+              disabled={checkout.isPending}
+            >
+              {checkout.isPending ? 'Checking Out...' : 'Check Out Items'}
+            </button>
+          )}
           <button className="btn btn-outline" onClick={() => { setSelected(null); }}>Close</button>
         </>
       }

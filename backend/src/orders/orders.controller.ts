@@ -17,6 +17,11 @@ export class OrdersController {
     return this.svc.getDailySummary(req.user.tenantId, date ?? new Date().toISOString().split('T')[0]);
   }
 
+  @Get('recent')
+  findRecent(@Request() req: any, @Query('limit') limit = '5') {
+    return this.svc.findRecent(req.user.tenantId, +limit);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string, @Request() req: any) {
     return this.svc.findById(id, req.user.tenantId);

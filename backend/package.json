@@ -8,7 +8,9 @@
     "start": "node dist/main.js",
     "dev": "ts-node-dev --respawn --transpile-only src/main.ts",
     "start:debug": "ts-node-dev --respawn --transpile-only --inspect src/main.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:ui": "vitest --ui"
   },
   "keywords": [],
   "author": "TuxedoPOS Team",
@@ -35,10 +37,15 @@
     "rxjs": "^7.8.2"
   },
   "devDependencies": {
+    "@nestjs/testing": "^11.1.21",
     "@types/node": "^25.7.0",
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
+    "@types/supertest": "^7.2.0",
+    "@vitest/ui": "^4.1.6",
+    "supertest": "^7.2.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.6"
   }
 }

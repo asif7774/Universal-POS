@@ -4,8 +4,8 @@ test.describe('Customer Portal Flow', () => {
   test('should display customer measurements and portal info', async ({ page }) => {
     // 1. Login first to get access to customer list (to find a valid ID)
     await page.goto('/login');
-    await page.fill('input[name="email"]', 'admin@tuxedopos.com');
-    await page.fill('input[name="password"]', 'password123');
+    await page.fill('input[name="email"]', 'james@tuxedopos.com');
+    await page.fill('input[name="password"]', 'pass');
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/.*dashboard/);
 

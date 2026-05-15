@@ -10,6 +10,7 @@ export interface StatProps {
 
 export interface RecentOrder {
   id: string;
+  orderNo: string;
   customer: string;
   type: string;
   total: string;

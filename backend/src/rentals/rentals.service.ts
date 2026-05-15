@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { db } from '../db';
 import { rentals, rentalItems, customers } from '../db/schema';
-import { eq, and, sql } from 'drizzle-orm';
+import { eq, and, sql, asc } from 'drizzle-orm';
 
 export interface RentalItem {
   id: string;
@@ -166,5 +166,25 @@ export class RentalsService {
       overdue: (await this.findOverdue(tenantId)).length,
       returned: all.filter(r => r.status === 'returned').length,
     };
+  }
+
+  async findUpcoming(tenantId: string, limit = 5): Promise<Rental[]> {
+    const res = await db.select({
+      rental: rentals,
+      customer: {
+        firstName: customers.firstName,
+        lastName: customers.lastName,
+      }
+    })
+    .from(rentals)
+    .leftJoin(customers, eq(rentals.customerId, customers.id))
+    .where(and(eq(rentals.tenantId, tenantId), eq(rentals.status, 'booked')))
+    .orderBy(asc(rentals.pickupDate))
+    .limit(limit);
+
+    return res.map(row => ({ 
+      ...row.rental, 
+      customer: row.customer 
+    })) as any;
   }
 }

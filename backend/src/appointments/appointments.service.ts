@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { db } from '../db';
 import { appointments, customers, users } from '../db/schema';
-import { eq, and, desc, asc } from 'drizzle-orm';
+import { eq, and, desc, asc, sql } from 'drizzle-orm';
 
 @Injectable()
 export class AppointmentsService {
@@ -60,5 +60,13 @@ export class AppointmentsService {
 
     if (!res[0]) throw new NotFoundException(`Appointment ${id} not found`);
     return res[0];
+  }
+
+  async getCount(tenantId: string, date: string) {
+    const res = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(appointments)
+      .where(and(eq(appointments.tenantId, tenantId), eq(appointments.date, date)));
+    return res[0]?.count || 0;
   }
 }

@@ -4,8 +4,8 @@ test.describe('POS Checkout Flow', () => {
   test.beforeEach(async ({ page }) => {
     // Login before each POS test
     await page.goto('/login');
-    await page.fill('input[name="email"]', 'admin@tuxedopos.com');
-    await page.fill('input[name="password"]', 'password123');
+    await page.fill('input[name="email"]', 'james@tuxedopos.com');
+    await page.fill('input[name="password"]', 'pass');
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/.*dashboard/);
   });

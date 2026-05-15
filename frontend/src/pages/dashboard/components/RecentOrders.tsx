@@ -10,7 +10,7 @@ export const RecentOrders: React.FC<{ orders: RecentOrder[] }> = ({ orders }) =>
   <div className="card p-0 overflow-hidden">
     <div className="card-header py-4 px-5 border-b border-[var(--surface-border)]">
       <span className="card-title">Recent Orders</span>
-      <a href="/pos" className="text-[0.8rem] text-[var(--tux-navy)] font-semibold no-underline hover:underline">View all →</a>
+      <a href="/reports" className="text-[0.8rem] text-[var(--tux-navy)] font-semibold no-underline hover:underline">View all →</a>
     </div>
     <table className="data-table">
       <thead>
@@ -26,7 +26,7 @@ export const RecentOrders: React.FC<{ orders: RecentOrder[] }> = ({ orders }) =>
       <tbody>
         {orders.map(o => (
           <tr key={o.id}>
-            <td><code className="text-[0.8rem] text-[var(--tux-navy)] font-semibold">{o.id}</code></td>
+            <td><code className="text-[0.8rem] text-[var(--tux-navy)] font-semibold">{o.orderNo}</code></td>
             <td className="font-medium">{o.customer}</td>
             <td className="text-[var(--text-secondary)] text-[0.85rem]">{o.type}</td>
             <td className="font-bold">{o.total}</td>

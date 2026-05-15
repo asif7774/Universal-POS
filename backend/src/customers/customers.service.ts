@@ -114,9 +114,10 @@ export class CustomersService {
   }
 
   async saveMeasurement(customerId: string, tenantId: string, takenById: string, data: Partial<Measurement>): Promise<Measurement> {
-    // Upsert isn't directly supported identically without a unique constraint on customerId, 
-    // so we delete existing first to keep 1 active measurement profile per customer.
-    await db.delete(measurements).where(and(eq(measurements.customerId, customerId), eq(measurements.tenantId, tenantId)));
+    // If id is provided, update existing
+    if (data.id) {
+      return this.updateMeasurement(data.id, customerId, tenantId, data);
+    }
     
     const res = await db.insert(measurements).values({
       customerId,
@@ -125,6 +126,23 @@ export class CustomersService {
       ...data,
     }).returning();
     return res[0] as unknown as Measurement;
+  }
+
+  async updateMeasurement(id: string, customerId: string, tenantId: string, data: Partial<Measurement>): Promise<Measurement> {
+    const { id: _, customerId: __, tenantId: ___, createdAt: ____, ...updateData } = data;
+    const res = await db.update(measurements)
+      .set(updateData)
+      .where(and(eq(measurements.id, id), eq(measurements.customerId, customerId), eq(measurements.tenantId, tenantId)))
+      .returning();
+    if (!res[0]) throw new NotFoundException(`Measurement ${id} not found`);
+    return res[0] as unknown as Measurement;
+  }
+
+  async deleteMeasurement(id: string, customerId: string, tenantId: string): Promise<void> {
+    const res = await db.delete(measurements)
+      .where(and(eq(measurements.id, id), eq(measurements.customerId, customerId), eq(measurements.tenantId, tenantId)))
+      .returning();
+    if (!res[0]) throw new NotFoundException(`Measurement ${id} not found`);
   }
 
   async update(id: string, tenantId: string, data: Partial<Customer>): Promise<Customer> {

@@ -8,7 +8,8 @@ import {
   isSvgSpriteInjected,
   hasVersionChanged,
   isSpriteLoaded,
-  markSpriteAsLoaded
+  markSpriteAsLoaded,
+  clearAllCachedSvgSprites
 } from '../../../utils/svgSpriteUtils';
 
 const SvgSpriteContext = createContext<SvgSpriteContextType | null>(null);
@@ -62,7 +63,11 @@ const SvgSpriteLoader: React.FC<SvgSpriteLoaderProps> = ({
       // Check cache first
       const cachedData = getCachedSvgSprite(spriteUrl);
 
-      if (cachedData && !hasVersionChanged(spriteUrl, spriteVersion)) {
+      if (hasVersionChanged(spriteUrl, spriteVersion)) {
+        // eslint-disable-next-line no-console
+        if (isDev) { console.log(`[SvgSpriteLoader] Version changed, clearing old cache`); }
+        clearAllCachedSvgSprites(); // Remove all old sprite data
+      } else if (cachedData) {
         // eslint-disable-next-line no-console
         if (isDev) { console.log(`[SvgSpriteLoader] Using cached sprite: ${spriteUrl}`); }
         // Use cached data
