@@ -67,7 +67,7 @@ const Sidebar: React.FC = () => {
   }, []);
 
   const pluginNavItems = getNavItems() || [];
-  
+
   // Dynamically add a "Plugins" section if any plugins have nav items
   const activeNavSections = [...NAV_SECTIONS];
   if (pluginNavItems.length > 0) {
@@ -95,14 +95,14 @@ const Sidebar: React.FC = () => {
     <>
       {/* Spacer to maintain layout without shifting content */}
       <div style={{ width: collapsed ? 68 : 260, flexShrink: 0, transition: 'width .2s ease' }} />
-      
-      <nav 
-        className="sidebar" 
-        aria-label="Main navigation" 
+
+      <nav
+        className="sidebar"
+        aria-label="Main navigation"
         onMouseEnter={isPointerFine ? () => setIsHovered(true) : undefined}
         onMouseLeave={isPointerFine ? () => setIsHovered(false) : undefined}
-        style={{ 
-          width: isEffectivelyExpanded ? 260 : 68, 
+        style={{
+          width: isEffectivelyExpanded ? 260 : 68,
           transition: 'width .2s ease',
           position: 'fixed',
           left: 0,
@@ -128,17 +128,17 @@ const Sidebar: React.FC = () => {
           <button
             onClick={() => setCollapsed(c => !c)}
             style={{
-              marginLeft: isEffectivelyExpanded ? 'auto' : 0, 
+              marginLeft: isEffectivelyExpanded ? 'auto' : 0,
               background: 'rgba(255,255,255,.1)',
               border: 'none', borderRadius: 6, width: 28, height: 28,
               cursor: 'pointer', color: 'rgba(255,255,255,.6)',
-              display: isEffectivelyExpanded || !collapsed ? 'flex' : 'none', 
+              display: isEffectivelyExpanded || !collapsed ? 'flex' : 'none',
               alignItems: 'center', justifyContent: 'center',
               flexShrink: 0,
             }}
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            <SvgIcon name={collapsed ? 'chevron-expand' : 'chevron-collapse'} width="14" height="14" />
+            <SvgIcon name={collapsed ? 'pinned' : 'menu'} width="20" height="20" strokeWidth="2" fill="none" />
           </button>
         </div>
 
@@ -160,7 +160,7 @@ const Sidebar: React.FC = () => {
                 )}
                 {visibleItems.map(item => {
                   const isEmoji = item.iconName && (item.iconName.length <= 2 || /\p{Emoji}/u.test(item.iconName));
-                  
+
                   return (
                     <NavLink
                       key={item.path}
