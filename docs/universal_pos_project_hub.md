@@ -322,6 +322,12 @@ gantt
     Stripe / Razorpay integration        :done, p5b, after p4d, 5d
     Advanced reporting                   :done, p5c, after p5b, 7d
     Hardware abstraction layer           :done, p5d, after p5a, 5d
+    section Phase 6: Refactoring
+    Decompose POS.tsx (God Component)    :p6a, after p5d, 4d
+    Performance (React.memo & Lazy load) :p6b, after p6a, 3d
+    Componentize Modals & Tables         :p6c, after p6b, 5d
+    Resolve SvgSpriteLoader Coupling     :p6d, after p6c, 2d
+    Milestone: Prod Ready                :milestone, after p6d, 0d
 ```
 
 ### Milestone Summary
@@ -333,6 +339,7 @@ gantt
 | **M3: Offline-First** | Week 9 | Works without internet, syncs on reconnect |
 | **M4: MVP** | Week 11 | Plugin system, retail domain, tenant config, admin panel | ✅ |
 | **M5: Scale** | Week 14+ | Restaurant domain, card payments, reporting, hardware | ✅ |
+| **M6: Refactoring & Polish** | Week 16 | Decomposed components, memoized renders, resolved coupling, prod-ready |
 
 ---
 
