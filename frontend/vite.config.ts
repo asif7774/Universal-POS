@@ -1,10 +1,45 @@
 import { defineConfig } from "vite";
 import { resolve } from "path";
 import react from "@vitejs/plugin-react";
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(() => {
   return {
-    plugins: [react()],
+    plugins: [
+      react(),
+      VitePWA({
+        registerType: 'autoUpdate',
+        includeAssets: ['favicon.svg', 'sprites/app-icons.svg'],
+        manifest: false, // we have our own manifest.webmanifest in /public
+        workbox: {
+          // Cache static assets
+          globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
+          // Network-first for API calls; fall back to cache
+          runtimeCaching: [
+            {
+              urlPattern: /\/api\/v1\/(products|customers)/,
+              handler: 'NetworkFirst',
+              options: {
+                cacheName: 'api-catalog',
+                networkTimeoutSeconds: 5,
+                expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 },
+              },
+            },
+            {
+              urlPattern: /\/api\/v1\/orders/,
+              handler: 'NetworkFirst',
+              options: {
+                cacheName: 'api-orders',
+                networkTimeoutSeconds: 5,
+                expiration: { maxEntries: 300, maxAgeSeconds: 60 * 30 },
+              },
+            },
+          ],
+          skipWaiting: true,
+          clientsClaim: true,
+        },
+      }),
+    ],
     server: {
       port: 5200,
       cors: true,
@@ -15,13 +50,14 @@ export default defineConfig(() => {
     },
     resolve: {
       alias: {
-        app: resolve(__dirname, "src", "app"),
+        app:        resolve(__dirname, "src", "app"),
         components: resolve(__dirname, "src", "components"),
-        hooks: resolve(__dirname, "src", "hooks"),
-        contexts: resolve(__dirname, "src", "contexts"),
-        layouts: resolve(__dirname, "src", "layouts"),
-        pages: resolve(__dirname, "src", "pages"),
-        utils: resolve(__dirname, "src", "utils"),
+        hooks:      resolve(__dirname, "src", "hooks"),
+        contexts:   resolve(__dirname, "src", "contexts"),
+        layouts:    resolve(__dirname, "src", "layouts"),
+        pages:      resolve(__dirname, "src", "pages"),
+        utils:      resolve(__dirname, "src", "utils"),
+        lib:        resolve(__dirname, "src", "lib"),
       },
     },
     build: {
