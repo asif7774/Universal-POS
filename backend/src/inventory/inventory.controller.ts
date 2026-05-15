@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Put, Post, Delete, Param, Body, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../common/guards';
 import { InventoryService } from './inventory.service';
 
@@ -10,5 +10,20 @@ export class InventoryController {
   @Get()
   async getInventory(@Req() req: any) {
     return this.svc.getInventory(req.user.tenantId);
+  }
+
+  @Put(':id')
+  async update(@Param('id') id: string, @Req() req: any, @Body() body: any) {
+    return this.svc.update(id, req.user.tenantId, body);
+  }
+
+  @Put(':id/stock')
+  async updateStock(@Param('id') id: string, @Req() req: any, @Body() body: any) {
+    return this.svc.updateStock(id, req.user.tenantId, body.sizes);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string, @Req() req: any) {
+    return this.svc.deleteItem(id, req.user.tenantId);
   }
 }
