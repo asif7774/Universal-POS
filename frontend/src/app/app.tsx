@@ -4,6 +4,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from 'contexts/AuthContext';
 import { SnackbarProvider } from 'contexts/SnackbarContext';
 import { OfflineProvider } from 'contexts/OfflineContext';
+import { TenantProvider } from 'contexts/TenantContext';
+import { PluginProvider, usePlugins } from 'contexts/PluginContext';
 import AppLayout from 'layouts/AppLayout';
 import { SvgSpriteLoader } from 'components/atoms/svg-sprite-loader';
 
@@ -50,6 +52,47 @@ const Spinner = () => (
   </div>
 );
 
+const AppRoutes = () => {
+  const { getRoutes } = usePlugins();
+  const pluginRoutes = getRoutes();
+
+  return (
+    <Suspense fallback={<Spinner />}>
+      <Routes>
+        {/* Public */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Protected — all wrapped in AppLayout */}
+        <Route element={<AppLayout />}>
+          <Route path="/dashboard"        element={<Dashboard />} />
+          <Route path="/pos"              element={<POS />} />
+          <Route path="/rentals"          element={<Rentals />} />
+          <Route path="/rentals/new"      element={<ComingSoon page="New Rental Booking" />} />
+          <Route path="/customers"        element={<Customers />} />
+          <Route path="/customers/new"    element={<ComingSoon page="New Customer" />} />
+          <Route path="/measurements"     element={<Measurements />} />
+          <Route path="/measurements/new" element={<Measurements />} />
+          <Route path="/tailoring"        element={<Tailoring />} />
+          <Route path="/inventory"        element={<Inventory />} />
+          <Route path="/appointments"     element={<Appointments />} />
+          <Route path="/appointments/new" element={<Appointments />} />
+          <Route path="/reports"          element={<Reports />} />
+          <Route path="/settings"         element={<Settings />} />
+          
+          {/* Plugin dynamic routes */}
+          {pluginRoutes.map((route) => (
+            <Route key={route.path} path={route.path} element={route.element} />
+          ))}
+        </Route>
+
+        {/* Redirects */}
+        <Route path="/"  element={<Navigate to="/dashboard" replace />} />
+        <Route path="*"  element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </Suspense>
+  );
+};
+
 // ── App ───────────────────────────────────────────────────────
 function App() {
   return (
@@ -57,38 +100,15 @@ function App() {
       <SvgSpriteLoader url="/sprites/app-icons.svg">
         <SnackbarProvider>
           <OfflineProvider>
-            <AuthProvider>
-              <Router>
-                <Suspense fallback={<Spinner />}>
-                  <Routes>
-                    {/* Public */}
-                    <Route path="/login" element={<Login />} />
-
-                    {/* Protected — all wrapped in AppLayout */}
-                    <Route element={<AppLayout />}>
-                      <Route path="/dashboard"        element={<Dashboard />} />
-                      <Route path="/pos"              element={<POS />} />
-                      <Route path="/rentals"          element={<Rentals />} />
-                      <Route path="/rentals/new"      element={<ComingSoon page="New Rental Booking" />} />
-                      <Route path="/customers"        element={<Customers />} />
-                      <Route path="/customers/new"    element={<ComingSoon page="New Customer" />} />
-                      <Route path="/measurements"     element={<Measurements />} />
-                      <Route path="/measurements/new" element={<Measurements />} />
-                      <Route path="/tailoring"        element={<Tailoring />} />
-                      <Route path="/inventory"        element={<Inventory />} />
-                      <Route path="/appointments"     element={<Appointments />} />
-                      <Route path="/appointments/new" element={<Appointments />} />
-                      <Route path="/reports"          element={<Reports />} />
-                      <Route path="/settings"         element={<Settings />} />
-                    </Route>
-
-                    {/* Redirects */}
-                    <Route path="/"  element={<Navigate to="/dashboard" replace />} />
-                    <Route path="*"  element={<Navigate to="/dashboard" replace />} />
-                  </Routes>
-                </Suspense>
-              </Router>
-            </AuthProvider>
+            <TenantProvider>
+              <PluginProvider>
+                <AuthProvider>
+                  <Router>
+                    <AppRoutes />
+                  </Router>
+                </AuthProvider>
+              </PluginProvider>
+            </TenantProvider>
           </OfflineProvider>
         </SnackbarProvider>
       </SvgSpriteLoader>

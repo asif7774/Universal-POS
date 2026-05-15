@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from 'contexts/AuthContext';
+import { usePlugins } from 'contexts/PluginContext';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 interface NavItem {
@@ -50,8 +51,25 @@ const NAV_SECTIONS: NavSection[] = [
 
 const Sidebar: React.FC = () => {
   const { user, logout } = useAuth();
+  const { getNavItems } = usePlugins();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
+
+  const pluginNavItems = getNavItems();
+  
+  // Dynamically add a "Plugins" section if any plugins have nav items
+  const activeNavSections = [...NAV_SECTIONS];
+  if (pluginNavItems.length > 0) {
+    activeNavSections.splice(3, 0, {
+      section: 'Plugins',
+      items: pluginNavItems.map(item => ({
+        label: item.label,
+        path: item.path,
+        iconName: item.icon, // For plugins, we'll assume it's either an emoji or an icon name
+        roles: item.roles
+      }))
+    });
+  }
 
   const handleLogout = () => {
     logout();
@@ -92,7 +110,7 @@ const Sidebar: React.FC = () => {
 
       {/* Nav sections */}
       <div className="sidebar-nav">
-        {NAV_SECTIONS.map(section => {
+        {activeNavSections.map(section => {
           const visibleItems = section.items.filter(
             item => !item.roles || (user && item.roles.includes(user.role))
           );
@@ -102,18 +120,26 @@ const Sidebar: React.FC = () => {
               {!collapsed && (
                 <div className="sidebar-section-label">{section.section}</div>
               )}
-              {visibleItems.map(item => (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
-                  title={collapsed ? item.label : undefined}
-                  style={{ justifyContent: collapsed ? 'center' : 'flex-start' }}
-                >
-                  <SvgIcon name={item.iconName} width="18" height="18" className="nav-icon" />
-                  {!collapsed && <span>{item.label}</span>}
-                </NavLink>
-              ))}
+              {visibleItems.map(item => {
+                const isEmoji = item.iconName && (item.iconName.length <= 2 || /\p{Emoji}/u.test(item.iconName));
+                
+                return (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
+                    title={collapsed ? item.label : undefined}
+                    style={{ justifyContent: collapsed ? 'center' : 'flex-start' }}
+                  >
+                    {isEmoji ? (
+                      <span className="nav-icon" style={{ fontSize: 16, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 18, height: 18 }}>{item.iconName}</span>
+                    ) : (
+                      <SvgIcon name={item.iconName} width="18" height="18" className="nav-icon" />
+                    )}
+                    {!collapsed && <span>{item.label}</span>}
+                  </NavLink>
+                );
+              })}
             </div>
           );
         })}

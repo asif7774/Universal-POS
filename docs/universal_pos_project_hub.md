@@ -367,8 +367,13 @@ gantt
 | Receipt Generation | Antigravity | ✅ Done | Browser print window with full order detail (items, tax, change, customer) |
 | Reports — Real API | Antigravity | ✅ Done | Replaced mock data with live /orders/summary + /orders, 30s refresh |
 | Customer on POS | Antigravity | ✅ Done | Search & attach customer to order at checkout; customerId saved to order |
-| Category Management | Antigravity | ⏳ Next | Edit/delete product categories from Settings or Inventory |
-| Offline (Dexie.js) | Antigravity | ⏳ Planned | Phase 3 — IndexedDB store + sync queue |
+| Category Management | Antigravity | ✅ Done | Edit/delete product categories from Settings or Inventory |
+| Offline (Dexie.js) | Antigravity | ✅ Done | Phase 3 — IndexedDB store + sync queue |
+| Offline Sync Engine | Antigravity | ✅ Done | Auto-flush queue on reconnect, 5x retry logic |
+| Offline PWA Workbox | Antigravity | ✅ Done | NetworkFirst caching for API, precaching assets |
+| Plugin Loader | Antigravity | ⏳ Planned | Phase 4 — Dynamic plugin architecture |
+| Tenant Config | Antigravity | ⏳ Planned | Phase 4 — Settings and configuration per tenant |
+| Admin Panel | Antigravity | ⏳ Planned | Phase 4 — Super-admin oversight |
 
 ### Completed
 
