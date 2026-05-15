@@ -10,7 +10,7 @@ interface CustomerCardProps {
 const fmt = (n: number | string | null | undefined) => `$${parseFloat((n as string) ?? '0').toFixed(2)}`;
 
 export const CustomerCard = memo(({ c, onClick }: CustomerCardProps) => (
-  <div className="card" style={{ cursor: 'pointer', transition: 'all .15s' }}
+  <div className="card" data-id={c.id} style={{ cursor: 'pointer', transition: 'all .15s' }}
     onClick={onClick}
     onMouseEnter={e => (e.currentTarget.style.transform = 'translateY(-2px)')}
     onMouseLeave={e => (e.currentTarget.style.transform = 'none')}

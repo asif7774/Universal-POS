@@ -14,8 +14,9 @@ async function bootstrap() {
   }));
 
   // CORS for frontend
+  const origins = process.env.ALLOWED_ORIGINS?.split(',') ?? ['http://localhost:5200', 'http://localhost:5201', 'http://localhost:5202', 'http://localhost:5203'];
   app.enableCors({
-    origin: ['http://localhost:5200', 'http://localhost:5201', 'http://localhost:5202'],
+    origin: origins,
     credentials: true,
   });
 

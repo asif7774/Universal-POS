@@ -52,3 +52,12 @@ coverage/
 # Local env files
 .env.development
 .env.production
+
+#Playwright
+.cache/
+frontend/playwright-report/
+frontend/test-results/
+frontend/playwright-video/
+backend/playwright-report/
+backend/test-results/
+backend/playwright-video/
