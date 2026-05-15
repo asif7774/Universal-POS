@@ -363,7 +363,12 @@ gantt
 
 | SVG Sprite Architecture | Antigravity | ✅ Done | Migrated all inline SVGs to central sprite, fixed vite-transform errors |
 | Notification System | Antigravity | ✅ Done | Added global SnackbarContext, styled toasts, wired to Mutations |
-| Product Catalog (CRUD) | Antigravity | ⏳ In Progress | Add/Edit items in Inventory, connect to NestJS backend |
+| Product Catalog (CRUD) | Antigravity | ✅ Done | Add Item modal → POST /products, snackbar confirm, inventory refresh |
+| Receipt Generation | Antigravity | ✅ Done | Browser print window with full order detail (items, tax, change, customer) |
+| Reports — Real API | Antigravity | ✅ Done | Replaced mock data with live /orders/summary + /orders, 30s refresh |
+| Customer on POS | Antigravity | ✅ Done | Search & attach customer to order at checkout; customerId saved to order |
+| Category Management | Antigravity | ⏳ Next | Edit/delete product categories from Settings or Inventory |
+| Offline (Dexie.js) | Antigravity | ⏳ Planned | Phase 3 — IndexedDB store + sync queue |
 
 ### Completed
 

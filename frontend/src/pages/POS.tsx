@@ -51,6 +51,9 @@ const POS: React.FC = () => {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderId, setOrderId] = useState('');
+  const [completedOrder, setCompletedOrder] = useState<any>(null);
+  const [customerSearch, setCustomerSearch] = useState('');
+  const [selectedCustomer, setSelectedCustomer] = useState<{id:string;firstName:string;lastName:string} | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
   const { data: products = [] } = useQuery<Product[]>({
@@ -68,6 +71,11 @@ const POS: React.FC = () => {
         rentalRate: p.rentalRatePerDay ? parseFloat(p.rentalRatePerDay) : undefined
       }));
     }
+  });
+
+  const { data: customers = [] } = useQuery<{id:string;firstName:string;lastName:string}[]>({
+    queryKey: ['customers-list'],
+    queryFn: () => apiClient.get('/customers'),
   });
 
   const CATEGORIES = ['All', ...Array.from(new Set(products.map(p => p.category)))];
@@ -168,8 +176,10 @@ const POS: React.FC = () => {
     },
     onSuccess: (data: any) => {
       setOrderId(data.orderNo);
+      setCompletedOrder(data);
       setOrderComplete(true);
       queryClient.invalidateQueries({ queryKey: ['orders'] });
+      showSnackbar(`✅ Order ${data.orderNo} completed!`, 'success');
     }
   });
 
@@ -177,6 +187,7 @@ const POS: React.FC = () => {
     const orderData = {
       status: 'completed',
       type: cart.some(i => i.isRental) && cart.some(i => !i.isRental) ? 'mixed' : cart.some(i => i.isRental) ? 'rental' : 'sale',
+      customerId: selectedCustomer?.id ?? null,
       subtotal: subtotal.toString(),
       discountPct: discount.toString(),
       discountAmt: discountAmt.toString(),
@@ -206,7 +217,47 @@ const POS: React.FC = () => {
     setCheckoutOpen(false);
     setOrderComplete(false);
     setOrderId('');
+    setCompletedOrder(null);
+    setSelectedCustomer(null);
+    setCustomerSearch('');
     searchRef.current?.focus();
+  };
+
+  const printReceipt = () => {
+    const storeName = 'TuxedoPOS';
+    const receiptItems = (completedOrder?.items ?? cart).map((i: any) => {
+      const name = i.name ?? i.product?.name;
+      const qty = i.qty;
+      const unit = i.unitPrice ? parseFloat(i.unitPrice) : (i.product?.price ?? 0);
+      const line = i.lineTotal ? parseFloat(i.lineTotal) : i.lineTotal;
+      return `${name} x${qty}  $${line.toFixed(2)}`;
+    }).join('\n');
+
+    const receiptText = [
+      storeName,
+      '================================',
+      `Order: ${orderId}`,
+      `Date: ${new Date().toLocaleString()}`,
+      `Customer: ${selectedCustomer ? `${selectedCustomer.firstName} ${selectedCustomer.lastName}` : 'Walk-in'}`,
+      `Payment: ${paymentMethod.toUpperCase()}`,
+      '--------------------------------',
+      receiptItems,
+      '--------------------------------',
+      `Subtotal:    $${subtotal.toFixed(2)}`,
+      discount > 0 ? `Discount:   -$${discountAmt.toFixed(2)}` : '',
+      `Tax (8.75%): $${tax.toFixed(2)}`,
+      `TOTAL:       $${total.toFixed(2)}`,
+      paymentMethod === 'cash' && change > 0 ? `Change:      $${change.toFixed(2)}` : '',
+      '================================',
+      'Thank you for choosing TuxedoPOS!',
+    ].filter(Boolean).join('\n');
+
+    const w = window.open('', '_blank', 'width=380,height=600');
+    if (!w) return;
+    w.document.write(`<html><head><title>Receipt ${orderId}</title><style>
+      body{font-family:monospace;font-size:13px;padding:20px;white-space:pre;}
+    </style></head><body>${receiptText.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}<script>window.print();window.close();<\/script></body></html>`);
+    w.document.close();
   };
 
   return (
@@ -446,6 +497,40 @@ const POS: React.FC = () => {
             <div style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--tux-navy)' }}>{fmt(total)}</div>
           </div>
 
+          {/* Customer */}
+          <div>
+            <label className="input-label" style={{ marginBottom: 6, display: 'block' }}>Customer (optional)</label>
+            {selectedCustomer ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', background: '#EEF2F8', borderRadius: 8, border: '1.5px solid var(--tux-navy)' }}>
+                <div className="avatar" style={{ width: 28, height: 28, fontSize: '.65rem', flexShrink: 0 }}>
+                  {selectedCustomer.firstName[0]}{selectedCustomer.lastName[0]}
+                </div>
+                <span style={{ flex: 1, fontWeight: 600, fontSize: '.85rem' }}>{selectedCustomer.firstName} {selectedCustomer.lastName}</span>
+                <button onClick={() => setSelectedCustomer(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: '1rem' }}>✕</button>
+              </div>
+            ) : (
+              <div>
+                <input className="input" placeholder="Search customer..." value={customerSearch}
+                  onChange={e => setCustomerSearch(e.target.value)} style={{ marginBottom: 4 }} />
+                {customerSearch && (
+                  <div style={{ border: '1px solid var(--surface-border)', borderRadius: 8, background: 'var(--surface-card)', maxHeight: 120, overflowY: 'auto' }}>
+                    {customers.filter(c => `${c.firstName} ${c.lastName}`.toLowerCase().includes(customerSearch.toLowerCase())).slice(0, 5).map(c => (
+                      <div key={c.id} onClick={() => { setSelectedCustomer(c); setCustomerSearch(''); }}
+                        style={{ padding: '8px 12px', cursor: 'pointer', fontSize: '.85rem', borderBottom: '1px solid var(--surface-border)' }}
+                        onMouseEnter={e => (e.currentTarget.style.background = 'var(--surface-hover)')}
+                        onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                        {c.firstName} {c.lastName}
+                      </div>
+                    ))}
+                    {customers.filter(c => `${c.firstName} ${c.lastName}`.toLowerCase().includes(customerSearch.toLowerCase())).length === 0 && (
+                      <div style={{ padding: '8px 12px', fontSize: '.82rem', color: 'var(--text-muted)' }}>No customers found</div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
           {/* Payment method */}
           <div>
             <div className="input-label" style={{ marginBottom: 8 }}>Payment Method</div>
@@ -522,7 +607,7 @@ const POS: React.FC = () => {
           </div>
 
           <div style={{ display: 'flex', gap: 8, flexDirection: 'column' }}>
-            <button className="btn btn-outline" style={{ width: '100%', fontSize: '.85rem' }}>
+            <button className="btn btn-outline" style={{ width: '100%', fontSize: '.85rem' }} onClick={printReceipt}>
               🖨️ Print Receipt
             </button>
             <button className="btn btn-gold" style={{ width: '100%' }} onClick={newOrder}>
