@@ -36,6 +36,7 @@ const Inventory    = lazy(() => import('pages/Inventory'));
 const Appointments = lazy(() => import('pages/Appointments'));
 const Reports      = lazy(() => import('pages/Reports'));
 const Settings     = lazy(() => import('pages/Settings'));
+const AdminPanel   = lazy(() => import('pages/Admin'));
 
 const ComingSoon = ({ page }: { page: string }) => (
   <div style={{ textAlign: 'center', padding: '80px 24px', color: 'var(--text-muted)' }}>
@@ -78,6 +79,7 @@ const AppRoutes = () => {
           <Route path="/appointments/new" element={<Appointments />} />
           <Route path="/reports"          element={<Reports />} />
           <Route path="/settings"         element={<Settings />} />
+          <Route path="/admin"            element={<AdminPanel />} />
           
           {/* Plugin dynamic routes */}
           {pluginRoutes.map((route) => (

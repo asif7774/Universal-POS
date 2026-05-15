@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../lib/apiClient';
 import { Modal } from 'components/atoms/modal/Modal';
 import { useSnackbar } from 'contexts/SnackbarContext';
+import { usePlugins } from 'contexts/PluginContext';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 // ── Types ─────────────────────────────────────────────────────
@@ -42,6 +43,7 @@ const fmt = (n: number) => `$${n.toFixed(2)}`;
 const POS: React.FC = () => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
+  const { getCheckoutExtensions } = usePlugins();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
@@ -530,6 +532,15 @@ const POS: React.FC = () => {
               </div>
             )}
           </div>
+
+          {/* Plugin Extensions (before-payment) */}
+          {getCheckoutExtensions('before-payment').length > 0 && (
+            <div style={{ marginBottom: 16 }}>
+              {getCheckoutExtensions('before-payment').map(ext => (
+                <div key={ext.id}>{ext.component}</div>
+              ))}
+            </div>
+          )}
 
           {/* Payment method */}
           <div>

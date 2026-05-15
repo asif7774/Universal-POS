@@ -311,10 +311,10 @@ gantt
     Milestone: Offline-First Complete    :milestone, after p3d, 0d
 
     section Phase 4: First Plugin
-    Plugin loader architecture           :p4a, after p3d, 4d
-    Retail plugin (returns, exchanges)   :p4b, after p4a, 5d
-    Tenant config system                 :p4c, after p4a, 3d
-    Admin panel                          :p4d, after p4c, 5d
+    Plugin loader architecture           :done, p4a, after p3d, 4d
+    Retail plugin (returns, exchanges)   :done, p4b, after p4a, 5d
+    Tenant config system                 :done, p4c, after p4a, 3d
+    Admin panel                          :done, p4d, after p4c, 5d
     Milestone: MVP Ready                 :milestone, after p4d, 0d
 
     section Phase 5: Scale
@@ -371,9 +371,9 @@ gantt
 | Offline (Dexie.js) | Antigravity | ✅ Done | Phase 3 — IndexedDB store + sync queue |
 | Offline Sync Engine | Antigravity | ✅ Done | Auto-flush queue on reconnect, 5x retry logic |
 | Offline PWA Workbox | Antigravity | ✅ Done | NetworkFirst caching for API, precaching assets |
-| Plugin Loader | Antigravity | ⏳ Planned | Phase 4 — Dynamic plugin architecture |
-| Tenant Config | Antigravity | ⏳ Planned | Phase 4 — Settings and configuration per tenant |
-| Admin Panel | Antigravity | ⏳ Planned | Phase 4 — Super-admin oversight |
+| Plugin Loader | Antigravity | ✅ Done | Phase 4 — Dynamic plugin architecture |
+| Tenant Config | Antigravity | ✅ Done | Phase 4 — Settings and configuration per tenant |
+| Admin Panel | Antigravity | ✅ Done | Phase 4 — Super-admin oversight |
 
 ### Completed
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { usePlugins } from 'contexts/PluginContext';
 
-type SettingsTab = 'store' | 'staff' | 'taxes' | 'receipts' | 'security';
+type SettingsTab = string;
 
 interface StaffMember {
   id: string; name: string; email: string; role: 'owner' | 'manager' | 'cashier';
@@ -17,6 +18,7 @@ const STAFF: StaffMember[] = [
 const ROLE_BADGE: Record<string, string> = { owner: 'badge-gold', manager: 'badge-navy', cashier: 'badge-gray' };
 
 const Settings: React.FC = () => {
+  const { getSettingsPages } = usePlugins();
   const [tab, setTab] = useState<SettingsTab>('store');
   const [saved, setSaved] = useState(false);
   const [store, setStore] = useState({
@@ -42,7 +44,14 @@ const Settings: React.FC = () => {
     { id: 'taxes',    label: 'Taxes & Fees',icon: '💰' },
     { id: 'receipts', label: 'Receipts',    icon: '🖨️'  },
     { id: 'security', label: 'Security',    icon: '🔐' },
+    ...getSettingsPages().map(page => ({
+      id: page.id,
+      label: page.title,
+      icon: '🔌' // Default icon for plugins
+    }))
   ];
+
+  const activePluginPage = getSettingsPages().find(p => p.id === tab);
 
   return (
     <div className="animate-fade-in">
@@ -293,6 +302,14 @@ const Settings: React.FC = () => {
                   ))}
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* ── Plugin Settings ── */}
+          {activePluginPage && (
+            <div className="card">
+              <div className="card-header"><span className="card-title">🔌 {activePluginPage.title}</span></div>
+              {activePluginPage.component}
             </div>
           )}
         </div>

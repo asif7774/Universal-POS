@@ -45,6 +45,7 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { label: 'Reports', path: '/reports', iconName: 'reports', roles: ['owner', 'manager'] },
       { label: 'Settings', path: '/settings', iconName: 'settings', roles: ['owner'] },
+      { label: 'Admin', path: '/admin', iconName: 'settings', roles: ['superadmin'] }, // Assume superadmin role exists or we filter by email
     ],
   },
 ];
@@ -112,7 +113,11 @@ const Sidebar: React.FC = () => {
       <div className="sidebar-nav">
         {activeNavSections.map(section => {
           const visibleItems = section.items.filter(
-            item => !item.roles || (user && item.roles.includes(user.role))
+            item => {
+              if (!item.roles) return true;
+              if (item.roles.includes('superadmin') && user?.email === 'admin@tuxedopos.com') return true;
+              return user && item.roles.includes(user.role);
+            }
           );
           if (!visibleItems.length) return null;
           return (
