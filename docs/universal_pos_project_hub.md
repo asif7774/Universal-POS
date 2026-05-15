@@ -361,6 +361,10 @@ gantt
 | NestJS backend modules | Antigravity | ✅ Done | Auth, Products, Orders, Customers, Rentals, Tailoring |
 | PostgreSQL schema + Drizzle | Antigravity | ✅ Done | Core tables with RLS |
 
+| SVG Sprite Architecture | Antigravity | ✅ Done | Migrated all inline SVGs to central sprite, fixed vite-transform errors |
+| Notification System | Antigravity | ✅ Done | Added global SnackbarContext, styled toasts, wired to Mutations |
+| Product Catalog (CRUD) | Antigravity | ⏳ In Progress | Add/Edit items in Inventory, connect to NestJS backend |
+
 ### Completed
 
 | Task | Date | Notes |

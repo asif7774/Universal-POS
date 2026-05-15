@@ -38,7 +38,7 @@ const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api/v1';
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Restore session on mount
   useEffect(() => {
@@ -50,6 +50,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     } catch {
       localStorage.removeItem(SESSION_KEY);
+    } finally {
+      setLoading(false);
     }
   }, []);
 

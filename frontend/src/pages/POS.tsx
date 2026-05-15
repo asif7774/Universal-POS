@@ -1,6 +1,9 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../lib/apiClient';
+import { Modal } from 'components/atoms/modal/Modal';
+import { useSnackbar } from 'contexts/SnackbarContext';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 // ── Types ─────────────────────────────────────────────────────
 interface Product {
@@ -38,6 +41,7 @@ const fmt = (n: number) => `$${n.toFixed(2)}`;
 // ── POS Terminal ──────────────────────────────────────────────
 const POS: React.FC = () => {
   const queryClient = useQueryClient();
+  const { showSnackbar } = useSnackbar();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
@@ -49,7 +53,7 @@ const POS: React.FC = () => {
   const [orderId, setOrderId] = useState('');
   const searchRef = useRef<HTMLInputElement>(null);
 
-  const { data: products = [], isLoading: productsLoading } = useQuery<Product[]>({
+  const { data: products = [] } = useQuery<Product[]>({
     queryKey: ['products'],
     queryFn: async () => {
       const data = await apiClient.get<any[]>('/products');
@@ -68,7 +72,6 @@ const POS: React.FC = () => {
 
   const CATEGORIES = ['All', ...Array.from(new Set(products.map(p => p.category)))];
 
-  const [barcodeFlash, setBarcodeFlash] = useState('');
   const barcodeBuffer = useRef('');
   const barcodeTimer = useRef<NodeJS.Timeout | undefined>(undefined);
 
@@ -101,8 +104,7 @@ const POS: React.FC = () => {
         const hit = products.find(p => p.sku.toUpperCase() === sku);
         if (hit) {
           addToCart(hit, hit.type === 'rental');
-          setBarcodeFlash(hit.name);
-          setTimeout(() => setBarcodeFlash(''), 2000);
+          showSnackbar(`📦 Added: ${hit.name}`, 'success');
         } else {
           setSearch(sku);
         }
@@ -217,7 +219,7 @@ const POS: React.FC = () => {
         <div style={{ padding: '14px 16px', background: 'var(--surface-card)', borderBottom: '1px solid var(--surface-border)', display: 'flex', gap: 10, alignItems: 'center' }}>
           <div className="input-with-icon" style={{ flex: 1 }}>
             <span className="input-icon">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <SvgIcon name="search" width="15" height="15" />
             </span>
             <input
               id="pos-search"
@@ -242,13 +244,6 @@ const POS: React.FC = () => {
               </button>
             ))}
           </div>
-          {/* Barcode flash indicator */}
-          {barcodeFlash && (
-            <div style={{ position: 'fixed', top: 16, left: '50%', transform: 'translateX(-50%)', zIndex: 9999, background: 'var(--tux-navy)', color: 'white', padding: '8px 18px', borderRadius: 999, fontSize: '.85rem', fontWeight: 700, boxShadow: 'var(--shadow-lg)', display: 'flex', alignItems: 'center', gap: 8, animation: 'slideDown .2s ease' }}>
-              <span>📦</span> Added: {barcodeFlash}
-              <style>{`@keyframes slideDown { from { opacity:0; transform: translateX(-50%) translateY(-10px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }`}</style>
-            </div>
-          )}
         </div>
 
         {/* Products */}
@@ -426,119 +421,116 @@ const POS: React.FC = () => {
       </div>
 
       {/* Checkout Modal */}
-      {checkoutOpen && !orderComplete && (
-        <div className="modal-overlay" onClick={() => setCheckoutOpen(false)}>
-          <div className="modal animate-slide-up" onClick={e => e.stopPropagation()} style={{ maxWidth: 420 }}>
-            <div className="modal-header">
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.2rem' }}>Checkout</h3>
-              <button className="btn btn-ghost btn-icon" onClick={() => setCheckoutOpen(false)}>✕</button>
+      <Modal 
+        isOpen={checkoutOpen && !orderComplete} 
+        onClose={() => setCheckoutOpen(false)}
+        title="Checkout"
+        maxWidth={420}
+        footer={
+          <>
+            <button className="btn btn-outline" onClick={() => setCheckoutOpen(false)}>Cancel</button>
+            <button
+              className="btn btn-gold"
+              onClick={processOrder}
+              disabled={paymentMethod === 'cash' && (parseFloat(cashGiven) < total || !cashGiven)}
+            >
+              ✓ Complete Sale
+            </button>
+          </>
+        }
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {/* Total */}
+          <div style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-md)', padding: '14px', textAlign: 'center' }}>
+            <div style={{ fontSize: '.8rem', color: 'var(--text-muted)', marginBottom: 4 }}>AMOUNT DUE</div>
+            <div style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--tux-navy)' }}>{fmt(total)}</div>
+          </div>
+
+          {/* Payment method */}
+          <div>
+            <div className="input-label" style={{ marginBottom: 8 }}>Payment Method</div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {PAYMENT_METHODS.map(m => (
+                <button key={m.id} onClick={() => setPaymentMethod(m.id)}
+                  style={{
+                    flex: 1, padding: '10px 6px', borderRadius: 'var(--radius-md)',
+                    border: `2px solid ${paymentMethod === m.id ? 'var(--tux-navy)' : 'var(--surface-border)'}`,
+                    background: paymentMethod === m.id ? '#EEF2F8' : 'var(--surface-card)',
+                    cursor: 'pointer', textAlign: 'center', transition: 'all .15s',
+                  }}>
+                  <div style={{ fontSize: '1.3rem' }}>{m.icon}</div>
+                  <div style={{ fontSize: '.75rem', fontWeight: 600, color: paymentMethod === m.id ? 'var(--tux-navy)' : 'var(--text-secondary)' }}>{m.label}</div>
+                </button>
+              ))}
             </div>
+          </div>
 
-            <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {/* Total */}
-              <div style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-md)', padding: '14px', textAlign: 'center' }}>
-                <div style={{ fontSize: '.8rem', color: 'var(--text-muted)', marginBottom: 4 }}>AMOUNT DUE</div>
-                <div style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--tux-navy)' }}>{fmt(total)}</div>
+          {/* Cash tendered */}
+          {paymentMethod === 'cash' && (
+            <div className="input-group">
+              <label className="input-label">Cash Tendered</label>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 6 }}>
+                {[Math.ceil(total), Math.ceil(total / 10) * 10, Math.ceil(total / 20) * 20, Math.ceil(total / 50) * 50].filter((v, i, a) => a.indexOf(v) === i).map(v => (
+                  <button key={v} onClick={() => setCashGiven(v.toString())}
+                    className="btn btn-outline btn-sm">
+                    {fmt(v)}
+                  </button>
+                ))}
               </div>
-
-              {/* Payment method */}
-              <div>
-                <div className="input-label" style={{ marginBottom: 8 }}>Payment Method</div>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  {PAYMENT_METHODS.map(m => (
-                    <button key={m.id} onClick={() => setPaymentMethod(m.id)}
-                      style={{
-                        flex: 1, padding: '10px 6px', borderRadius: 'var(--radius-md)',
-                        border: `2px solid ${paymentMethod === m.id ? 'var(--tux-navy)' : 'var(--surface-border)'}`,
-                        background: paymentMethod === m.id ? '#EEF2F8' : 'var(--surface-card)',
-                        cursor: 'pointer', textAlign: 'center', transition: 'all .15s',
-                      }}>
-                      <div style={{ fontSize: '1.3rem' }}>{m.icon}</div>
-                      <div style={{ fontSize: '.75rem', fontWeight: 600, color: paymentMethod === m.id ? 'var(--tux-navy)' : 'var(--text-secondary)' }}>{m.label}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Cash tendered */}
-              {paymentMethod === 'cash' && (
-                <div className="input-group">
-                  <label className="input-label">Cash Tendered</label>
-                  <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 6 }}>
-                    {[Math.ceil(total), Math.ceil(total / 10) * 10, Math.ceil(total / 20) * 20, Math.ceil(total / 50) * 50].filter((v, i, a) => a.indexOf(v) === i).map(v => (
-                      <button key={v} onClick={() => setCashGiven(v.toString())}
-                        className="btn btn-outline btn-sm">
-                        {fmt(v)}
-                      </button>
-                    ))}
-                  </div>
-                  <input
-                    type="number" className="input" placeholder="0.00"
-                    value={cashGiven} onChange={e => setCashGiven(e.target.value)}
-                    min={0} step="0.01"
-                  />
-                  {parseFloat(cashGiven) > 0 && (
-                    <div style={{ fontSize: '.9rem', fontWeight: 700, color: change >= 0 ? 'var(--status-success)' : 'var(--status-error)', marginTop: 4 }}>
-                      Change: {change >= 0 ? fmt(change) : `Short by ${fmt(-change)}`}
-                    </div>
-                  )}
+              <input
+                type="number" className="input" placeholder="0.00"
+                value={cashGiven} onChange={e => setCashGiven(e.target.value)}
+                min={0} step="0.01"
+              />
+              {parseFloat(cashGiven) > 0 && (
+                <div style={{ fontSize: '.9rem', fontWeight: 700, color: change >= 0 ? 'var(--status-success)' : 'var(--status-error)', marginTop: 4 }}>
+                  Change: {change >= 0 ? fmt(change) : `Short by ${fmt(-change)}`}
                 </div>
               )}
             </div>
-
-            <div className="modal-footer">
-              <button className="btn btn-outline" onClick={() => setCheckoutOpen(false)}>Cancel</button>
-              <button
-                className="btn btn-gold"
-                onClick={processOrder}
-                disabled={paymentMethod === 'cash' && (parseFloat(cashGiven) < total || !cashGiven)}
-              >
-                ✓ Complete Sale
-              </button>
-            </div>
-          </div>
+          )}
         </div>
-      )}
+      </Modal>
 
       {/* Order Complete */}
-      {orderComplete && (
-        <div className="modal-overlay">
-          <div className="modal animate-slide-up" style={{ maxWidth: 380, textAlign: 'center' }}>
-            <div className="modal-body" style={{ padding: '36px 32px' }}>
-              <div style={{ fontSize: '3.5rem', marginBottom: 12 }}>✅</div>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.4rem', marginBottom: 6 }}>Sale Complete!</h3>
-              <code style={{ fontSize: '.85rem', color: 'var(--tux-navy)', fontWeight: 700 }}>{orderId}</code>
+      <Modal 
+        isOpen={orderComplete} 
+        onClose={newOrder}
+        maxWidth={380}
+      >
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '3.5rem', marginBottom: 12 }}>✅</div>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.4rem', marginBottom: 6 }}>Sale Complete!</h3>
+          <code style={{ fontSize: '.85rem', color: 'var(--tux-navy)', fontWeight: 700 }}>{orderId}</code>
 
-              <div style={{ margin: '20px 0', padding: '14px', background: 'var(--surface-hover)', borderRadius: 'var(--radius-md)', textAlign: 'left', fontSize: '.85rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                  <span style={{ color: 'var(--text-muted)' }}>Items</span><span style={{ fontWeight: 600 }}>{cart.length}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                  <span style={{ color: 'var(--text-muted)' }}>Total Charged</span><span style={{ fontWeight: 700, color: 'var(--tux-navy)' }}>{fmt(total)}</span>
-                </div>
-                {paymentMethod === 'cash' && change > 0 && (
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: 'var(--text-muted)' }}>Change</span><span style={{ fontWeight: 700, color: 'var(--status-success)' }}>{fmt(change)}</span>
-                  </div>
-                )}
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-                  <span style={{ color: 'var(--text-muted)' }}>Payment</span>
-                  <span style={{ fontWeight: 600, textTransform: 'capitalize' }}>{paymentMethod}</span>
-                </div>
+          <div style={{ margin: '20px 0', padding: '14px', background: 'var(--surface-hover)', borderRadius: 'var(--radius-md)', textAlign: 'left', fontSize: '.85rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+              <span style={{ color: 'var(--text-muted)' }}>Items</span><span style={{ fontWeight: 600 }}>{cart.length}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+              <span style={{ color: 'var(--text-muted)' }}>Total Charged</span><span style={{ fontWeight: 700, color: 'var(--tux-navy)' }}>{fmt(total)}</span>
+            </div>
+            {paymentMethod === 'cash' && change > 0 && (
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: 'var(--text-muted)' }}>Change</span><span style={{ fontWeight: 700, color: 'var(--status-success)' }}>{fmt(change)}</span>
               </div>
-
-              <div style={{ display: 'flex', gap: 8, flexDirection: 'column' }}>
-                <button className="btn btn-outline" style={{ width: '100%', fontSize: '.85rem' }}>
-                  🖨️ Print Receipt
-                </button>
-                <button className="btn btn-gold" style={{ width: '100%' }} onClick={newOrder}>
-                  + New Order
-                </button>
-              </div>
+            )}
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
+              <span style={{ color: 'var(--text-muted)' }}>Payment</span>
+              <span style={{ fontWeight: 600, textTransform: 'capitalize' }}>{paymentMethod}</span>
             </div>
           </div>
+
+          <div style={{ display: 'flex', gap: 8, flexDirection: 'column' }}>
+            <button className="btn btn-outline" style={{ width: '100%', fontSize: '.85rem' }}>
+              🖨️ Print Receipt
+            </button>
+            <button className="btn btn-gold" style={{ width: '100%' }} onClick={newOrder}>
+              + New Order
+            </button>
+          </div>
         </div>
-      )}
+      </Modal>
     </div>
   );
 };

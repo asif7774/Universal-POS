@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../lib/apiClient';
+import { Modal } from 'components/atoms/modal/Modal';
+import { useSnackbar } from 'contexts/SnackbarContext';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 interface MeasurementRecord {
   id: string;
@@ -46,6 +49,7 @@ const fmtDate = (d: string) => new Date(d).toLocaleDateString('en-US', { month: 
 // New Measurement Form
 const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const queryClient = useQueryClient();
+  const { showSnackbar } = useSnackbar();
   const [form, setForm] = useState<Partial<MeasurementRecord>>({});
   const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
 
@@ -62,6 +66,7 @@ const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['measurements'] });
+      showSnackbar('Measurement record saved successfully!', 'success');
       onClose();
     }
   });
@@ -82,52 +87,51 @@ const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
   ];
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal animate-slide-up" onClick={e => e.stopPropagation()} style={{ maxWidth: 560 }}>
-        <div className="modal-header">
-          <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.1rem' }}>📐 New Measurement Record</h3>
-          <button className="btn btn-ghost btn-icon" onClick={onClose}>✕</button>
-        </div>
-        <div className="modal-body">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <div className="input-group" style={{ gridColumn: '1 / -1' }}>
-              <label className="input-label">Select Customer</label>
-              <select className="input" value={form.customerId ?? ''} onChange={e => set('customerId', e.target.value)}>
-                <option value="" disabled>Select a customer...</option>
-                {customers.map(c => (
-                  <option key={c.id} value={c.id}>{c.firstName} {c.lastName}</option>
-                ))}
-              </select>
-            </div>
-            {inputFields.map(f => (
-              <div key={f.key} className="input-group">
-                <label className="input-label">{f.label}</label>
-                <input
-                  className="input" type={f.type} placeholder={f.placeholder}
-                  value={(form as Record<string, string>)[f.key] ?? ''}
-                  onChange={e => set(f.key, e.target.value)}
-                />
-              </div>
-            ))}
-            <div className="input-group" style={{ gridColumn: '1 / -1' }}>
-              <label className="input-label">Fitting Notes</label>
-              <textarea
-                className="input" placeholder="Any special notes about fit, alterations needed, etc."
-                rows={3} style={{ resize: 'vertical' }}
-                value={form.fittingNotes ?? ''}
-                onChange={e => set('fittingNotes', e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="modal-footer">
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      title="📐 New Measurement Record"
+      maxWidth={560}
+      footer={
+        <>
           <button className="btn btn-outline" onClick={onClose} disabled={mutation.isPending}>Cancel</button>
           <button className="btn btn-gold" onClick={() => mutation.mutate(form)} disabled={mutation.isPending}>
             {mutation.isPending ? 'Saving...' : 'Save Measurements'}
           </button>
+        </>
+      }
+    >
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+          <label className="input-label">Select Customer</label>
+          <select className="input" value={form.customerId ?? ''} onChange={e => set('customerId', e.target.value)}>
+            <option value="" disabled>Select a customer...</option>
+            {customers.map(c => (
+              <option key={c.id} value={c.id}>{c.firstName} {c.lastName}</option>
+            ))}
+          </select>
+        </div>
+        {inputFields.map(f => (
+          <div key={f.key} className="input-group">
+            <label className="input-label">{f.label}</label>
+            <input
+              className="input" type={f.type} placeholder={f.placeholder}
+              value={(form as Record<string, string>)[f.key] ?? ''}
+              onChange={e => set(f.key, e.target.value)}
+            />
+          </div>
+        ))}
+        <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+          <label className="input-label">Fitting Notes</label>
+          <textarea
+            className="input" placeholder="Any special notes about fit, alterations needed, etc."
+            rows={3} style={{ resize: 'vertical' }}
+            value={form.fittingNotes ?? ''}
+            onChange={e => set('fittingNotes', e.target.value)}
+          />
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 
@@ -160,7 +164,7 @@ const Measurements: React.FC = () => {
 
       <div className="input-with-icon" style={{ marginBottom: 20, maxWidth: 400 }}>
         <span className="input-icon">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <SvgIcon name="search" width="15" height="15" />
         </span>
         <input className="input" placeholder="Search customer..." value={search}
           onChange={e => setSearch(e.target.value)} style={{ paddingLeft: 36 }} />
@@ -214,49 +218,48 @@ const Measurements: React.FC = () => {
       )}
 
       {/* Detail Modal */}
-      {selected && (
-        <div className="modal-overlay" onClick={() => setSelected(null)}>
-          <div className="modal animate-slide-up" onClick={e => e.stopPropagation()} style={{ maxWidth: 560 }}>
-            <div className="modal-header">
-              <div>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.1rem' }}>{selected.customerName}</h3>
-                <div style={{ fontSize: '.8rem', color: 'var(--text-muted)' }}>
-                  Measured {fmtDate(selected.date)} · by {selected.takenBy}
+      <Modal
+        isOpen={!!selected}
+        onClose={() => setSelected(null)}
+        maxWidth={560}
+        title={selected?.customerName}
+        footer={
+          <>
+            <button className="btn btn-outline">✏️ Edit</button>
+            <button className="btn btn-primary">🖨️ Print Card</button>
+            <button className="btn btn-ghost btn-sm" onClick={() => setSelected(null)}>Close</button>
+          </>
+        }
+      >
+        {selected && (
+          <>
+            <div style={{ fontSize: '.8rem', color: 'var(--text-muted)', marginTop: -16, marginBottom: 16 }}>
+              Measured {fmtDate(selected.date)} · by {selected.takenBy}
+            </div>
+            {/* Measurement grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 32px' }}>
+              {FIELDS.filter(f => selected[f.key]).map(f => (
+                <div key={f.key} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--surface-border)', fontSize: '.875rem' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>{f.label}</span>
+                  <span style={{ fontWeight: 700 }}>{String(selected[f.key])}</span>
                 </div>
+              ))}
+            </div>
+            {selected.notes && (
+              <div style={{ marginTop: 16, padding: '10px 12px', background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', fontSize: '.85rem' }}>
+                <div style={{ fontWeight: 600, marginBottom: 4, color: 'var(--text-secondary)', fontSize: '.75rem', textTransform: 'uppercase' }}>Tailor Notes</div>
+                {selected.notes}
               </div>
-              <button className="btn btn-ghost btn-icon" onClick={() => setSelected(null)}>✕</button>
-            </div>
-            <div className="modal-body">
-              {/* Measurement grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 32px' }}>
-                {FIELDS.filter(f => selected[f.key]).map(f => (
-                  <div key={f.key} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--surface-border)', fontSize: '.875rem' }}>
-                    <span style={{ color: 'var(--text-secondary)' }}>{f.label}</span>
-                    <span style={{ fontWeight: 700 }}>{String(selected[f.key])}</span>
-                  </div>
-                ))}
+            )}
+            {selected.fittingNotes && (
+              <div style={{ marginTop: 10, padding: '10px 12px', background: '#FDF8E7', border: '1px solid #FDE68A', borderRadius: 'var(--radius-sm)', fontSize: '.85rem', color: '#92400E' }}>
+                <div style={{ fontWeight: 600, marginBottom: 4, fontSize: '.75rem', textTransform: 'uppercase' }}>Fitting Notes</div>
+                {selected.fittingNotes}
               </div>
-              {selected.notes && (
-                <div style={{ marginTop: 16, padding: '10px 12px', background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', fontSize: '.85rem' }}>
-                  <div style={{ fontWeight: 600, marginBottom: 4, color: 'var(--text-secondary)', fontSize: '.75rem', textTransform: 'uppercase' }}>Tailor Notes</div>
-                  {selected.notes}
-                </div>
-              )}
-              {selected.fittingNotes && (
-                <div style={{ marginTop: 10, padding: '10px 12px', background: '#FDF8E7', border: '1px solid #FDE68A', borderRadius: 'var(--radius-sm)', fontSize: '.85rem', color: '#92400E' }}>
-                  <div style={{ fontWeight: 600, marginBottom: 4, fontSize: '.75rem', textTransform: 'uppercase' }}>Fitting Notes</div>
-                  {selected.fittingNotes}
-                </div>
-              )}
-            </div>
-            <div className="modal-footer">
-              <button className="btn btn-outline">✏️ Edit</button>
-              <button className="btn btn-primary">🖨️ Print Card</button>
-              <button className="btn btn-ghost btn-sm" onClick={() => setSelected(null)}>Close</button>
-            </div>
-          </div>
-        </div>
-      )}
+            )}
+          </>
+        )}
+      </Modal>
 
       {showNew && <NewMeasurementModal onClose={() => setShowNew(false)} />}
     </div>

@@ -1,8 +1,10 @@
-import React, { Suspense, lazy } from 'react';
+import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from 'contexts/AuthContext';
+import { SnackbarProvider } from 'contexts/SnackbarContext';
 import AppLayout from 'layouts/AppLayout';
+import { SvgSpriteLoader } from 'components/atoms/svg-sprite-loader';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,17 +16,17 @@ const queryClient = new QueryClient({
 });
 
 // ── Pages (lazy loaded) ───────────────────────────────────────
-const Login        = lazy(() => import('pages/Login'));
-const Dashboard    = lazy(() => import('pages/Dashboard'));
-const POS          = lazy(() => import('pages/POS'));
-const Rentals      = lazy(() => import('pages/Rentals'));
-const Customers    = lazy(() => import('pages/Customers'));
+const Login = lazy(() => import('pages/Login'));
+const Dashboard = lazy(() => import('pages/Dashboard'));
+const POS = lazy(() => import('pages/POS'));
+const Rentals = lazy(() => import('pages/Rentals'));
+const Customers = lazy(() => import('pages/Customers'));
 const Measurements = lazy(() => import('pages/Measurements'));
-const Tailoring    = lazy(() => import('pages/Tailoring'));
-const Inventory    = lazy(() => import('pages/Inventory'));
+const Tailoring = lazy(() => import('pages/Tailoring'));
+const Inventory = lazy(() => import('pages/Inventory'));
 const Appointments = lazy(() => import('pages/Appointments'));
-const Reports      = lazy(() => import('pages/Reports'));
-const Settings     = lazy(() => import('pages/Settings'));
+const Reports = lazy(() => import('pages/Reports'));
+const Settings = lazy(() => import('pages/Settings'));
 
 // Placeholder for pages being built this week
 const ComingSoon = ({ page }: { page: string }) => (
@@ -56,38 +58,42 @@ const Spinner = () => (
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Router>
-        <Suspense fallback={<Spinner />}>
-          <Routes>
-            {/* Public */}
-            <Route path="/login" element={<Login />} />
+      <SvgSpriteLoader url="/sprites/app-icons.svg">
+        <SnackbarProvider>
+          <AuthProvider>
+            <Router>
+              <Suspense fallback={<Spinner />}>
+                <Routes>
+                  {/* Public */}
+                  <Route path="/login" element={<Login />} />
 
-            {/* Protected — all wrapped in AppLayout */}
-            <Route element={<AppLayout />}>
-              <Route path="/dashboard"    element={<Dashboard />} />
-              <Route path="/pos"          element={<POS />} />
-              <Route path="/rentals"      element={<Rentals />} />
-              <Route path="/rentals/new"  element={<ComingSoon page="New Rental Booking" />} />
-              <Route path="/customers"    element={<Customers />} />
-              <Route path="/customers/new" element={<ComingSoon page="New Customer" />} />
-              <Route path="/measurements" element={<Measurements />} />
-              <Route path="/measurements/new" element={<Measurements />} />
-              <Route path="/tailoring"    element={<Tailoring />} />
-              <Route path="/inventory"    element={<Inventory />} />
-              <Route path="/appointments" element={<Appointments />} />
-              <Route path="/appointments/new" element={<Appointments />} />
-              <Route path="/reports"      element={<Reports />} />
-              <Route path="/settings"     element={<Settings />} />
-            </Route>
+                  {/* Protected — all wrapped in AppLayout */}
+                  <Route element={<AppLayout />}>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/pos" element={<POS />} />
+                    <Route path="/rentals" element={<Rentals />} />
+                    <Route path="/rentals/new" element={<ComingSoon page="New Rental Booking" />} />
+                    <Route path="/customers" element={<Customers />} />
+                    <Route path="/customers/new" element={<ComingSoon page="New Customer" />} />
+                    <Route path="/measurements" element={<Measurements />} />
+                    <Route path="/measurements/new" element={<Measurements />} />
+                    <Route path="/tailoring" element={<Tailoring />} />
+                    <Route path="/inventory" element={<Inventory />} />
+                    <Route path="/appointments" element={<Appointments />} />
+                    <Route path="/appointments/new" element={<Appointments />} />
+                    <Route path="/reports" element={<Reports />} />
+                    <Route path="/settings" element={<Settings />} />
+                  </Route>
 
-            {/* Redirects */}
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Routes>
-        </Suspense>
-      </Router>
-      </AuthProvider>
+                  {/* Redirects */}
+                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                  <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                </Routes>
+              </Suspense>
+            </Router>
+          </AuthProvider>
+        </SnackbarProvider>
+      </SvgSpriteLoader>
     </QueryClientProvider>
   );
 }

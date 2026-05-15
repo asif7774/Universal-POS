@@ -2,6 +2,7 @@ import React from 'react';
 import { useAuth } from 'contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../lib/apiClient';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 // ── Mini chart sparkline ──────────────────────────────────────
 const Sparkline = ({ data, color }: { data: number[]; color: string }) => {
@@ -125,7 +126,7 @@ const Dashboard: React.FC = () => {
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <button className="btn btn-outline btn-sm">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <SvgIcon name="search" width="14" height="14" />
             Quick Search
           </button>
           <a href="/pos" className="btn btn-gold">

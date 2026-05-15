@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../lib/apiClient';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
+import { useSnackbar } from 'contexts/SnackbarContext';
 
 interface Measurement {
   chest: string; waist: string; hips: string; inseam: string;
@@ -41,7 +43,7 @@ const Customers: React.FC = () => {
   const [isAdding, setIsAdding] = useState(false);
   
   const queryClient = useQueryClient();
-
+  const { showSnackbar } = useSnackbar();
   const { data: customers = [], isLoading } = useQuery({
     queryKey: ['customers'],
     queryFn: () => apiClient.get<Customer[]>('/customers'),
@@ -57,6 +59,7 @@ const Customers: React.FC = () => {
     mutationFn: (data: Partial<Customer>) => apiClient.post<Customer>('/customers', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['customers'] });
+      showSnackbar('Customer added successfully!', 'success');
       setIsAdding(false);
     }
   });
@@ -135,7 +138,7 @@ const Customers: React.FC = () => {
           {/* Search */}
           <div className="input-with-icon" style={{ marginBottom: 20, maxWidth: 420 }}>
             <span className="input-icon">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <SvgIcon name="search" width="15" height="15" />
             </span>
             <input className="input" placeholder="Search by name, email, phone..." value={search} onChange={e => setSearch(e.target.value)} style={{ paddingLeft: 36 }} />
           </div>

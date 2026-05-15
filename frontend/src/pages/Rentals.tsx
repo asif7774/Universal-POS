@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../lib/apiClient';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 type RentalStatus = 'booked' | 'out' | 'returned' | 'overdue' | 'cancelled';
 
@@ -194,7 +195,7 @@ const Rentals: React.FC = () => {
           {/* Search */}
           <div className="input-with-icon" style={{ marginBottom: 16, maxWidth: 400 }}>
             <span className="input-icon">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <SvgIcon name="search" width="15" height="15" />
             </span>
             <input className="input" placeholder="Search by customer, order, event..." value={search} onChange={e => setSearch(e.target.value)} style={{ paddingLeft: 36 }} />
           </div>

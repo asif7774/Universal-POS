@@ -1,6 +1,7 @@
 import { LogosProps } from "components/atoms/logos/index";
+import { ReactElement } from "react";
 
-const Vite = (props: LogosProps): JSX.Element => {
+const Vite = (props: LogosProps): ReactElement => {
   return (
     <svg
       width="1em"

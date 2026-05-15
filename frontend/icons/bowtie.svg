@@ -1,0 +1,5 @@
+<svg viewBox="0 0 48 48" fill="none">
+  <path d="M24 22L8 14v20l16-8z" fill="#D4AF37" />
+  <path d="M24 22l16-8v20L24 26v-4z" fill="#D4AF37" opacity=".8" />
+  <ellipse cx="24" cy="24" rx="3" ry="4" fill="#1E3A5F" />
+</svg>

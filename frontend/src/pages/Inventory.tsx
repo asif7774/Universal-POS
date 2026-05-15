@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../lib/apiClient';
+import { useSnackbar } from 'contexts/SnackbarContext';
+import { Modal } from 'components/atoms/modal/Modal';
 
 interface InventoryItem {
   id: string;
@@ -39,7 +41,93 @@ const SizeCell: React.FC<{ data: { total: number; available: number; out: number
 
 const fmt = (n: number) => `$${n.toFixed(2)}`;
 
+const AddItemModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const queryClient = useQueryClient();
+  const { showSnackbar } = useSnackbar();
+  
+  const mutation = useMutation({
+    mutationFn: (data: any) => apiClient.post('/products', data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['inventory'] });
+      showSnackbar('Product added successfully!', 'success');
+      onClose();
+    }
+  });
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    mutation.mutate({
+      sku: formData.get('sku'),
+      name: formData.get('name'),
+      type: formData.get('type'),
+      category: formData.get('category'),
+      salePrice: Number(formData.get('salePrice')) || 0,
+      rentalRatePerDay: Number(formData.get('rentalRatePerDay')) || 0,
+      taxable: formData.get('taxable') === 'on',
+      trackInventory: true
+    });
+  };
+
+  return (
+    <Modal isOpen={true} onClose={onClose} title="📦 Add New Product" maxWidth={500}>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div>
+            <label className="label">SKU *</label>
+            <input required name="sku" className="input" placeholder="e.g. TUX-001" />
+          </div>
+          <div>
+            <label className="label">Name *</label>
+            <input required name="name" className="input" placeholder="Product name" />
+          </div>
+        </div>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div>
+            <label className="label">Type *</label>
+            <select name="type" className="input">
+              <option value="rental">Rental</option>
+              <option value="sale">Sale</option>
+              <option value="service">Service</option>
+            </select>
+          </div>
+          <div>
+            <label className="label">Category *</label>
+            <input required name="category" className="input" placeholder="e.g. Tuxedos" />
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div>
+            <label className="label">Sale Price</label>
+            <input name="salePrice" type="number" step="0.01" className="input" placeholder="0.00" />
+          </div>
+          <div>
+            <label className="label">Rental Rate / Day</label>
+            <input name="rentalRatePerDay" type="number" step="0.01" className="input" placeholder="0.00" />
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 16 }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '.9rem' }}>
+            <input type="checkbox" name="taxable" defaultChecked /> Taxable
+          </label>
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 16 }}>
+          <button type="button" className="btn btn-outline" onClick={onClose}>Cancel</button>
+          <button type="submit" className="btn btn-gold" disabled={mutation.isPending}>
+            {mutation.isPending ? 'Saving...' : 'Add Product'}
+          </button>
+        </div>
+      </form>
+    </Modal>
+  );
+};
+
 const Inventory: React.FC = () => {
+  const [isAdding, setIsAdding] = useState(false);
   const [category, setCategory] = useState('All');
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<InventoryItem | null>(null);
@@ -76,8 +164,10 @@ const Inventory: React.FC = () => {
           <h1 className="page-title">Inventory</h1>
           <p className="page-subtitle">{totalItems} total items · {totalOut} currently out · {lowStockItems} low stock · {outOfStock} sizes out of stock</p>
         </div>
-        <button className="btn btn-gold">+ Add Item</button>
+        <button className="btn btn-gold" onClick={() => setIsAdding(true)}>+ Add Item</button>
       </div>
+
+      {isAdding && <AddItemModal onClose={() => setIsAdding(false)} />}
 
       {/* Summary stat cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 24 }}>
@@ -103,7 +193,7 @@ const Inventory: React.FC = () => {
       <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
         <div className="input-with-icon" style={{ maxWidth: 300 }}>
           <span className="input-icon">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <SvgIcon name="search" width="15" height="15" />
           </span>
           <input className="input" placeholder="Search SKU or name..." value={search}
             onChange={e => setSearch(e.target.value)} style={{ paddingLeft: 36 }} />
