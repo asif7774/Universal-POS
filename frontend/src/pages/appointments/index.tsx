@@ -31,8 +31,8 @@ const Appointments: React.FC = () => {
     }
   });
 
-  if (isLoading) {return <div className="page-header"><h1 className="page-title">Loading Appointments...</h1></div>;}
-  if (error) {return <div className="page-header"><h1 className="page-title" style={{ color: 'red' }}>Error loading appointments</h1></div>;}
+  if (isLoading) { return <div className="page-header"><h1 className="page-title">Loading Appointments...</h1></div>; }
+  if (error) { return <div className="page-header"><h1 className="page-title" style={{ color: 'red' }}>Error loading appointments</h1></div>; }
 
   const dayAppts = appointments.filter(a => a.date === selectedDay).sort((a, b) => a.time.localeCompare(b.time));
   const todayCount = appointments.filter(a => a.date === TODAY && a.status !== 'Cancelled').length;
@@ -50,7 +50,7 @@ const Appointments: React.FC = () => {
         </div>
         <div className="flex gap-2.5">
           <div className="flex bg-[var(--surface-hover)] rounded-lg p-[3px]">
-            {(['week','list'] as const).map(v => (
+            {(['week', 'list'] as const).map(v => (
               <button key={v} onClick={() => { setView(v); }}
                 className={`flex items-center gap-1.5 px-3.5 py-1.25 rounded-md border-none cursor-pointer font-semibold text-[0.78rem] transition-all duration-150 ${view === v ? 'bg-[var(--surface-card)] text-[var(--tux-navy)] shadow-[var(--shadow-sm)]' : 'bg-transparent text-[var(--text-muted)]'}`}>
                 <SvgIcon name={v === 'week' ? 'appointments' : 'menu'} width="14" height="14" />
@@ -63,7 +63,7 @@ const Appointments: React.FC = () => {
       </div>
 
       {/* Week strip */}
-      <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
+      <div className="flex gap-2 mb-6 overflow-x-auto pb-1 pt-12">
         {DAYS.map(d => {
           const info = fmtDay(d);
           const count = apptsByDay[d]?.filter(a => a.status !== 'Cancelled').length ?? 0;
@@ -107,7 +107,7 @@ const Appointments: React.FC = () => {
               const now = new Date();
               const startH = 9, endH = 18;
               const pct = ((now.getHours() - startH) * 60 + now.getMinutes()) / ((endH - startH) * 60);
-              if (pct < 0 || pct > 1) {return null;}
+              if (pct < 0 || pct > 1) { return null; }
               return (
                 <div className="absolute left-0 right-0 h-[2px] bg-[var(--status-error)] z-10" style={{ top: pct * HOURS.length * 60 }}>
                   <div className="absolute left-[-5px] top-[-4px] w-[10px] h-[10px] rounded-full bg-[var(--status-error)]" />
@@ -117,9 +117,12 @@ const Appointments: React.FC = () => {
 
             {/* Appointment blocks */}
             {dayAppts.map(appt => {
+              if (!appt.time) { return null; }
               const [h, m] = appt.time.split(':').map(Number);
+              if (isNaN(h) || isNaN(m)) { return null; }
+              
               const startMin = (h - 9) * 60 + m;
-              const cfg = TYPE_CONFIG[appt.type];
+              const cfg = TYPE_CONFIG[appt.type] || TYPE_CONFIG['Consultation'];
               const cancelled = appt.status === 'Cancelled';
               return (
                 <div key={appt.id}
@@ -127,7 +130,7 @@ const Appointments: React.FC = () => {
                   className={`absolute left-2 right-2 rounded-lg py-1.25 px-2.5 cursor-pointer z-[5] transition-all duration-150 overflow-hidden border-[1.5px] border-l-[3px] hover:shadow-md ${cancelled ? 'bg-[var(--surface-hover)] border-[var(--surface-border)] opacity-50' : 'opacity-100'}`}
                   style={{
                     top: (startMin / 30) * 30,
-                    height: Math.max((appt.duration / 30) * 30 - 4, 28),
+                    height: Math.max(((appt.duration || 30) / 30) * 30 - 4, 28),
                     background: cancelled ? undefined : cfg.bg,
                     borderColor: cancelled ? undefined : `${cfg.color}22`,
                     borderLeftColor: cancelled ? undefined : cfg.color,
@@ -166,7 +169,7 @@ const Appointments: React.FC = () => {
               <tr><th>Date</th><th>Time</th><th>Customer</th><th>Type</th><th>Duration</th><th>Assigned</th><th>Status</th><th>Notes</th><th></th></tr>
             </thead>
             <tbody>
-              {appointments.slice().sort((a,b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`)).map(appt => {
+              {appointments.slice().sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`)).map(appt => {
                 const cfg = TYPE_CONFIG[appt.type] || TYPE_CONFIG['Consultation'];
                 const scfg = STATUS_CONFIG[appt.status];
                 const dInfo = fmtDay(appt.date);
@@ -200,10 +203,10 @@ const Appointments: React.FC = () => {
       )}
 
       {/* Detail modal */}
-      <AppointmentDetailModal 
-        selected={selected} 
-        setSelected={setSelected} 
-        updateMutation={updateMutation} 
+      <AppointmentDetailModal
+        selected={selected}
+        setSelected={setSelected}
+        updateMutation={updateMutation}
       />
 
       {showNew && <NewApptModal onClose={() => { setShowNew(false); }} defaultDate={selectedDay} />}

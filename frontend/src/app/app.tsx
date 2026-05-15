@@ -37,6 +37,7 @@ const Appointments = lazy(() => import('pages/appointments'));
 const Reports      = lazy(() => import('pages/reports'));
 const Settings     = lazy(() => import('pages/settings'));
 const AdminPanel   = lazy(() => import('pages/admin'));
+const CustomerPortal = lazy(() => import('pages/customer-portal'));
 
 const ComingSoon = ({ page }: { page: string }) => (
   <div style={{ textAlign: 'center', padding: '80px 24px', color: 'var(--text-muted)' }}>
@@ -75,8 +76,9 @@ const AppRoutes = () => {
   return (
     <Suspense fallback={<Spinner />}>
       <Routes>
-        {/* Public */}
+        {/* Public / Standalone */}
         <Route path="/login" element={<Login />} />
+        <Route path="/customer-portal/:id" element={<CustomerPortal />} />
 
         {/* Protected — all wrapped in AppLayout */}
         <Route element={<AppLayout />}>

@@ -10,6 +10,7 @@ import { RecentOrders } from './components/RecentOrders';
 import { QuickActions } from './components/QuickActions';
 import { UpcomingPickups } from './components/UpcomingPickups';
 import { RentalFleetStatus } from './components/RentalFleetStatus';
+import { PredictiveAnalytics } from './components/PredictiveAnalytics';
 import { Skeleton } from 'components/atoms/skeleton/Skeleton';
 
 const Dashboard: React.FC = () => {
@@ -179,6 +180,7 @@ const Dashboard: React.FC = () => {
             deposit: `$${r.depositPaid || '0.00'}`
           }))} />
           <RentalFleetStatus fleet={rentalFleet} />
+          <PredictiveAnalytics />
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from 'contexts/AuthContext';
 import { usePlugins } from 'contexts/PluginContext';
+import { useOffline } from 'contexts/OfflineContext';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 interface NavItem {
@@ -53,6 +54,7 @@ const NAV_SECTIONS: NavSection[] = [
 const Sidebar: React.FC = () => {
   const { user, logout } = useAuth();
   const { getNavItems } = usePlugins();
+  const { isOnline, queuedItems } = useOffline();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -180,6 +182,22 @@ const Sidebar: React.FC = () => {
               </div>
             );
           })}
+        </div>
+
+        {/* Status Badges */}
+        <div className={`px-4 py-2 flex flex-col gap-1.5 transition-opacity duration-200 ${isEffectivelyExpanded ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
+          {!isOnline && (
+            <div className="flex items-center gap-2 bg-status-error/10 text-status-error text-[0.65rem] font-bold px-2.5 py-1.5 rounded-md border border-status-error/20">
+              <div className="w-1.5 h-1.5 rounded-full bg-status-error animate-pulse" />
+              OFFLINE MODE
+            </div>
+          )}
+          {queuedItems > 0 && (
+            <div className={`flex items-center gap-2 bg-tux-gold/10 text-tux-gold text-[0.65rem] font-bold px-2.5 py-1.5 rounded-md border border-tux-gold/20 ${!isOnline ? '' : 'animate-bounce'}`}>
+              <SvgIcon name="sync" width="12" height="12" className={isOnline ? 'animate-spin' : ''} />
+              SYNCING {queuedItems} ITEMS
+            </div>
+          )}
         </div>
 
         {/* Footer — user info + logout */}

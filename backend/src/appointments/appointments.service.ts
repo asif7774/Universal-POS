@@ -38,6 +38,7 @@ export class AppointmentsService {
               r.status === 'no-show' ? 'No-Show' : r.status,
       date: r.date,
       time: r.startTime,
+      duration: r.duration,
       assignedTo: r.assignedToName,
       notes: r.notes,
     }));

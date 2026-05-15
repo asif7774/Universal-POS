@@ -3,7 +3,7 @@ import { StoreSettings } from 'types/settings';
 
 interface StoreInfoTabProps {
   store: StoreSettings;
-  set: (k: string, v: string) => void;
+  set: (k: string, v: any) => void;
 }
 
 export const StoreInfoTab: React.FC<StoreInfoTabProps> = ({ store, set }) => (
@@ -22,7 +22,7 @@ export const StoreInfoTab: React.FC<StoreInfoTabProps> = ({ store, set }) => (
         <div key={f.key} className="input-group"
           style={f.span ? { gridColumn: '1/-1' } : {}}>
           <label className="input-label">{f.label}</label>
-          <input className="input" value={(store as Record<string,string>)[f.key]}
+          <input className="input" value={(store as any)[f.key] || ''}
             onChange={e => { set(f.key, e.target.value); }} />
         </div>
       ))}

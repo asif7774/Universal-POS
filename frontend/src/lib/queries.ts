@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from './apiClient';
 import { StoreSettings, StaffMember } from '../types/settings';
+import { posDb } from './db';
+import { useOfflineMutation } from '../hooks/useOfflineMutation';
 
 // ── Types (mirrors backend) ──────────────────────────────────
 export interface Product {
@@ -56,7 +58,23 @@ export const QK = {
 export const useProducts = (category?: string) =>
   useQuery({
     queryKey: QK.products(category),
-    queryFn:  () => apiClient.get<Product[]>(`/products${category ? `?category=${category}` : ''}`),
+    queryFn: async () => {
+      try {
+        const data = await apiClient.get<Product[]>(`/products${category ? `?category=${category}` : ''}`);
+        return data;
+      } catch (err) {
+        const local = await posDb.products.toArray();
+        if (local.length > 0) {
+          const mapped = local.map(p => ({
+            ...p,
+            salePrice: p.salePrice ? parseFloat(p.salePrice) : undefined,
+            rentalRatePerDay: p.rentalRatePerDay ? parseFloat(p.rentalRatePerDay) : undefined,
+          } as Product));
+          return category ? mapped.filter(p => p.category === category) : mapped;
+        }
+        throw err;
+      }
+    },
     staleTime: 5 * 60 * 1000,
   });
 
@@ -71,7 +89,26 @@ export const useCategories = () =>
 export const useCustomers = (search?: string) =>
   useQuery({
     queryKey: QK.customers(search),
-    queryFn:  () => apiClient.get<Customer[]>(`/customers${search ? `?search=${encodeURIComponent(search)}` : ''}`),
+    queryFn: async () => {
+      try {
+        return await apiClient.get<Customer[]>(`/customers${search ? `?search=${encodeURIComponent(search)}` : ''}`);
+      } catch (err) {
+        const local = await posDb.customers.toArray();
+        if (local.length > 0) {
+          const mapped = local.map(c => ({ ...c, totalOrders: 0, totalSpent: 0 } as Customer));
+          if (search) {
+            const s = search.toLowerCase();
+            return mapped.filter(c => 
+              c.firstName.toLowerCase().includes(s) || 
+              c.lastName.toLowerCase().includes(s) || 
+              c.email?.toLowerCase().includes(s)
+            );
+          }
+          return mapped;
+        }
+        throw err;
+      }
+    },
     staleTime: 2 * 60 * 1000,
   });
 
@@ -84,9 +121,12 @@ export const useCustomer = (id: string) =>
 
 export const useCreateCustomer = () => {
   const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (data: Partial<Customer>) => apiClient.post<Customer>('/customers', data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['customers'] }),
+  return useOfflineMutation<Customer, Partial<Customer>>({
+    method: 'POST',
+    url: '/customers',
+    mutationOptions: {
+      onSuccess: () => qc.invalidateQueries({ queryKey: ['customers'] }),
+    }
   });
 };
 
@@ -143,7 +183,21 @@ export const useCheckIn = () => {
 export const useOrders = () =>
   useQuery({
     queryKey: QK.orders(),
-    queryFn:  () => apiClient.get<Order[]>('/orders'),
+    queryFn: async () => {
+      try {
+        return await apiClient.get<Order[]>('/orders');
+      } catch (err) {
+        const local = await posDb.orders.toArray();
+        if (local.length > 0) {
+          return local.map(o => ({
+            ...o,
+            total: o.total ? parseFloat(o.total) : 0,
+            items: [], // we don't cache full items in the summary table yet
+          } as Order));
+        }
+        throw err;
+      }
+    },
     staleTime: 60 * 1000,
   });
 
@@ -156,12 +210,16 @@ export const useOrderSummary = (date?: string) =>
 
 export const useCreateOrder = () => {
   const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (data: unknown) => apiClient.post<Order>('/orders', data),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['orders'] });
-      qc.invalidateQueries({ queryKey: ['rentals'] });
-    },
+  return useOfflineMutation<Order, any>({
+    method: 'POST',
+    url: '/orders',
+    mutationOptions: {
+      onSuccess: () => {
+        qc.invalidateQueries({ queryKey: ['orders'] });
+        qc.invalidateQueries({ queryKey: ['rentals'] });
+        qc.invalidateQueries({ queryKey: ['products'] }); // refresh stock
+      },
+    }
   });
 };
 
