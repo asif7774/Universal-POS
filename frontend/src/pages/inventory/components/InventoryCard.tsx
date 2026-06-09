@@ -20,7 +20,7 @@ export const InventoryCard = memo(({ item, onClick }: InventoryCardProps) => {
     <div className="card cursor-pointer" onClick={onClick}>
       <div className="flex justify-between items-start mb-3.5">
         <div className="flex gap-3 items-center">
-          <div className="w-[42px] h-[42px] bg-surface-hover rounded-[10px] flex items-center justify-center shrink-0 text-tux-navy">
+          <div className="w-[42px] h-[42px] bg-surface-hover rounded-[10px] flex items-center justify-center shrink-0 text-tux-gold">
             <SvgIcon name={item.category === 'Tuxedos' ? 'tuxedo' : item.category === 'Shoes' ? 'shoe' : item.category === 'Accessories' ? 'accessory' : 'inventory'} width="22" height="22" />
           </div>
           <div>

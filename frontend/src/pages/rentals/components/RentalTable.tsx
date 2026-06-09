@@ -47,7 +47,7 @@ export const RentalTable = memo(({ filtered, setSelected }: RentalTableProps) =>
             
             return (
               <tr key={r.id} onClick={() => { setSelected(r); }}>
-                <td><code style={{ fontSize: '.8rem', color: 'var(--tux-navy)', fontWeight: 700 }}>{r.rentalNo}</code></td>
+                <td><code style={{ fontSize: '.8rem', color: 'var(--tux-gold)', fontWeight: 700 }}>{r.rentalNo}</code></td>
                 <td>
                   <div style={{ fontWeight: 600, fontSize: '.875rem' }}>{customerName}</div>
                   <div style={{ fontSize: '.75rem', color: 'var(--text-muted)' }}>{phone}</div>

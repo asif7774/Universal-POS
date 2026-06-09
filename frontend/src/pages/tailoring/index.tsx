@@ -109,7 +109,7 @@ const Tailoring: React.FC = () => {
                 <tbody>
                   {filtered.map(j => (
                     <tr key={j.id} onClick={() => { setSelected(j); }}>
-                      <td><code className="text-[0.8rem] text-[var(--tux-navy)] font-bold">{j.jobNo}</code></td>
+                      <td><code className="text-[0.8rem] text-[var(--tux-gold)] font-bold">{j.jobNo}</code></td>
                       <td className="font-semibold text-[0.875rem]">{j.customerName}</td>
                       <td className="text-[var(--text-secondary)] text-[0.85rem]">{j.garment}</td>
                       <td><span className={`badge ${TYPE_BADGE[j.type] || 'badge-gray'}`}>{j.type}</span></td>
@@ -118,11 +118,11 @@ const Tailoring: React.FC = () => {
                         {isOverdue(j.dueDate, j.status) && <SvgIcon name="warning" width="12" height="12" />}
                         {fmtDate(j.dueDate)}
                       </td>
-                      <td className="font-bold text-[var(--tux-navy)]">{fmt(j.price)}</td>
+                      <td className="font-bold text-[var(--text-primary)]">{fmt(j.price)}</td>
                       <td>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.75rem] font-semibold" style={{ background: `${STATUS_COLOR[j.status] || '#94A3B8'}18`, color: STATUS_COLOR[j.status] || '#94A3B8' }}>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.75rem] font-semibold" style={{ background: `${STATUS_COLOR[j.status] || '#94A3B8'}22`, color: STATUS_COLOR[j.status] || 'var(--text-secondary)' }}>
                           <span className="w-1.5 h-1.5 rounded-full" style={{ background: STATUS_COLOR[j.status] || '#94A3B8' }} />
-                          {j.status}
+                          {j.status.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
                         </span>
                       </td>
                       <td style={{ minWidth: 120 }}><StatusPipeline current={j.status} /></td>

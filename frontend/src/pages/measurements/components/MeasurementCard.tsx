@@ -32,7 +32,7 @@ export const MeasurementCard = memo(({ r, onClick }: MeasurementCardProps) => (
         { l: 'Sleeve', v: r.sleeve }, { l: 'Inseam', v: r.inseam },
       ].map(s => (
         <div key={s.l} style={{ textAlign: 'center', padding: '6px 4px', background: 'var(--surface-hover)', borderRadius: 8 }}>
-          <div style={{ fontSize: '.85rem', fontWeight: 800, color: 'var(--tux-navy)' }}>{s.v}</div>
+          <div style={{ fontSize: '.85rem', fontWeight: 800, color: 'var(--text-primary)' }}>{s.v}</div>
           <div style={{ fontSize: '.65rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>{s.l}</div>
         </div>
       ))}

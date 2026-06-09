@@ -38,7 +38,7 @@ export const CustomerCard = memo(({ c, onClick }: CustomerCardProps) => (
         { label: 'Points', value: c.loyaltyPoints },
       ].map(s => (
         <div key={s.label}>
-          <div style={{ fontSize: '.9rem', fontWeight: 800, color: 'var(--tux-navy)' }}>{s.value}</div>
+          <div style={{ fontSize: '.9rem', fontWeight: 800, color: 'var(--text-primary)' }}>{s.value}</div>
           <div style={{ fontSize: '.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.05em' }}>{s.label}</div>
         </div>
       ))}

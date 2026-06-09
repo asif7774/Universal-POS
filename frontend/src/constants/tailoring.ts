@@ -9,6 +9,7 @@ export const STATUS_COLOR: Record<JobStatus, string> = {
 
 export const TYPE_BADGE: Record<string, string> = {
   Alteration: 'badge-navy', 'New Stitch': 'badge-gold', Repair: 'badge-gray', Rush: 'badge-red',
+  Hemming: 'badge-navy', Pressing: 'badge-gray', 'Custom Stitch': 'badge-gold',
 };
 
 export const fmt = (n: number | string | null | undefined) => `$${parseFloat((n as string) ?? '0').toFixed(2)}`;

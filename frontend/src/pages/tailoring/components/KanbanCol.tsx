@@ -40,7 +40,7 @@ export const KanbanCol = memo(({ status, jobs, onSelect }: KanbanColProps) => (
             <span style={{ fontSize: '.72rem', color: isOverdue(job.dueDate, job.status) ? 'var(--status-error)' : 'var(--text-muted)', fontWeight: isOverdue(job.dueDate, job.status) ? 700 : 400, display: 'flex', alignItems: 'center', gap: 4 }}>
               <SvgIcon name={isOverdue(job.dueDate, job.status) ? 'warning' : 'calendar'} width="12" height="12" /> Due {fmtDate(job.dueDate)}
             </span>
-            <span style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--tux-navy)' }}>{fmt(job.price)}</span>
+            <span style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>{fmt(job.price)}</span>
           </div>
           <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
             <SvgIcon name="user" width="10" height="10" /> {job.assignedToName}
