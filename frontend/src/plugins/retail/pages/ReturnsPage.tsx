@@ -69,10 +69,10 @@ export const ReturnsPage: React.FC = () => {
                   <td className="font-semibold">{r.customerName}</td>
                   <td className="text-[var(--text-secondary)] text-[0.85rem]">{r.reason}</td>
                   <td className="text-[0.85rem]">
-                    {r.items.map(i => `${i.name} (×${i.qty})`).join(', ')}
+                    {(r.items ?? []).map(i => `${i.name} (×${i.qty})`).join(', ')}
                   </td>
                   <td className="font-bold text-[var(--status-error)]">
-                    ${r.refundAmount.toFixed(2)}
+                    ${(r.refundAmount ?? 0).toFixed(2)}
                   </td>
                   <td>
                     <span className={`badge ${STATUS_BADGE[r.status] || 'badge-gray'}`}>
