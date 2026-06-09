@@ -5,7 +5,7 @@ import { CustomersService } from './customers.service';
 @Controller('customers')
 @UseGuards(JwtAuthGuard)
 export class CustomersController {
-  constructor(private readonly svc: CustomersService) {}
+  constructor(private readonly svc: CustomersService) { }
 
   @Get()
   findAll(@Request() req: any, @Query('search') search?: string) {
