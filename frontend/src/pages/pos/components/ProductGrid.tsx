@@ -93,13 +93,13 @@ export const ProductGrid = memo(({
                 <div className="text-[0.7rem] text-text-muted mb-1.5">{product.sku}</div>
                 {product.type === 'rental' ? (
                   <div>
-                    <div className="text-[0.85rem] font-extrabold text-tux-navy">
+                    <div className="text-[0.85rem] font-extrabold text-text-primary">
                       {fmt(product.rentalRate ?? 0)}<span className="font-normal text-[0.7rem]">/day</span>
                     </div>
                     <div className="badge badge-gold mt-1">Rental</div>
                   </div>
                 ) : (
-                  <div className="text-[0.9rem] font-extrabold text-tux-navy">{fmt(product.price)}</div>
+                  <div className="text-[0.9rem] font-extrabold text-text-primary">{fmt(product.price)}</div>
                 )}
                 <div
                   className="text-[0.72rem] mt-1.5 font-semibold flex items-center justify-center gap-1"

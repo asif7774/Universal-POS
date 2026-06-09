@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { apiClient } from '../../../lib/apiClient';
 import { useCreateTailoringJob, useStaff } from '../../../lib/queries';
 import { useSnackbar } from 'contexts/SnackbarContext';
 import { Modal } from 'components/atoms/modal/Modal';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
+import { SearchableSelect } from 'components/atoms/searchable-select/SearchableSelect';
 
 export const NewTailoringJobModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { showSnackbar } = useSnackbar();
   const createJob = useCreateTailoringJob();
   const { data: staffMembers = [] } = useStaff();
+  const { data: customers = [] } = useQuery<{ id: string; firstName: string; lastName: string }[]>({
+    queryKey: ['customers'],
+    queryFn: () => apiClient.get('/customers'),
+  });
 
   const [form, setForm] = useState({
     customerName: '',
@@ -59,9 +66,18 @@ export const NewTailoringJobModal: React.FC<{ onClose: () => void }> = ({ onClos
     >
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
         <div className="input-group" style={{ gridColumn: '1 / -1' }}>
-          <label className="input-label">Customer Name *</label>
-          <input className="input" placeholder="John Smith" value={form.customerName}
-            onChange={e => { set('customerName', e.target.value); }} />
+          <label className="input-label">Customer *</label>
+          <SearchableSelect
+            options={customers.map(c => ({ value: c.id, label: `${c.firstName} ${c.lastName}` }))}
+            value={customers.find(c => `${c.firstName} ${c.lastName}` === form.customerName)?.id ?? ''}
+            onChange={id => {
+              const c = customers.find(x => x.id === id);
+              if (c) set('customerName', `${c.firstName} ${c.lastName}`);
+            }}
+            placeholder="Search and select customer..."
+            searchPlaceholder="Type name to search..."
+            noOptionsMessage="No customers found"
+          />
         </div>
 
         <div className="input-group">
@@ -81,12 +97,18 @@ export const NewTailoringJobModal: React.FC<{ onClose: () => void }> = ({ onClos
 
         <div className="input-group">
           <label className="input-label">Assigned Staff</label>
-          <select className="input" value={form.assignedToName} onChange={e => { set('assignedToName', e.target.value); }}>
-            <option value="" disabled>Select staff...</option>
-            {staffMembers.filter(s => s.isActive).map(s => (
-              <option key={s.id} value={s.name}>{s.name} ({s.role})</option>
-            ))}
-          </select>
+          <SearchableSelect
+            options={staffMembers.filter(s => s.isActive).map(s => ({
+              value: s.name,
+              label: s.name,
+              sublabel: s.role,
+            }))}
+            value={form.assignedToName}
+            onChange={v => { set('assignedToName', v); }}
+            placeholder="Select staff member..."
+            searchPlaceholder="Search staff..."
+            noOptionsMessage="No active staff found"
+          />
         </div>
 
         <div className="input-group">

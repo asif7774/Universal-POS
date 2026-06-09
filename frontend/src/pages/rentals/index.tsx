@@ -4,6 +4,7 @@ import { apiClient } from '../../lib/apiClient';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 import { Rental } from 'types/rentals';
 import { RentalTable, daysLeft } from './components/RentalTable';
+import { type RentalFormData } from './components/NewRentalForm';
 import { RentalDetailModal } from './components/RentalDetailModal';
 import { NewRentalForm } from './components/NewRentalForm';
 import { TableSkeleton } from 'components/atoms/skeleton/Skeleton';
@@ -56,21 +57,16 @@ const Rentals: React.FC = () => {
     return acc;
   }, {});
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const itemStr = formData.get('items') as string;
-    const items = itemStr.split(',').map(i => ({ productName: i.trim() })).filter(i => i.productName);
-
+  const handleSubmit = (data: RentalFormData) => {
     createRental.mutate({
-      customerId: formData.get('customerId') as string,
-      eventName: formData.get('eventName') as string,
-      pickupDate: formData.get('pickupDate') as string,
-      returnDate: formData.get('returnDate') as string,
-      depositPaid: formData.get('depositPaid') as string,
+      customerId: data.customerId,
+      eventName: data.eventName,
+      pickupDate: data.pickupDate,
+      returnDate: data.returnDate,
+      depositPaid: data.depositPaid,
       status: 'booked',
-      notes: formData.get('notes') as string,
-      items,
+      notes: data.notes,
+      items: data.items,
     });
   };
 

@@ -5,6 +5,7 @@ import { Modal } from 'components/atoms/modal/Modal';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 import { useSnackbar } from 'contexts/SnackbarContext';
 import { MeasurementRecord } from 'types/measurements';
+import { SearchableSelect } from 'components/atoms/searchable-select/SearchableSelect';
 
 export const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const queryClient = useQueryClient();
@@ -71,12 +72,14 @@ export const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         <div className="input-group" style={{ gridColumn: '1 / -1' }}>
           <label className="input-label">Select Customer</label>
-          <select className="input" value={form.customerId ?? ''} onChange={e => { set('customerId', e.target.value); }}>
-            <option value="" disabled>Select a customer...</option>
-            {customers.map(c => (
-              <option key={c.id} value={c.id}>{c.firstName} {c.lastName}</option>
-            ))}
-          </select>
+          <SearchableSelect
+            options={customers.map(c => ({ value: c.id, label: `${c.firstName} ${c.lastName}` }))}
+            value={form.customerId ?? ''}
+            onChange={v => { set('customerId', v); }}
+            placeholder="Search and select customer..."
+            searchPlaceholder="Type name to search..."
+            noOptionsMessage="No customers found"
+          />
         </div>
         {inputFields.map(f => (
           <div key={f.key} className="input-group">
