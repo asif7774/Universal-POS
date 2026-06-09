@@ -51,7 +51,7 @@ const Dashboard: React.FC = () => {
     subtitle: `${settings?.name || 'TuxedoPOS'} · ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}`,
     actions: (
       <div className="flex gap-3">
-        <button className="btn btn-outline bg-white border-[1.5px]" onClick={() => { navigate('/pos'); }}>
+        <button className="btn btn-outline bg-[var(--surface-card)] border-[1.5px]" onClick={() => { navigate('/pos'); }}>
           <SvgIcon name="search" width="16" height="16" />
           Quick Search
         </button>
@@ -111,7 +111,7 @@ const Dashboard: React.FC = () => {
 
         {/* Priority Alerts "Command Center" */}
         {alerts.length > 0 && (
-          <div className="card p-6 bg-gradient-to-br from-[#FFF5F5] to-white border-dashed border-[#FECACA] shadow-none">
+          <div className="card p-6 bg-gradient-to-br from-[#FFF5F5] dark:from-red-950/25 to-white dark:to-[var(--surface-card)] border-dashed border-[#FECACA] dark:border-red-800/30 shadow-none">
              <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-[10px] bg-status-error flex items-center justify-center text-white shadow-[0_4px_12px_rgba(239,68,68,0.2)]">
@@ -127,8 +127,8 @@ const Dashboard: React.FC = () => {
              
              <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-3">
                 {alerts.map((a, i) => (
-                  <div key={i} className="p-4 rounded-lg bg-white shadow-sm flex gap-3 items-start border border-[#FEE2E2] transition-transform duration-200">
-                    <div className={`w-6 h-6 rounded-[6px] flex items-center justify-center shrink-0 ${a.type === 'error' ? 'bg-[#FEF2F2] text-status-error' : 'bg-[#FFFBEB] text-status-warning'}`}>
+                  <div key={i} className="p-4 rounded-lg bg-white dark:bg-[var(--surface-hover)] shadow-sm flex gap-3 items-start border border-[#FEE2E2] dark:border-red-800/20 transition-transform duration-200">
+                    <div className={`w-6 h-6 rounded-[6px] flex items-center justify-center shrink-0 ${a.type === 'error' ? 'bg-[#FEF2F2] dark:bg-red-900/30 text-status-error' : 'bg-[#FFFBEB] dark:bg-amber-900/30 text-status-warning'}`}>
                        <SvgIcon name="warning" width="14" height="14" />
                     </div>
                     <div className="flex-1">
