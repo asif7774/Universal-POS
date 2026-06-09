@@ -3,7 +3,6 @@ import { Pool } from 'pg';
 import * as dns from 'dns';
 import * as schema from './schema';
 
-// Force IPv4 — Render free tier does not support IPv6
 dns.setDefaultResultOrder('ipv4first');
 
 const pool = new Pool({
