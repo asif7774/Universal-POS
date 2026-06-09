@@ -7,6 +7,7 @@ import { RentalTable, daysLeft } from './components/RentalTable';
 import { RentalDetailModal } from './components/RentalDetailModal';
 import { NewRentalForm } from './components/NewRentalForm';
 import { TableSkeleton } from 'components/atoms/skeleton/Skeleton';
+import { usePageHeader } from 'contexts/PageHeaderContext';
 
 const Rentals: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('all');
@@ -23,7 +24,7 @@ const Rentals: React.FC = () => {
 
   const { data: customers = [] } = useQuery({
     queryKey: ['customers'],
-    queryFn: () => apiClient.get<{id: string, firstName: string, lastName: string}[]>('/customers'),
+    queryFn: () => apiClient.get<{ id: string, firstName: string, lastName: string }[]>('/customers'),
     enabled: isAdding,
   });
 
@@ -73,27 +74,28 @@ const Rentals: React.FC = () => {
     });
   };
 
+  usePageHeader({
+    title: isAdding ? 'New Rental' : 'Rental Management',
+    subtitle: isAdding ? 'Create a new rental booking' : `${rentals.filter(r => ['booked', 'out'].includes(r.status)).length} active rentals · ${counts['overdue'] ?? 0} overdue`,
+    actions: isAdding
+      ? (
+        <button onClick={() => { setIsAdding(false); }} className="btn btn-outline">
+          <SvgIcon name="arrow-left" width="18" height="18" /> Back
+        </button>
+      )
+      : <button className="btn btn-gold" onClick={() => { setIsAdding(true); }}>+ New Rental Booking</button>,
+  });
+
   return (
     <div className="animate-fade-in">
-      {/* Header */}
-      <div className="page-header">
-        <div className="flex items-center gap-4">
-          {isAdding && (
-            <button onClick={() => { setIsAdding(false); }} className="btn btn-icon btn-ghost -ml-2">
-              <SvgIcon name="arrow-left" width="22" height="22" />
-            </button>
-          )}
-          <div>
-            <h1 className="page-title">{isAdding ? 'New Rental' : 'Rental Management'}</h1>
-            <p className="page-subtitle">{isAdding ? 'Create a new rental booking' : `${rentals.length} active rentals · ${counts['overdue'] ?? 0} overdue`}</p>
-          </div>
-        </div>
-        {!isAdding && <button className="btn btn-gold" onClick={() => { setIsAdding(true); }}>+ New Rental Booking</button>}
-      </div>
-
       {!isAdding && (
         <div className="search-container">
-          {/* Status filters */}
+          <div className="search-input-wrapper input-with-icon">
+            <span className="input-icon">
+              <SvgIcon name="search" width="18" height="18" />
+            </span>
+            <input className="input" placeholder="Search by customer, order, event..." value={search} onChange={e => { setSearch(e.target.value); }} />
+          </div>
           <div className="filter-group">
             {statuses.map(s => {
               const count = s === 'all' ? rentals.length : (counts[s] ?? 0);
@@ -111,18 +113,10 @@ const Rentals: React.FC = () => {
               );
             })}
           </div>
-
-          {/* Search */}
-          <div className="search-input-wrapper input-with-icon">
-            <span className="input-icon">
-              <SvgIcon name="search" width="18" height="18" />
-            </span>
-            <input className="input" placeholder="Search by customer, order, event..." value={search} onChange={e => { setSearch(e.target.value); }} />
-          </div>
         </div>
       )}
       {isAdding ? (
-        <NewRentalForm 
+        <NewRentalForm
           customers={customers}
           onSubmit={handleSubmit}
           isPending={createRental.isPending}

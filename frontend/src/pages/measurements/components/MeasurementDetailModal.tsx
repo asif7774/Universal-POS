@@ -88,7 +88,8 @@ export const MeasurementDetailModal: React.FC<MeasurementDetailModalProps> = ({ 
         <button className="btn btn-outline" onClick={startEditing} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
           <SvgIcon name="tailoring" width="14" height="14" /> Edit
         </button>
-        <button className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+        <button className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+          onClick={() => { window.print(); }}>
           <SvgIcon name="printer" width="14" height="14" /> Print Card
         </button>
         <button className="btn btn-ghost btn-sm text-[var(--status-error)]" onClick={() => { setShowDeleteConfirm(true); }}>Delete</button>

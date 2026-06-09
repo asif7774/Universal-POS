@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useSnackbar } from './SnackbarContext';
 
 export type UserRole = 'owner' | 'manager' | 'cashier';
 
@@ -20,7 +21,7 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   login: (email: string, password: string, isPin?: boolean) => Promise<boolean>;
-  logout: () => void;
+  logout: (message?: string) => void;
   loading: boolean;
 }
 
@@ -35,8 +36,6 @@ export const useAuth = () => {
 
 const SESSION_KEY = 'tuxedopos_session';
 const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api/v1';
-
-import { useSnackbar } from './SnackbarContext';
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -95,10 +94,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const logout = () => {
+  const logout = (message?: string) => {
     setUser(null);
     localStorage.removeItem(SESSION_KEY);
-    showSnackbar('Logged out successfully.', 'info');
+    showSnackbar(message ?? 'Logged out successfully.', message ? 'error' : 'info');
   };
 
   return (

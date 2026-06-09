@@ -8,6 +8,7 @@ import { StatusPipeline } from './components/StatusPipeline';
 import { KanbanCol } from './components/KanbanCol';
 import { TailoringDetailModal } from './components/TailoringDetailModal';
 import { NewTailoringJobModal } from './components/NewTailoringJobModal';
+import { usePageHeader } from 'contexts/PageHeaderContext';
 
 const Tailoring: React.FC = () => {
   const [view, setView] = useState<'kanban' | 'list'>('kanban');
@@ -40,36 +41,28 @@ const Tailoring: React.FC = () => {
   const totalRevenue = jobs.reduce((s, j) => s + j.price, 0);
   const overdueCount = jobs.filter(j => isOverdue(j.dueDate, j.status)).length;
 
+  usePageHeader({
+    title: 'Tailoring Jobs',
+    subtitle: `${jobs.length} active jobs · ${overdueCount > 0 ? `${overdueCount} overdue · ` : ''}${fmt(totalRevenue)} revenue`,
+    actions: (
+      <div className="flex gap-3 items-center">
+        {/* View toggle */}
+        <div className="flex bg-[var(--surface-hover)] rounded-[10px] p-[3px]">
+          {(['kanban', 'list'] as const).map(v => (
+            <button key={v} onClick={() => { setView(v); }}
+              className={`btn btn-sm px-3 py-1.5 text-[0.75rem] rounded-lg ${view === v ? 'btn-primary' : 'btn-ghost'}`}>
+              <SvgIcon name={v === 'kanban' ? 'chart-bar' : 'clipboard'} width="14" height="14" />
+              {v === 'kanban' ? 'Kanban' : 'List'}
+            </button>
+          ))}
+        </div>
+        <button className="btn btn-gold" onClick={() => { setShowNewJob(true); }}>+ New Job Card</button>
+      </div>
+    ),
+  });
+
   return (
     <div className="animate-fade-in">
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">Tailoring Jobs</h1>
-          <p className="page-subtitle">
-            {jobs.length} active jobs · 
-            {overdueCount > 0 && (
-              <span className="text-[var(--status-error)] font-bold">
-                {overdueCount} overdue · 
-              </span>
-            )}
-            {fmt(totalRevenue)} revenue
-          </p>
-        </div>
-        <div className="flex gap-3 items-center">
-          {/* View toggle */}
-          <div className="flex bg-[var(--surface-hover)] rounded-[10px] p-[3px]">
-            {(['kanban', 'list'] as const).map(v => (
-              <button key={v} onClick={() => { setView(v); }}
-                className={`btn btn-sm px-3 py-1.5 text-[0.75rem] rounded-lg ${view === v ? 'btn-primary' : 'btn-ghost'}`}>
-                <SvgIcon name={v === 'kanban' ? 'chart-bar' : 'clipboard'} width="14" height="14" />
-                {v === 'kanban' ? 'Kanban' : 'List'}
-              </button>
-            ))}
-          </div>
-          <button className="btn btn-gold" onClick={() => { setShowNewJob(true); }}>+ New Job Card</button>
-        </div>
-      </div>
-      
       <div className="search-container">
         <div className="search-input-wrapper input-with-icon">
           <span className="input-icon">

@@ -9,10 +9,12 @@ import { HAL } from '../../lib/hardware';
 import { Product, CartItem } from 'types/pos';
 import { InventoryItem } from 'types/inventory';
 import { ProductGrid } from './components/ProductGrid';
+import { ProductDetailModal } from './components/ProductDetailModal';
 import { TableSkeleton } from 'components/atoms/skeleton/Skeleton';
 import { CartSidebar } from './components/CartSidebar';
 import { CheckoutModal } from './checkout/CheckoutModal';
 import { OrderCompleteModal } from './checkout/OrderCompleteModal';
+import { usePageHeader } from 'contexts/PageHeaderContext';
 
 const POS: React.FC = () => {
   const queryClient = useQueryClient();
@@ -35,6 +37,7 @@ const POS: React.FC = () => {
   const [customerSearch, setCustomerSearch] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState<{ id: string; firstName: string; lastName: string } | null>(null);
   const [processingPayment, setProcessingPayment] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
   // Fetch inventory for real stock levels
@@ -65,7 +68,8 @@ const POS: React.FC = () => {
         type: p.type,
         category: p.category,
         stock: totalStock,
-        rentalRate: p.rentalRatePerDay ? parseFloat(p.rentalRatePerDay) : undefined
+        rentalRate: p.rentalRatePerDay ? parseFloat(p.rentalRatePerDay) : undefined,
+        imageUrl: p.imageUrl ?? undefined,
       } as Product;
     });
   }, [rawProducts, inventory]);
@@ -259,8 +263,13 @@ const POS: React.FC = () => {
     await HAL.printReceipt(receiptText);
   };
 
+  usePageHeader({
+    title: 'POS Terminal',
+    subtitle: `${cart.length} items in cart · $${total.toFixed(2)} total`,
+  });
+
   return (
-    <div className={`grid h-screen gap-0 -mx-6 -mb-6 overflow-hidden transition-[grid-template-columns] duration-300 ease-in-out ${cart.length > 0 ? 'grid-cols-[1fr_360px]' : 'grid-cols-1'}`}>
+    <div className={`grid h-screen gap-0 -mx-[28px] -my-[24px] overflow-hidden transition-[grid-template-columns] duration-300 ease-in-out ${cart.length > 0 ? 'grid-cols-[1fr_360px]' : 'grid-cols-1'}`}>
       {isLoadingProducts ? (
         <div className="p-8"><TableSkeleton rows={10} cols={4} /></div>
       ) : (
@@ -272,6 +281,7 @@ const POS: React.FC = () => {
           setCategory={setCategory}
           categories={CATEGORIES}
           onAddToCart={addToCart}
+          onSelectProduct={setSelectedProduct}
           searchRef={searchRef}
         />
       )}
@@ -321,6 +331,14 @@ const POS: React.FC = () => {
         paymentMethod={paymentMethod}
         change={change}
         onPrintReceipt={printReceipt}
+        customer={selectedCustomer}
+        settings={settings ?? null}
+      />
+
+      <ProductDetailModal
+        product={selectedProduct}
+        onClose={() => { setSelectedProduct(null); }}
+        onAddToCart={(product, isRental) => { addToCart(product, isRental); }}
       />
     </div>
   );

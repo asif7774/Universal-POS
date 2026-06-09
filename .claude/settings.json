@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(investigate)",
+      "Skill(investigate:*)",
+      "Bash(npx tsc *)",
+      "Bash(grep -r \"\\\\[{.*},\" /Volumes/Data/RND/Universal-POS/frontend/src/pages --include=\"*.tsx\" -n)"
+    ]
+  }
+}

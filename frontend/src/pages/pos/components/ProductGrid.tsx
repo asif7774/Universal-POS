@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { Product } from 'types/pos';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
+import { ProductImage } from 'components/atoms/ProductImage';
 
 interface ProductGridProps {
   products: Product[];
@@ -10,13 +11,14 @@ interface ProductGridProps {
   setCategory: (c: string) => void;
   categories: string[];
   onAddToCart: (product: Product, isRental: boolean) => void;
+  onSelectProduct: (product: Product) => void;
   searchRef: React.RefObject<HTMLInputElement | null>;
 }
 
 const fmt = (n: number) => `$${n.toFixed(2)}`;
 
-export const ProductGrid = memo(({ 
-  products, search, setSearch, category, setCategory, categories, onAddToCart, searchRef 
+export const ProductGrid = memo(({
+  products, search, setSearch, category, setCategory, categories, onAddToCart, onSelectProduct, searchRef
 }: ProductGridProps) => {
 
   const filtered = products.filter(p => {
@@ -72,25 +74,20 @@ export const ProductGrid = memo(({
               <div
                 key={product.id}
                 className="pos-product-card"
-                onClick={() => { onAddToCart(product, product.type === 'rental'); }}
+                onClick={() => { onSelectProduct(product); }}
                 role="button"
                 tabIndex={0}
-                onKeyDown={e => e.key === 'Enter' && onAddToCart(product, product.type === 'rental')}
+                onKeyDown={e => { if (e.key === 'Enter') onSelectProduct(product); }}
               >
-                <div className="mb-3 text-tux-navy opacity-80 flex justify-center">
-                  <SvgIcon 
-                    name={
-                      product.category === 'Tuxedos' ? 'tuxedo' :
-                      product.category === 'Suits' ? 'shirt' :
-                      product.category === 'Accessories' ? 'accessory' :
-                      product.category === 'Shoes' ? 'shoe' :
-                      product.category === 'Shirts' ? 'shirt' : 'scissors'
-                    } 
-                    width="28" 
-                    height="28" 
+                <div className="mb-2 flex justify-center">
+                  <ProductImage
+                    imageUrl={product.imageUrl}
+                    category={product.category}
+                    name={product.name}
+                    size="sm"
                   />
                 </div>
-                <div className="text-[0.8rem] font-bold text-text-primary mb-1 leading-tight">
+                <div className="text-[0.8rem] font-bold text-text-primary mb-0.5 leading-tight">
                   {product.name}
                 </div>
                 <div className="text-[0.7rem] text-text-muted mb-1.5">{product.sku}</div>
@@ -104,11 +101,11 @@ export const ProductGrid = memo(({
                 ) : (
                   <div className="text-[0.9rem] font-extrabold text-tux-navy">{fmt(product.price)}</div>
                 )}
-                <div 
-                  className={`text-[0.72rem] mt-1.5 font-semibold flex items-center justify-center gap-1`}
+                <div
+                  className="text-[0.72rem] mt-1.5 font-semibold flex items-center justify-center gap-1"
                   style={{ color: product.stock === 0 ? 'var(--status-error)' : product.stock < 5 ? 'var(--status-warning)' : 'var(--status-success)' }}
                 >
-                  <div 
+                  <div
                     className="w-1.5 h-1.5 rounded-full"
                     style={{ backgroundColor: product.stock === 0 ? 'var(--status-error)' : product.stock < 5 ? 'var(--status-warning)' : 'var(--status-success)' }}
                   />

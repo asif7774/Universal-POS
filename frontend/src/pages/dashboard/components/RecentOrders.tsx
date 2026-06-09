@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { RecentOrder } from 'types/dashboard';
 
 const STATUS_BADGE: Record<string, string> = {
@@ -10,7 +11,7 @@ export const RecentOrders: React.FC<{ orders: RecentOrder[] }> = ({ orders }) =>
   <div className="card p-0 overflow-hidden">
     <div className="card-header py-4 px-5 border-b border-[var(--surface-border)]">
       <span className="card-title">Recent Orders</span>
-      <a href="/reports" className="text-[0.8rem] text-[var(--tux-navy)] font-semibold no-underline hover:underline">View all →</a>
+      <Link to="/reports" className="text-[0.8rem] text-[var(--tux-navy)] font-semibold no-underline hover:underline">View all →</Link>
     </div>
     <table className="data-table">
       <thead>

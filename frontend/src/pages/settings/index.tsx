@@ -9,6 +9,7 @@ import { StaffTab } from './components/StaffTab';
 import { TaxesTab } from './components/TaxesTab';
 import { ReceiptsTab } from './components/ReceiptsTab';
 import { SecurityTab } from './components/SecurityTab';
+import { usePageHeader } from 'contexts/PageHeaderContext';
 
 // Fallback defaults used only while the API is loading or unavailable
 const DEFAULT_SETTINGS: StoreSettings = {
@@ -59,24 +60,22 @@ const Settings: React.FC = () => {
 
   const activePluginPage = getSettingsPages().find(p => p.id === tab);
 
+  usePageHeader({
+    title: 'Settings',
+    subtitle: `${store.name || 'TuxedoPOS'} · Configure your store`,
+    actions: tab !== 'staff' && tab !== 'receipts' && tab !== 'security' ? (
+      <button className="btn btn-gold" onClick={save} disabled={updateSettings.isPending} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        {updateSettings.isPending ? 'Saving...' : updateSettings.isSuccess ? (
+          <>
+            <SvgIcon name="check-circle" width="14" height="14" /> Saved!
+          </>
+        ) : 'Save Changes'}
+      </button>
+    ) : undefined,
+  });
+
   return (
     <div className="animate-fade-in">
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">Settings</h1>
-          <p className="page-subtitle">{store.name || 'TuxedoPOS'} · Configure your store</p>
-        </div>
-        {tab !== 'staff' && (
-          <button className="btn btn-gold" onClick={save} disabled={updateSettings.isPending} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            {updateSettings.isPending ? 'Saving...' : updateSettings.isSuccess ? (
-              <>
-                <SvgIcon name="check-circle" width="14" height="14" /> Saved!
-              </>
-            ) : 'Save Changes'}
-          </button>
-        )}
-      </div>
-
       {isLoading ? (
         <div className="p-10 text-center text-[var(--text-muted)]">Loading settings...</div>
       ) : (

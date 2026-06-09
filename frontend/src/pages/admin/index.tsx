@@ -5,6 +5,7 @@ import { useAdminTenants } from '../../lib/queries';
 import { GlobalStats } from './components/GlobalStats';
 import { TenantList } from './components/TenantList';
 import { NewTenantModal } from './components/NewTenantModal';
+import { usePageHeader } from 'contexts/PageHeaderContext';
 
 const AdminPanel: React.FC = () => {
   const { user } = useAuth();
@@ -19,16 +20,14 @@ const AdminPanel: React.FC = () => {
   const { data: tenants = [], isLoading } = useAdminTenants();
   const [showNewTenant, setShowNewTenant] = useState(false);
 
+  usePageHeader({
+    title: 'Super Admin',
+    subtitle: 'Global oversight and tenant management',
+    actions: <button className="btn btn-navy" onClick={() => { setShowNewTenant(true); }}>+ New Tenant</button>,
+  });
+
   return (
     <div className="animate-fade-in">
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">Super Admin</h1>
-          <p className="page-subtitle">Global oversight and tenant management</p>
-        </div>
-        <button className="btn btn-navy" onClick={() => { setShowNewTenant(true); }}>+ New Tenant</button>
-      </div>
-
       <GlobalStats />
       
       {isLoading ? (

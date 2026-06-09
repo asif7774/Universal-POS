@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Order } from 'types/reports';
 import { TableSkeleton } from 'components/atoms/skeleton/Skeleton';
 
@@ -12,7 +13,7 @@ export const RecentTransactions: React.FC<RecentTransactionsProps> = ({ orders, 
     <div className="card" style={{ height: 350, display: 'flex', flexDirection: 'column' }}>
       <div className="card-header">
         <span className="card-title">Recent Transactions</span>
-        <button className="btn btn-outline btn-sm">View All</button>
+        <Link to="/reports" className="btn btn-outline btn-sm">View All</Link>
       </div>
       <div style={{ flex: 1, overflowY: 'auto', position: 'relative', padding: isLoading ? '0 16px' : 0 }}>
         {isLoading ? (

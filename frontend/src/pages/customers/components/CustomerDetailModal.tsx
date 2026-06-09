@@ -1,6 +1,11 @@
 import { useState } from 'react';
-import { Customer, Measurement } from 'types/customers';
-import { useUpdateCustomer, useDeleteCustomer, useAddLoyalty } from '../../../lib/queries';
+import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { Customer } from 'types/customers';
+import { MeasurementRecord } from 'types/measurements';
+import { Rental } from 'types/rentals';
+import { apiClient } from '../../../lib/apiClient';
+import { useUpdateCustomer, useDeleteCustomer, useAddLoyalty, useUpdateMeasurement } from '../../../lib/queries';
 import { useSnackbar } from 'contexts/SnackbarContext';
 import { Modal } from 'components/atoms/modal/Modal';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
@@ -10,7 +15,7 @@ interface CustomerDetailModalProps {
   setSelected: (c: Customer | null) => void;
   activeTab: 'profile' | 'measurements' | 'history';
   setActiveTab: (tab: 'profile' | 'measurements' | 'history') => void;
-  measurements?: Measurement[];
+  measurements?: MeasurementRecord[];
 }
 
 const fmt = (n: number | string | null | undefined) => `$${parseFloat((n as string) ?? '0').toFixed(2)}`;
@@ -29,6 +34,39 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
   const deleteCustomer = useDeleteCustomer();
   const addLoyalty = useAddLoyalty();
 
+  const navigate = useNavigate();
+  const updateMeasurement = useUpdateMeasurement();
+  const [isEditingMeasurements, setIsEditingMeasurements] = useState(false);
+  const [measurementForm, setMeasurementForm] = useState<Record<string, string>>({});
+
+  const startEditingMeasurements = (m: MeasurementRecord) => {
+    setMeasurementForm({
+      jacketSize: m.jacketSize ?? '', chest: m.chest ?? '', waist: m.waist ?? '',
+      hips: m.hips ?? '', shoulder: m.shoulder ?? '', neck: m.neck ?? '',
+      sleeve: m.sleeve ?? '', inseam: m.inseam ?? '', outseam: m.outseam ?? '',
+      shoeSize: m.shoeSize ?? '', notes: m.notes ?? '', fittingNotes: m.fittingNotes ?? '',
+    });
+    setIsEditingMeasurements(true);
+  };
+
+  const saveMeasurements = (m: MeasurementRecord) => {
+    updateMeasurement.mutate(
+      { customerId: m.customerId, measurementId: m.id, ...measurementForm },
+      {
+        onSuccess: () => {
+          showSnackbar('Measurements updated!', 'success');
+          setIsEditingMeasurements(false);
+        },
+        onError: () => showSnackbar('Failed to update measurements', 'error'),
+      }
+    );
+  };
+
+  const { data: rentalHistory = [] } = useQuery<Rental[]>({
+    queryKey: ['rentals', 'customer', selected?.id],
+    queryFn: () => apiClient.get(`/rentals?customerId=${selected!.id}`),
+    enabled: !!selected?.id,
+  });
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [loyaltyInput, setLoyaltyInput] = useState('');
@@ -86,7 +124,7 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
   return (
     <Modal
       isOpen={!!selected}
-      onClose={() => { setSelected(null); setIsEditing(false); setShowDeleteConfirm(false); }}
+      onClose={() => { setSelected(null); setIsEditing(false); setShowDeleteConfirm(false); setIsEditingMeasurements(false); }}
       maxWidth={580}
       title={(
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
@@ -118,12 +156,20 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
               {updateCustomer.isPending ? 'Saving...' : 'Save Changes'}
             </button>
           </>
+        ) : isEditingMeasurements && measurements?.[0] ? (
+          <>
+            <button className="btn btn-outline" onClick={() => { setIsEditingMeasurements(false); }}>Cancel</button>
+            <button className="btn btn-gold" onClick={() => { saveMeasurements(measurements[0]); }} disabled={updateMeasurement.isPending}>
+              {updateMeasurement.isPending ? 'Saving...' : 'Save Measurements'}
+            </button>
+          </>
         ) : (
           <>
             <button className="btn btn-outline" onClick={startEditing} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
               <SvgIcon name="tailoring" width="14" height="14" /> Edit
             </button>
-            <button className="btn btn-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <button className="btn btn-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+              onClick={() => { setSelected(null); navigate('/rentals'); }}>
               <SvgIcon name="rental" width="14" height="14" /> + New Rental
             </button>
             <button className="btn btn-ghost btn-sm text-[var(--status-error)]" onClick={() => { setShowDeleteConfirm(true); }}>Delete</button>
@@ -135,7 +181,7 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
         {/* Tabs */}
         <div style={{ display: 'flex', borderBottom: '1px solid var(--surface-border)', background: 'var(--surface-hover)' }}>
           {(['profile', 'measurements', 'history'] as const).map(tab => (
-            <button key={tab} onClick={() => { setActiveTab(tab); setIsEditing(false); }}
+            <button key={tab} onClick={() => { setActiveTab(tab); setIsEditing(false); setIsEditingMeasurements(false); }}
               style={{
                 flex: 1, padding: '12px 10px', border: 'none', background: 'none',
                 cursor: 'pointer', fontWeight: 600, fontSize: '.8rem',
@@ -236,51 +282,105 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
 
           {activeTab === 'measurements' && (
             measurements && measurements.length > 0 ? (
-              <div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 24px' }}>
-                  <div>
-                    <MeasurementRow label="Jacket Size" value={measurements[0].jacketSize} />
-                    <MeasurementRow label="Chest" value={measurements[0].chest} />
-                    <MeasurementRow label="Waist" value={measurements[0].waist} />
-                    <MeasurementRow label="Hips" value={measurements[0].hips} />
-                    <MeasurementRow label="Shoulder" value={measurements[0].shoulder} />
+              isEditingMeasurements ? (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 20px' }}>
+                  {[
+                    { key: 'jacketSize', label: 'Jacket Size' },
+                    { key: 'chest',      label: 'Chest'       },
+                    { key: 'waist',      label: 'Waist'       },
+                    { key: 'hips',       label: 'Hips'        },
+                    { key: 'shoulder',   label: 'Shoulder'    },
+                    { key: 'neck',       label: 'Neck'        },
+                    { key: 'sleeve',     label: 'Sleeve'      },
+                    { key: 'inseam',     label: 'Inseam'      },
+                    { key: 'outseam',    label: 'Outseam'     },
+                    { key: 'shoeSize',   label: 'Shoe Size'   },
+                  ].map(f => (
+                    <div key={f.key} className="input-group">
+                      <label className="input-label">{f.label}</label>
+                      <input className="input" value={measurementForm[f.key] ?? ''}
+                        onChange={e => { setMeasurementForm(fm => ({ ...fm, [f.key]: e.target.value })); }} />
+                    </div>
+                  ))}
+                  <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+                    <label className="input-label">Tailor Notes</label>
+                    <textarea className="input" rows={2} value={measurementForm.notes ?? ''}
+                      onChange={e => { setMeasurementForm(fm => ({ ...fm, notes: e.target.value })); }}
+                      style={{ resize: 'vertical' }} />
                   </div>
-                  <div>
-                    <MeasurementRow label="Neck" value={measurements[0].neck} />
-                    <MeasurementRow label="Sleeve" value={measurements[0].sleeve} />
-                    <MeasurementRow label="Inseam" value={measurements[0].inseam} />
-                    <MeasurementRow label="Outseam" value={measurements[0].outseam} />
-                    <MeasurementRow label="Shoe Size" value={measurements[0].shoeSize} />
+                  <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+                    <label className="input-label">Fitting Notes</label>
+                    <textarea className="input" rows={2} value={measurementForm.fittingNotes ?? ''}
+                      onChange={e => { setMeasurementForm(fm => ({ ...fm, fittingNotes: e.target.value })); }}
+                      style={{ resize: 'vertical' }} />
                   </div>
                 </div>
-                {measurements[0].notes && (
-                  <div style={{ marginTop: 14, padding: '10px 12px', background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', fontSize: '.82rem', color: 'var(--text-secondary)', display: 'flex', gap: 8 }}>
-                    <SvgIcon name="tailoring" width="16" height="16" style={{ marginTop: 2 }} /> {measurements[0].notes}
+              ) : (
+                <div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 24px' }}>
+                    <div>
+                      <MeasurementRow label="Jacket Size" value={measurements[0].jacketSize} />
+                      <MeasurementRow label="Chest" value={measurements[0].chest} />
+                      <MeasurementRow label="Waist" value={measurements[0].waist} />
+                      <MeasurementRow label="Hips" value={measurements[0].hips} />
+                      <MeasurementRow label="Shoulder" value={measurements[0].shoulder} />
+                    </div>
+                    <div>
+                      <MeasurementRow label="Neck" value={measurements[0].neck} />
+                      <MeasurementRow label="Sleeve" value={measurements[0].sleeve} />
+                      <MeasurementRow label="Inseam" value={measurements[0].inseam} />
+                      <MeasurementRow label="Outseam" value={measurements[0].outseam} />
+                      <MeasurementRow label="Shoe Size" value={measurements[0].shoeSize} />
+                    </div>
                   </div>
-                )}
-                <button className="btn btn-outline" style={{ marginTop: 16, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                  <SvgIcon name="scissors" width="14" height="14" /> Edit Measurements
-                </button>
-              </div>
+                  {measurements[0].notes && (
+                    <div style={{ marginTop: 14, padding: '10px 12px', background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', fontSize: '.82rem', color: 'var(--text-secondary)', display: 'flex', gap: 8 }}>
+                      <SvgIcon name="tailoring" width="16" height="16" style={{ marginTop: 2 }} /> {measurements[0].notes}
+                    </div>
+                  )}
+                  <button className="btn btn-outline" style={{ marginTop: 16, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+                    onClick={() => { startEditingMeasurements(measurements[0]); }}>
+                    <SvgIcon name="scissors" width="14" height="14" /> Edit Measurements
+                  </button>
+                </div>
+              )
             ) : (
               <div className="empty-state">
                 <div className="empty-state-icon">
                   <SvgIcon name="measurements" width="48" height="48" style={{ opacity: 0.3 }} />
                 </div>
                 <p>No measurements on file</p>
-                <button className="btn btn-gold" style={{ marginTop: 12 }}>Add Measurements</button>
+                <button className="btn btn-gold" style={{ marginTop: 12 }}
+                  onClick={() => { setSelected(null); navigate('/measurements'); }}>Add Measurements</button>
               </div>
             )
           )}
 
           {activeTab === 'history' && (
-            <div className="empty-state">
-              <div className="empty-state-icon">
-                <SvgIcon name="clipboard" width="48" height="48" style={{ opacity: 0.3 }} />
+            rentalHistory.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {rentalHistory.map(r => (
+                  <div key={r.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--surface-border)' }}>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: '.875rem', color: 'var(--tux-navy)' }}>{r.rentalNo}</div>
+                      <div style={{ fontSize: '.75rem', color: 'var(--text-secondary)' }}>
+                        {r.eventName || 'No event'} · {new Date(r.pickupDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </div>
+                    </div>
+                    <span className={`badge badge-${r.status === 'returned' ? 'gray' : r.status === 'out' ? 'navy' : r.status === 'overdue' ? 'red' : 'gold'}`}>
+                      {r.status}
+                    </span>
+                  </div>
+                ))}
               </div>
-              <p style={{ marginBottom: 4 }}>{selected.totalOrders} orders total</p>
-              <p style={{ fontSize: '.8rem' }}>Full order history coming with API integration</p>
-            </div>
+            ) : (
+              <div className="empty-state">
+                <div className="empty-state-icon">
+                  <SvgIcon name="clipboard" width="48" height="48" style={{ opacity: 0.3 }} />
+                </div>
+                <p>No rental history found</p>
+              </div>
+            )
           )}
         </div>
       </div>

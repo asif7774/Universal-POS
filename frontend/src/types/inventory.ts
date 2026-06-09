@@ -10,4 +10,5 @@ export interface InventoryItem {
   lowStockThreshold: number;
   location: string;
   condition: 'Excellent' | 'Good' | 'Fair' | 'Poor';
+  imageUrl?: string;
 }

@@ -18,7 +18,7 @@ export const EmailForm: React.FC<EmailFormProps> = ({ loading, onLogin, onSucces
     if (!email || !password) { onError('Please fill in all fields'); return; }
     const ok = await onLogin(email, password);
     if (ok) { onSuccess(); }
-    else { onError('Invalid email or password. Try admin@tuxedopos.com / password'); }
+    else { onError('Invalid email or password. Please check your credentials.'); }
   };
 
   return (
@@ -31,7 +31,7 @@ export const EmailForm: React.FC<EmailFormProps> = ({ loading, onLogin, onSucces
           </span>
           <input
             id="email" type="email" className="input"
-            placeholder="admin@tuxedopos.com"
+            placeholder="you@example.com"
             value={email} onChange={e => { setEmail(e.target.value); }}
             autoComplete="email" required
           />

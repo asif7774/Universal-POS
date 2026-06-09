@@ -2,7 +2,7 @@ import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from 'contexts/AuthContext';
-import { SnackbarProvider, useSnackbar } from 'contexts/SnackbarContext';
+import { SnackbarProvider } from 'contexts/SnackbarContext';
 import { OfflineProvider } from 'contexts/OfflineContext';
 import { TenantProvider } from 'contexts/TenantContext';
 import { PluginProvider, usePlugins } from 'contexts/PluginContext';
@@ -60,18 +60,18 @@ const AppRoutes = () => {
   const { getRoutes } = usePlugins();
   const pluginRoutes = getRoutes();
   const { logout } = useAuth();
-  const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
   useEffect(() => {
     const handleUnauthorized = () => {
-      logout();
-      showSnackbar('Session expired or unauthorized. Please log in again.', 'error');
+      // Skip if already on the login page
+      if (window.location.pathname === '/login') return;
+      logout('Session expired or unauthorized. Please log in again.');
       navigate('/login', { replace: true });
     };
     window.addEventListener('auth:unauthorized', handleUnauthorized);
     return () => { window.removeEventListener('auth:unauthorized', handleUnauthorized); };
-  }, [logout, showSnackbar, navigate]);
+  }, [logout, navigate]);
 
   return (
     <Suspense fallback={<Spinner />}>

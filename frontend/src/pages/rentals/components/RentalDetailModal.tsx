@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Rental } from 'types/rentals';
 import { STATUS_CONFIG, fmt, fmtDate, daysLeft } from './RentalTable';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -12,6 +13,10 @@ interface RentalDetailModalProps {
 
 export const RentalDetailModal = ({ selected, setSelected }: RentalDetailModalProps) => {
   const queryClient = useQueryClient();
+  const [showCheckinForm, setShowCheckinForm] = useState(false);
+  const [checkinCondition, setCheckinCondition] = useState('good');
+  const [damageFee, setDamageFee] = useState('0');
+
   const checkout = useMutation({
     mutationFn: () => apiClient.patch(`/rentals/${selected?.id}/checkout`, {}),
     onSuccess: () => {
@@ -21,9 +26,13 @@ export const RentalDetailModal = ({ selected, setSelected }: RentalDetailModalPr
   });
 
   const checkin = useMutation({
-    mutationFn: () => apiClient.patch(`/rentals/${selected?.id}/checkin`, { condition: 'good', damageFee: 0 }),
+    mutationFn: () => apiClient.patch(`/rentals/${selected?.id}/checkin`, {
+      condition: checkinCondition,
+      damageFee: parseFloat(damageFee) || 0,
+    }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['rentals'] });
+      setShowCheckinForm(false);
       setSelected(null);
     }
   });
@@ -48,25 +57,33 @@ export const RentalDetailModal = ({ selected, setSelected }: RentalDetailModalPr
       )}
       footer={
         <>
-          {selected.status === 'out' && (
-            <button 
-              className="btn btn-primary" 
-              onClick={() => { checkin.mutate(); }}
-              disabled={checkin.isPending}
-            >
-              {checkin.isPending ? 'Processing...' : 'Mark as Returned'}
+          {selected.status === 'out' && !showCheckinForm && (
+            <button className="btn btn-primary" onClick={() => { setShowCheckinForm(true); }}>
+              Mark as Returned
             </button>
           )}
+          {selected.status === 'out' && showCheckinForm && (
+            <>
+              <button className="btn btn-outline" onClick={() => { setShowCheckinForm(false); }}>Cancel</button>
+              <button
+                className="btn btn-primary"
+                onClick={() => { checkin.mutate(); }}
+                disabled={checkin.isPending}
+              >
+                {checkin.isPending ? 'Processing...' : 'Confirm Return'}
+              </button>
+            </>
+          )}
           {selected.status === 'booked' && (
-            <button 
-              className="btn btn-gold" 
+            <button
+              className="btn btn-gold"
               onClick={() => { checkout.mutate(); }}
               disabled={checkout.isPending}
             >
               {checkout.isPending ? 'Checking Out...' : 'Check Out Items'}
             </button>
           )}
-          <button className="btn btn-outline" onClick={() => { setSelected(null); }}>Close</button>
+          <button className="btn btn-outline" onClick={() => { setSelected(null); setShowCheckinForm(false); }}>Close</button>
         </>
       }
     >
@@ -110,6 +127,25 @@ export const RentalDetailModal = ({ selected, setSelected }: RentalDetailModalPr
             </div>
           ))}
         </div>
+
+        {showCheckinForm && (
+          <div style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-md)', padding: '14px', border: '1px solid var(--surface-border)', display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '.05em' }}>RETURN DETAILS</div>
+            <div>
+              <label className="label" style={{ fontSize: '.78rem' }}>Condition</label>
+              <select className="input" value={checkinCondition} onChange={e => { setCheckinCondition(e.target.value); }}>
+                <option value="good">Good — no issues</option>
+                <option value="minor">Minor — small wear or stain</option>
+                <option value="damaged">Damaged — repair needed</option>
+              </select>
+            </div>
+            <div>
+              <label className="label" style={{ fontSize: '.78rem' }}>Damage Fee ($)</label>
+              <input className="input" type="number" min="0" step="0.01" value={damageFee}
+                onChange={e => { setDamageFee(e.target.value); }} />
+            </div>
+          </div>
+        )}
 
         {selected.notes && (
           <div style={{ padding: '10px 12px', background: '#FFFBEB', borderRadius: 'var(--radius-sm)', border: '1px solid #FDE68A', fontSize: '.85rem', color: '#92400E', display: 'flex', gap: 8 }}>

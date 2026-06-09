@@ -24,10 +24,13 @@ export const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose
       return await apiClient.post(`/customers/${customerId}/measurements`, data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['measurements'] });
+      void queryClient.invalidateQueries({ queryKey: ['measurements'] });
       showSnackbar('Measurement record saved successfully!', 'success');
       onClose();
-    }
+    },
+    onError: (err: Error) => {
+      showSnackbar(err.message === 'Customer ID is required' ? 'Please select a customer.' : 'Failed to save measurement.', 'error');
+    },
   });
 
   const inputFields = [

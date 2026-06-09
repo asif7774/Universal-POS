@@ -13,18 +13,21 @@ interface AppointmentDetailModalProps {
 export const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({ selected, setSelected, updateMutation }) => {
   if (!selected) {return null;}
 
+  const typeCfg = TYPE_CONFIG[selected.type] ?? TYPE_CONFIG['Consultation'];
+  const statusCfg = STATUS_CONFIG[selected.status] ?? { cls: 'badge-gray', dot: '#94A3B8' };
+
   return (
     <div className="modal-overlay" onClick={() => { setSelected(null); }}>
       <div className="modal animate-slide-up" onClick={e => { e.stopPropagation(); }} style={{ maxWidth: 460 }}>
         <div className="modal-header">
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-              <span style={{ color: TYPE_CONFIG[selected.type].color, opacity: 0.8 }}>
-                <SvgIcon name={TYPE_CONFIG[selected.type].icon} width="20" height="20" />
+              <span style={{ color: typeCfg.color, opacity: 0.8 }}>
+                <SvgIcon name={typeCfg.icon} width="20" height="20" />
               </span>
               <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.1rem' }}>{selected.type} — {selected.customer}</h3>
             </div>
-            <span className={`badge ${STATUS_CONFIG[selected.status].cls}`}>{selected.status}</span>
+            <span className={`badge ${statusCfg.cls}`}>{selected.status}</span>
           </div>
           <button className="btn btn-ghost btn-icon" onClick={() => { setSelected(null); }}>
             <SvgIcon name="close" width="16" height="16" />

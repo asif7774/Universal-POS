@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { InventoryItem } from 'types/inventory';
+import { ProductImage } from 'components/atoms/ProductImage';
 import { useUpdateInventoryItem, useDeleteInventoryItem, useUpdateStock } from '../../../lib/queries';
 import { useSnackbar } from 'contexts/SnackbarContext';
 import { SizeCell } from './SizeCell';
@@ -21,7 +22,7 @@ export const InventoryDetailModal: React.FC<InventoryDetailModalProps> = ({ sele
 
   const [mode, setMode] = useState<'view' | 'edit' | 'stock'>('view');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [editForm, setEditForm] = useState({ name: '', category: '', location: '', lowStockThreshold: 0, salePrice: 0, rentalRate: 0 });
+  const [editForm, setEditForm] = useState({ name: '', category: '', location: '', lowStockThreshold: 0, salePrice: 0, rentalRate: 0, imageUrl: '' });
   const [stockAdjust, setStockAdjust] = useState<Record<string, number>>({});
 
   if (!selected) {return null;}
@@ -34,6 +35,7 @@ export const InventoryDetailModal: React.FC<InventoryDetailModalProps> = ({ sele
       lowStockThreshold: selected.lowStockThreshold,
       salePrice: selected.salePrice ?? 0,
       rentalRate: selected.rentalRate ?? 0,
+      imageUrl: selected.imageUrl ?? '',
     });
     setMode('edit');
   };
@@ -168,6 +170,23 @@ export const InventoryDetailModal: React.FC<InventoryDetailModalProps> = ({ sele
             <label className="input-label">Low Stock Threshold</label>
             <input className="input" type="number" value={editForm.lowStockThreshold} onChange={e => { setEditForm(f => ({ ...f, lowStockThreshold: Number(e.target.value) })); }} />
           </div>
+          <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+            <label className="input-label">Product Image URL</label>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+              <input
+                className="input"
+                placeholder="https://example.com/image.jpg"
+                value={editForm.imageUrl}
+                onChange={e => { setEditForm(f => ({ ...f, imageUrl: e.target.value })); }}
+              />
+              <ProductImage
+                imageUrl={editForm.imageUrl || undefined}
+                category={editForm.category}
+                name={editForm.name}
+                size="sm"
+              />
+            </div>
+          </div>
         </div>
       ) : mode === 'stock' ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -190,12 +209,17 @@ export const InventoryDetailModal: React.FC<InventoryDetailModalProps> = ({ sele
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+            <ProductImage imageUrl={selected.imageUrl} category={selected.category} name={selected.name} size="md" />
+            <div style={{ flex: 1, fontSize: '.82rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+              <div><strong>SKU:</strong> {selected.sku}</div>
+              <div><strong>Type:</strong> {selected.type === 'rental' ? `Rental · ${fmt(selected.rentalRate ?? 0)}/day` : `Sale · ${fmt(selected.salePrice ?? 0)}`}</div>
+              <div><strong>Condition:</strong> {selected.condition}</div>
+            </div>
+          </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
             {[
-              { label: 'SKU', value: selected.sku },
               { label: 'Category', value: selected.category },
-              { label: 'Type', value: selected.type === 'rental' ? `Rental — ${fmt(selected.rentalRate ?? 0)}/day` : `Sale — ${fmt(selected.salePrice ?? 0)}` },
-              { label: 'Condition', value: selected.condition },
               { label: 'Location', value: selected.location },
               { label: 'Low Stock Alert', value: `≤ ${selected.lowStockThreshold} units` },
             ].map(i => (

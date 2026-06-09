@@ -8,6 +8,7 @@ import { RevenueChart } from './components/RevenueChart';
 import { PaymentMethodsChart } from './components/PaymentMethodsChart';
 import { CategorySalesChart } from './components/CategorySalesChart';
 import { RecentTransactions } from './components/RecentTransactions';
+import { usePageHeader } from 'contexts/PageHeaderContext';
 
 const Reports: React.FC = () => {
   const [period, setPeriod] = useState<'today' | 'week' | 'month'>('week');
@@ -39,25 +40,23 @@ const Reports: React.FC = () => {
   const rentalCount = summary?.rentalCount ?? 0;
   const avgOrder = orderCount > 0 ? revenue / orderCount : 0;
 
+  usePageHeader({
+    title: 'Advanced Reporting',
+    subtitle: `Live analytics · ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}`,
+    actions: (
+      <div className="flex gap-2">
+        {(['today', 'week', 'month'] as const).map(p => (
+          <button key={p} onClick={() => { setPeriod(p); }}
+            className={`btn btn-sm capitalize ${period === p ? 'btn-primary' : 'btn-outline'}`}>
+            {p}
+          </button>
+        ))}
+      </div>
+    ),
+  });
+
   return (
     <div className="animate-fade-in">
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">Advanced Reporting</h1>
-          <p className="page-subtitle">
-            Live analytics · {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
-          </p>
-        </div>
-        <div className="flex gap-2">
-          {(['today', 'week', 'month'] as const).map(p => (
-            <button key={p} onClick={() => { setPeriod(p); }}
-              className={`btn btn-sm capitalize ${period === p ? 'btn-primary' : 'btn-outline'}`}>
-              {p}
-            </button>
-          ))}
-        </div>
-      </div>
-
       <KPICards 
         isLoading={isLoading} 
         revenue={revenue} 

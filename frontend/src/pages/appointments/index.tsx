@@ -1,14 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../lib/apiClient';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 import { Appointment } from 'types/appointments';
-import { TODAY, DAYS, HOURS, TYPE_CONFIG, STATUS_CONFIG, fmtDay } from 'constants/appointments';
+import { HOURS, TYPE_CONFIG, STATUS_CONFIG, fmtDay } from 'constants/appointments';
 import { NewApptModal } from './components/NewApptModal';
 import { AppointmentDetailModal } from './components/AppointmentDetailModal';
+import { usePageHeader } from 'contexts/PageHeaderContext';
 
 const Appointments: React.FC = () => {
-  const [selectedDay, setSelectedDay] = useState(TODAY);
+  const today = useMemo(() => new Date().toISOString().split('T')[0], []);
+  const [weekOffset, setWeekOffset] = useState(0);
+  const DAYS = useMemo(() => {
+    const days: string[] = [];
+    for (let i = weekOffset - 1; i < weekOffset + 7; i++) {
+      const d = new Date(today);
+      d.setDate(d.getDate() + i);
+      days.push(d.toISOString().split('T')[0]);
+    }
+    return days;
+  }, [today, weekOffset]);
+  const [selectedDay, setSelectedDay] = useState(() => new Date().toISOString().split('T')[0]);
   const [view, setView] = useState<'week' | 'list'>('week');
   const [selected, setSelected] = useState<Appointment | null>(null);
   const [showNew, setShowNew] = useState(false);
@@ -31,39 +43,54 @@ const Appointments: React.FC = () => {
     }
   });
 
-  if (isLoading) { return <div className="page-header"><h1 className="page-title">Loading Appointments...</h1></div>; }
-  if (error) { return <div className="page-header"><h1 className="page-title" style={{ color: 'red' }}>Error loading appointments</h1></div>; }
+  const todayCount = appointments.filter(a => a.date === today && a.status !== 'Cancelled').length;
+  const confirmedToday = appointments.filter(a => a.date === today && a.status === 'Confirmed').length;
+
+  usePageHeader({
+    title: 'Appointments',
+    subtitle: isLoading ? 'Loading...' : error ? 'Error loading appointments' : `${todayCount} today · ${confirmedToday} confirmed · ${appointments.filter(a => a.status === 'No-Show').length} no-shows this week`,
+    actions: (
+      <div className="flex gap-2.5">
+        <div className="flex bg-[var(--surface-hover)] rounded-lg p-[3px]">
+          {(['week', 'list'] as const).map(v => (
+            <button key={v} onClick={() => { setView(v); }}
+              className={`flex items-center gap-1.5 px-3.5 py-1.25 rounded-md border-none cursor-pointer font-semibold text-[0.78rem] transition-all duration-150 ${view === v ? 'bg-[var(--surface-card)] text-[var(--tux-navy)] shadow-[var(--shadow-sm)]' : 'bg-transparent text-[var(--text-muted)]'}`}>
+              <SvgIcon name={v === 'week' ? 'appointments' : 'menu'} width="14" height="14" />
+              {v === 'week' ? 'Week' : 'List'}
+            </button>
+          ))}
+        </div>
+        <button className="btn btn-gold" onClick={() => { setShowNew(true); }}>+ New Appointment</button>
+      </div>
+    ),
+  });
+
+  if (isLoading) { return <div className="p-10 text-center text-[var(--text-muted)]">Loading Appointments...</div>; }
+  if (error) { return <div className="p-10 text-center text-red-500">Error loading appointments</div>; }
 
   const dayAppts = appointments.filter(a => a.date === selectedDay).sort((a, b) => a.time.localeCompare(b.time));
-  const todayCount = appointments.filter(a => a.date === TODAY && a.status !== 'Cancelled').length;
-  const confirmedToday = appointments.filter(a => a.date === TODAY && a.status === 'Confirmed').length;
 
   const apptsByDay: Record<string, Appointment[]> = {};
   DAYS.forEach(d => { apptsByDay[d] = appointments.filter(a => a.date === d).sort((a, b) => a.time.localeCompare(b.time)); });
 
   return (
     <div className="animate-fade-in">
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">Appointments</h1>
-          <p className="page-subtitle">{todayCount} today · {confirmedToday} confirmed · {appointments.filter(a => a.status === 'No-Show').length} no-shows this week</p>
-        </div>
-        <div className="flex gap-2.5">
-          <div className="flex bg-[var(--surface-hover)] rounded-lg p-[3px]">
-            {(['week', 'list'] as const).map(v => (
-              <button key={v} onClick={() => { setView(v); }}
-                className={`flex items-center gap-1.5 px-3.5 py-1.25 rounded-md border-none cursor-pointer font-semibold text-[0.78rem] transition-all duration-150 ${view === v ? 'bg-[var(--surface-card)] text-[var(--tux-navy)] shadow-[var(--shadow-sm)]' : 'bg-transparent text-[var(--text-muted)]'}`}>
-                <SvgIcon name={v === 'week' ? 'appointments' : 'menu'} width="14" height="14" />
-                {v === 'week' ? 'Week' : 'List'}
-              </button>
-            ))}
-          </div>
-          <button className="btn btn-gold" onClick={() => { setShowNew(true); }}>+ New Appointment</button>
-        </div>
-      </div>
-
       {/* Week strip */}
-      <div className="flex gap-2 mb-6 overflow-x-auto pb-1 pt-12">
+      <div className="flex items-center gap-2 mb-6 pb-1 pt-4">
+        <button
+          className="btn btn-outline btn-sm shrink-0"
+          onClick={() => {
+            const newOffset = weekOffset - 7;
+            setWeekOffset(newOffset);
+            const d = new Date(today);
+            d.setDate(d.getDate() + newOffset - 1);
+            setSelectedDay(d.toISOString().split('T')[0]);
+          }}
+          title="Previous week"
+        >
+          <SvgIcon name="chevron-left" width="14" height="14" />
+        </button>
+        <div className="flex gap-2 overflow-x-auto flex-1">
         {DAYS.map(d => {
           const info = fmtDay(d);
           const count = apptsByDay[d]?.filter(a => a.status !== 'Cancelled').length ?? 0;
@@ -84,6 +111,20 @@ const Appointments: React.FC = () => {
             </button>
           );
         })}
+        </div>
+        <button
+          className="btn btn-outline btn-sm shrink-0"
+          onClick={() => {
+            const newOffset = weekOffset + 7;
+            setWeekOffset(newOffset);
+            const d = new Date(today);
+            d.setDate(d.getDate() + newOffset - 1);
+            setSelectedDay(d.toISOString().split('T')[0]);
+          }}
+          title="Next week"
+        >
+          <SvgIcon name="chevron-right" width="14" height="14" />
+        </button>
       </div>
 
       {view === 'week' && (
@@ -103,7 +144,7 @@ const Appointments: React.FC = () => {
             ))}
 
             {/* Current time indicator (today only) */}
-            {selectedDay === TODAY && (() => {
+            {selectedDay === today && (() => {
               const now = new Date();
               const startH = 9, endH = 18;
               const pct = ((now.getHours() - startH) * 60 + now.getMinutes()) / ((endH - startH) * 60);
@@ -121,7 +162,10 @@ const Appointments: React.FC = () => {
               const [h, m] = appt.time.split(':').map(Number);
               if (isNaN(h) || isNaN(m)) { return null; }
               
-              const startMin = (h - 9) * 60 + m;
+              const gridStart = 9, gridEnd = 18;
+              const startMin = (h - gridStart) * 60 + m;
+              const gridTotalMin = (gridEnd - gridStart) * 60;
+              if (startMin < 0 || startMin >= gridTotalMin) { return null; }
               const cfg = TYPE_CONFIG[appt.type] || TYPE_CONFIG['Consultation'];
               const cancelled = appt.status === 'Cancelled';
               return (
@@ -176,7 +220,7 @@ const Appointments: React.FC = () => {
                 return (
                   <tr key={appt.id} onClick={() => { setSelected(appt); }} className={appt.status === 'Cancelled' ? 'opacity-50' : 'opacity-100'}>
                     <td className="font-semibold text-[0.85rem] whitespace-nowrap">
-                      {appt.date === TODAY ? <span className="text-[var(--tux-gold)] font-bold">Today</span> : `${dInfo.weekday} ${dInfo.day} ${dInfo.month}`}
+                      {appt.date === today ? <span className="text-[var(--tux-gold)] font-bold">Today</span> : `${dInfo.weekday} ${dInfo.day} ${dInfo.month}`}
                     </td>
                     <td className="font-bold text-[0.85rem] text-[var(--tux-navy)] whitespace-nowrap">{appt.time}</td>
                     <td>

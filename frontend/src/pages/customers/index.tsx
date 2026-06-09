@@ -3,11 +3,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../lib/apiClient';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 import { useSnackbar } from 'contexts/SnackbarContext';
-import { Customer, Measurement } from 'types/customers';
+import { Customer } from 'types/customers';
+import { MeasurementRecord } from 'types/measurements';
 import { CustomerCard } from './components/CustomerCard';
 import { NewCustomerForm } from './components/NewCustomerForm';
 import { CustomerDetailModal } from './components/CustomerDetailModal';
 import { CardSkeleton } from 'components/atoms/skeleton/Skeleton';
+import { usePageHeader } from 'contexts/PageHeaderContext';
 
 const Customers: React.FC = () => {
   const [search, setSearch] = useState('');
@@ -25,7 +27,7 @@ const Customers: React.FC = () => {
 
   const { data: measurements } = useQuery({
     queryKey: ['measurements', selected?.id],
-    queryFn: () => apiClient.get<Measurement[]>(`/customers/${selected?.id}/measurements`),
+    queryFn: () => apiClient.get<MeasurementRecord[]>(`/customers/${selected?.id}/measurements`),
     enabled: !!selected && activeTab === 'measurements',
   });
 
@@ -57,22 +59,20 @@ const Customers: React.FC = () => {
     });
   };
 
+  usePageHeader({
+    title: isAdding ? 'Add Customer' : 'Customers',
+    subtitle: isAdding ? 'Register a new customer profile' : `${customers.length} customers · ${customers.filter(c => c.tags.includes('VIP')).length} VIP`,
+    actions: isAdding
+      ? (
+        <button onClick={() => { setIsAdding(false); }} className="btn btn-outline">
+          <SvgIcon name="arrow-left" width="18" height="18" /> Back
+        </button>
+      )
+      : <button className="btn btn-gold" onClick={() => { setIsAdding(true); }}>+ Add Customer</button>,
+  });
+
   return (
     <div className="animate-fade-in">
-      <div className="page-header">
-        <div className="flex items-center gap-4">
-          {isAdding && (
-            <button onClick={() => { setIsAdding(false); }} className="btn btn-icon btn-ghost -ml-2">
-              <SvgIcon name="arrow-left" width="22" height="22" />
-            </button>
-          )}
-          <div>
-            <h1 className="page-title">{isAdding ? 'Add Customer' : 'Customers'}</h1>
-            <p className="page-subtitle">{isAdding ? 'Register a new customer profile' : `${customers.length} customers · ${customers.filter(c => c.tags.includes('VIP')).length} VIP`}</p>
-          </div>
-        </div>
-        {!isAdding && <button className="btn btn-gold" onClick={() => { setIsAdding(true); }}>+ Add Customer</button>}
-      </div>
 
       {!isAdding && (
         <div className="search-container">

@@ -6,6 +6,7 @@ import { MeasurementRecord } from 'types/measurements';
 import { MeasurementCard } from './components/MeasurementCard';
 import { NewMeasurementModal } from './components/NewMeasurementModal';
 import { MeasurementDetailModal } from './components/MeasurementDetailModal';
+import { usePageHeader } from 'contexts/PageHeaderContext';
 
 const Measurements: React.FC = () => {
   const [search, setSearch] = useState('');
@@ -17,8 +18,14 @@ const Measurements: React.FC = () => {
     queryFn: async () => await apiClient.get<MeasurementRecord[]>('/customers/measurements/all'),
   });
 
-  if (isLoading) {return <div className="page-header"><h1 className="page-title">Loading...</h1></div>;}
-  if (error) {return <div className="page-header"><h1 className="page-title text-red-500">Error loading measurements</h1></div>;}
+  usePageHeader({
+    title: 'Measurements',
+    subtitle: isLoading ? 'Loading...' : error ? 'Error loading measurements' : `Digital measurement book · ${records.length} profiles on file`,
+    actions: <button className="btn btn-gold" onClick={() => { setShowNew(true); }}>+ Take Measurement</button>,
+  });
+
+  if (isLoading) {return <div className="p-10 text-center text-[var(--text-muted)]">Loading...</div>;}
+  if (error) {return <div className="p-10 text-center text-red-500">Error loading measurements</div>;}
 
   const filtered = records.filter(r =>
     r.customerName.toLowerCase().includes(search.toLowerCase())
@@ -26,14 +33,6 @@ const Measurements: React.FC = () => {
 
   return (
     <div className="animate-fade-in">
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">Measurements</h1>
-          <p className="page-subtitle">Digital measurement book · {records.length} profiles on file</p>
-        </div>
-        <button className="btn btn-gold" onClick={() => { setShowNew(true); }}>+ Take Measurement</button>
-      </div>
-
       <div className="search-container">
         <div className="search-input-wrapper input-with-icon">
           <span className="input-icon">

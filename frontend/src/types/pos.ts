@@ -6,7 +6,8 @@ export interface Product {
   type: 'sale' | 'rental';
   category: string;
   stock: number;
-  rentalRate?: number; // per day
+  rentalRate?: number;
+  imageUrl?: string;
 }
 
 export interface CartItem {

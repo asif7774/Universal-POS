@@ -2,7 +2,10 @@ import React, { Suspense } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import { useAuth } from 'contexts/AuthContext';
 import { useOffline } from 'contexts/OfflineContext';
+import { PageHeaderProvider } from 'contexts/PageHeaderContext';
 import Sidebar from 'components/organisms/sidebar/Sidebar';
+import PageHeader from 'components/organisms/header';
+import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 const SkeletonBar = () => (
   <div className="skeleton h-5 rounded-md mb-2" />
@@ -46,21 +49,24 @@ const AppLayout: React.FC = () => {
   if (!isAuthenticated) {return <Navigate to="/login" replace />;}
 
   return (
-    <>
+    <PageHeaderProvider>
       <OfflineBanner />
       <div className={`app-shell transition-[margin-top] duration-250 ease-in-out ${!isOnline ? 'mt-[38px]' : 'mt-0'}`}>
         <Sidebar />
         <div className="main-content">
-          <Suspense fallback={
-            <div className="p-6">
-              {[1,2,3].map(i => <SkeletonBar key={i} />)}
-            </div>
-          }>
-            <Outlet />
-          </Suspense>
+          <PageHeader />
+          <div className="page-body">
+            <Suspense fallback={
+              <div className="p-6">
+                {[1,2,3].map(i => <SkeletonBar key={i} />)}
+              </div>
+            }>
+              <Outlet />
+            </Suspense>
+          </div>
         </div>
       </div>
-    </>
+    </PageHeaderProvider>
   );
 };
 
