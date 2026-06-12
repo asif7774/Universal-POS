@@ -14,7 +14,14 @@ async function bootstrap() {
   }));
 
   // CORS for frontend
-  const origins = process.env.ALLOWED_ORIGINS?.split(',') ?? ['http://localhost:5200', 'http://localhost:5201', 'http://localhost:5202', 'http://localhost:5203'];
+  const origins = process.env.ALLOWED_ORIGINS?.split(',') ?? [
+    'http://localhost:5200',
+    'http://localhost:5201',
+    'http://localhost:5202',
+    'http://localhost:5203',
+    'https://pos.walit.in',
+    'https://universal-pos-asif7774s-projects.vercel.app'
+  ];
   app.enableCors({
     origin: origins,
     credentials: true,
