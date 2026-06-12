@@ -8,6 +8,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { useNetworkStatus } from 'hooks/useNetworkStatus';
+import { useAuth } from 'contexts/AuthContext';
 import { seedProducts, seedCustomers, seedOrders, flushQueue, enqueue, queueSize, resyncAll } from 'lib/syncEngine';
 import type { SyncOperation } from 'lib/db';
 
@@ -24,6 +25,7 @@ const OfflineContext = createContext<OfflineContextValue | null>(null);
 
 export const OfflineProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isOnline, justReconnected } = useNetworkStatus();
+  const { isAuthenticated } = useAuth();
   const [queuedItems, setQueuedItems] = useState(0);
 
   const refreshQueueCount = useCallback(async () => {
@@ -31,12 +33,13 @@ export const OfflineProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setQueuedItems(count);
   }, []);
 
-  // Seed cache on mount
+  // Seed cache on mount, ONLY if authenticated
   useEffect(() => {
+    if (!isAuthenticated) return;
     void seedProducts();
     void seedCustomers();
     void seedOrders();
-  }, []);
+  }, [isAuthenticated]);
 
   // On reconnect: flush queue + resync
   useEffect(() => {

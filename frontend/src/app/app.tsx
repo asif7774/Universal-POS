@@ -118,17 +118,17 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <SvgSpriteLoader url="/sprites/app-icons.svg?v=1.2.3" version="1.2.3">
         <SnackbarProvider>
-          <OfflineProvider>
-            <TenantProvider>
-              <PluginProvider>
-                <AuthProvider>
+          <AuthProvider>
+            <OfflineProvider>
+              <TenantProvider>
+                <PluginProvider>
                   <Router>
                     <AppRoutes />
                   </Router>
-                </AuthProvider>
-              </PluginProvider>
-            </TenantProvider>
-          </OfflineProvider>
+                </PluginProvider>
+              </TenantProvider>
+            </OfflineProvider>
+          </AuthProvider>
         </SnackbarProvider>
       </SvgSpriteLoader>
     </QueryClientProvider>
