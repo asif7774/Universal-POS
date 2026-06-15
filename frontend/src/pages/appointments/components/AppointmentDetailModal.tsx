@@ -42,7 +42,7 @@ export const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({ 
               { label: 'Assigned To', value: selected.assignedTo },
               ...(selected.orderId ? [{ label: 'Linked Order', value: selected.orderId }] : []),
             ].map(i => (
-              <div key={i.label} style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', padding: '8px 10px' }}>
+              <div key={i.label} style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '8px 10px' }}>
                 <div style={{ fontSize: '.7rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 3 }}>{i.label}</div>
                 <div style={{ fontSize: '.875rem', fontWeight: 700 }}>{i.value}</div>
               </div>
@@ -57,7 +57,7 @@ export const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({ 
         </div>
         <div className="modal-footer">
           {selected.status === 'Scheduled' && (
-            <button className="btn btn-primary" onClick={() => { updateMutation.mutate({ id: selected.id, status: 'Confirmed' }); }}>
+            <button className="btn btn-gold" onClick={() => { updateMutation.mutate({ id: selected.id, status: 'Confirmed' }); }}>
               <SvgIcon name="check-circle" width="16" height="16" /> Confirm
             </button>
           )}

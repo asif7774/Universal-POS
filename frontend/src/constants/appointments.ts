@@ -24,11 +24,11 @@ export const TYPE_CONFIG: Record<AppointmentType, { color: string; icon: string;
 };
 
 export const STATUS_CONFIG: Record<AppointmentStatus, { cls: string; dot: string }> = {
-  Scheduled:  { cls: 'badge-navy',   dot: '#1E3A5F' },
-  Confirmed:  { cls: 'badge-gold',   dot: '#D4AF37' },
-  Completed:  { cls: 'badge-green',  dot: '#10B981' },
-  Cancelled:  { cls: 'badge-gray',   dot: '#94A3B8' },
-  'No-Show':  { cls: 'badge-red',    dot: '#EF4444' },
+  Scheduled:  { cls: 'badge-gold',    dot: '#D4AF37' },
+  Confirmed:  { cls: 'badge-success', dot: '#10B981' },
+  Completed:  { cls: 'badge-emerald', dot: '#10B981' },
+  Cancelled:  { cls: 'badge-error',   dot: '#EF4444' },
+  'No-Show':  { cls: 'badge-neutral', dot: '#94A3B8' },
 };
 
 export const fmtDay = (d: string) => {
