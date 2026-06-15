@@ -52,14 +52,7 @@ const Dashboard: React.FC = () => {
     title: `${greeting}, ${user?.name?.split(' ')[0] ?? 'User'}`,
     subtitle: `${settings?.name || 'TuxedoPOS'} · ${now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}`,
     actions: (
-      <div className="flex gap-3 items-center">
-        <button
-          className="btn btn-outline bg-[var(--surface-card)] border-[1.5px] lg:hidden"
-          onClick={() => { window.dispatchEvent(new CustomEvent('mobile-menu-open')); }}
-          aria-label="Open navigation"
-        >
-          <SvgIcon name="menu" width="20" height="20" />
-        </button>
+      <div className="flex gap-3">
         <button className="btn btn-outline bg-[var(--surface-card)] border-[1.5px] hidden sm:flex" onClick={() => { navigate('/pos'); }}>
           <SvgIcon name="search" width="16" height="16" />
           Quick Search
