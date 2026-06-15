@@ -45,7 +45,7 @@ export const CheckoutModal = ({
         <>
           <button className="btn btn-outline" onClick={onClose} disabled={processingPayment || isPending}>Cancel</button>
           <button
-            className="btn btn-gold"
+            className="btn btn-gold btn-lg w-full"
             onClick={processOrder}
             disabled={(paymentMethod === 'cash' && (parseFloat(cashGiven) < total || !cashGiven)) || processingPayment || isPending}
             style={{ display: 'flex', alignItems: 'center', gap: 6 }}
@@ -61,21 +61,21 @@ export const CheckoutModal = ({
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         {/* Total */}
-        <div style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-md)', padding: '14px', textAlign: 'center' }}>
+        <div style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-md)', padding: '14px', textAlign: 'center' }}>
           <div style={{ fontSize: '.8rem', color: 'var(--text-muted)', marginBottom: 4 }}>AMOUNT DUE</div>
-          <div style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--tux-navy)' }}>{fmt(total)}</div>
+          <div className="text-2xl font-black tracking-tight text-[var(--accent-gold-text)]">{fmt(total)}</div>
         </div>
 
         {/* Customer */}
         <div>
           <label className="input-label" style={{ marginBottom: 6, display: 'block' }}>Customer (optional)</label>
           {selectedCustomer ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', background: '#EEF2F8', borderRadius: 8, border: '1.5px solid var(--tux-navy)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', background: 'var(--bg-panel-hover)', borderRadius: 8, border: '1.5px solid var(--accent-gold)' }}>
               <div className="avatar" style={{ width: 28, height: 28, fontSize: '.65rem', flexShrink: 0 }}>
                 {selectedCustomer.firstName[0]}{selectedCustomer.lastName[0]}
               </div>
               <span style={{ flex: 1, fontWeight: 600, fontSize: '.85rem' }}>{selectedCustomer.firstName} {selectedCustomer.lastName}</span>
-              <button onClick={() => { setSelectedCustomer(null); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex' }}>
+              <button onClick={() => { setSelectedCustomer(null); }} className="btn btn-ghost btn-icon" aria-label="Close">
                 <SvgIcon name="close" width="14" height="14" />
               </button>
             </div>
@@ -84,11 +84,11 @@ export const CheckoutModal = ({
               <input className="input" placeholder="Search customer..." value={customerSearch}
                 onChange={e => { setCustomerSearch(e.target.value); }} style={{ marginBottom: 4 }} />
               {customerSearch && (
-                <div style={{ border: '1px solid var(--surface-border)', borderRadius: 8, background: 'var(--surface-card)', maxHeight: 120, overflowY: 'auto' }}>
+                <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 8, background: 'var(--bg-panel)', maxHeight: 120, overflowY: 'auto' }}>
                   {customers.filter(c => `${c.firstName} ${c.lastName}`.toLowerCase().includes(customerSearch.toLowerCase())).slice(0, 5).map(c => (
                     <div key={c.id} onClick={() => { setSelectedCustomer(c); setCustomerSearch(''); }}
-                      style={{ padding: '8px 12px', cursor: 'pointer', fontSize: '.85rem', borderBottom: '1px solid var(--surface-border)' }}
-                      onMouseEnter={e => (e.currentTarget.style.background = 'var(--surface-hover)')}
+                      style={{ padding: '8px 12px', cursor: 'pointer', fontSize: '.85rem', borderBottom: '1px solid var(--border-subtle)' }}
+                      onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-panel-hover)')}
                       onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
                       {c.firstName} {c.lastName}
                     </div>
@@ -116,17 +116,13 @@ export const CheckoutModal = ({
           <div className="input-label" style={{ marginBottom: 8 }}>Payment Method</div>
           <div style={{ display: 'flex', gap: 8 }}>
             {PAYMENT_METHODS.map(m => (
-              <button key={m.id} onClick={() => { setPaymentMethod(m.id); }}
-                style={{
-                  flex: 1, padding: '10px 6px', borderRadius: 'var(--radius-md)',
-                  border: `2px solid ${paymentMethod === m.id ? 'var(--tux-navy)' : 'var(--surface-border)'}`,
-                  background: paymentMethod === m.id ? '#EEF2F8' : 'var(--surface-card)',
-                  cursor: 'pointer', textAlign: 'center', transition: 'all .15s',
-                }}>
-                <div style={{ marginBottom: 6, color: paymentMethod === m.id ? 'var(--tux-navy)' : 'var(--text-muted)', display: 'flex', justifyContent: 'center' }}>
-                  <SvgIcon name={m.icon} width="24" height="24" />
-                </div>
-                <div style={{ fontSize: '.75rem', fontWeight: 600, color: paymentMethod === m.id ? 'var(--tux-navy)' : 'var(--text-secondary)' }}>{m.label}</div>
+              <button
+                key={m.id}
+                onClick={() => { setPaymentMethod(m.id); }}
+                className={`btn flex-1 flex-col items-center gap-1.5 py-3 ${paymentMethod === m.id ? 'btn-gold' : 'btn-outline'}`}
+              >
+                <SvgIcon name={m.icon} width="24" height="24" />
+                <span style={{ fontSize: '.75rem', fontWeight: 600 }}>{m.label}</span>
               </button>
             ))}
           </div>

@@ -52,15 +52,8 @@ const Dashboard: React.FC = () => {
     title: `${greeting}, ${user?.name?.split(' ')[0] ?? 'User'}`,
     subtitle: `${settings?.name || 'TuxedoPOS'} · ${now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}`,
     actions: (
-      <div className="flex gap-3 items-center">
-        <button
-          className="btn btn-outline bg-[var(--surface-card)] border-[1.5px] lg:hidden"
-          onClick={() => { window.dispatchEvent(new CustomEvent('mobile-menu-open')); }}
-          aria-label="Open navigation"
-        >
-          <SvgIcon name="menu" width="20" height="20" />
-        </button>
-        <button className="btn btn-outline bg-[var(--surface-card)] border-[1.5px] hidden sm:flex" onClick={() => { navigate('/pos'); }}>
+      <div className="flex gap-3">
+        <button className="btn btn-outline hidden sm:flex" onClick={() => { navigate('/pos'); }}>
           <SvgIcon name="search" width="16" height="16" />
           Quick Search
         </button>
@@ -79,7 +72,7 @@ const Dashboard: React.FC = () => {
         <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
            {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} height={120} className="rounded-lg" />)}
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5">
            <Skeleton height={400} className="rounded-xl" />
            <div className="flex flex-col gap-5">
               <Skeleton height={200} className="rounded-xl" />
@@ -91,10 +84,10 @@ const Dashboard: React.FC = () => {
   }
 
   const STATS: StatProps[] = [
-    { label: "Today's Revenue", value: `$${orderSummary?.revenue?.toFixed(2) ?? '0.00'}`, change: '', positive: true, icon: 'banknote', color: 'var(--tux-navy)', sparkData: revenueData.length ? revenueData.map(d => parseFloat(String(d.revenue)) || 0) : [0] },
-    { label: 'Active Rentals', value: `${rentalStats?.out ?? 0}`, change: '', positive: true, icon: 'tuxedo', color: 'var(--tux-gold)', sparkData: Array.from({ length: 7 }, () => rentalStats?.out ?? 0) },
-    { label: 'Appointments Today', value: `${appointmentData?.count ?? 0}`, change: '', positive: true, icon: 'appointments', color: 'var(--status-success)', sparkData: Array.from({ length: 7 }, () => appointmentData?.count ?? 0) },
-    { label: 'Overdue Returns', value: `${rentalStats?.overdue ?? 0}`, change: '', positive: false, icon: 'warning', color: 'var(--status-error)', sparkData: Array.from({ length: 7 }, () => rentalStats?.overdue ?? 0) },
+    { label: "Today's Revenue",    value: `$${orderSummary?.revenue?.toFixed(2) ?? '0.00'}`, change: '', positive: true,  icon: 'banknote',     colorVariant: 'gold',    sparkData: revenueData.length ? revenueData.map(d => parseFloat(String(d.revenue)) || 0) : [0] },
+    { label: 'Active Rentals',     value: `${rentalStats?.out ?? 0}`,                        change: '', positive: true,  icon: 'tuxedo',       colorVariant: 'emerald', sparkData: Array.from({ length: 7 }, () => rentalStats?.out ?? 0) },
+    { label: 'Appointments Today', value: `${appointmentData?.count ?? 0}`,                  change: '', positive: true,  icon: 'appointments', colorVariant: 'primary', sparkData: Array.from({ length: 7 }, () => appointmentData?.count ?? 0) },
+    { label: 'Overdue Returns',    value: `${rentalStats?.overdue ?? 0}`,                    change: '', positive: false, icon: 'warning',      colorVariant: 'error',   sparkData: Array.from({ length: 7 }, () => rentalStats?.overdue ?? 0) },
   ];
 
   const rentalFleet = [
@@ -107,11 +100,9 @@ const Dashboard: React.FC = () => {
   return (
     <div className="animate-fade-in">
       <div className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-           <h2 className="text-[0.75rem] font-bold text-text-muted uppercase tracking-wider whitespace-nowrap">
-             Business Pulse
-           </h2>
-           <div className="h-px flex-1 bg-surface-border opacity-50" />
+        <div className="section-divider">
+          <span className="section-divider-label">Business Pulse</span>
+          <div className="section-divider-line" />
         </div>
         
         {/* Stat cards grid */}
@@ -121,31 +112,31 @@ const Dashboard: React.FC = () => {
 
         {/* Priority Alerts "Command Center" */}
         {alerts.length > 0 && (
-          <div className="card p-6 bg-gradient-to-br from-[#FFF5F5] dark:from-red-950/25 to-white dark:to-[var(--surface-card)] border-dashed border-[#FECACA] dark:border-red-800/30 shadow-none">
+          <div className="panel p-6 border border-[var(--status-error-subtle)]">
              <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-[10px] bg-status-error flex items-center justify-center text-white shadow-[0_4px_12px_rgba(239,68,68,0.2)]">
+                  <div className="w-9 h-9 rounded-[10px] bg-[var(--status-error-subtle)] flex items-center justify-center text-[var(--status-error)]">
                      <SvgIcon name="warning" width="18" height="18" />
                   </div>
                   <div>
-                     <div className="font-extrabold text-[0.95rem] text-[#991B1B]">Attention Required</div>
-                     <div className="text-[0.75rem] text-[#B91C1C] opacity-70">{alerts.length} items need immediate action</div>
+                     <div className="font-extrabold text-[0.95rem] text-[var(--status-error)]">Attention Required</div>
+                     <div className="text-[0.75rem] text-[var(--text-muted)]">{alerts.length} items need immediate action</div>
                   </div>
                 </div>
-                <button className="btn btn-sm btn-ghost text-[#991B1B]" onClick={() => { queryClient.setQueryData(['dashboard', 'alerts'], []); }}>Dismiss All</button>
+                <button className="btn btn-ghost btn-sm text-[var(--status-error)]" onClick={() => { queryClient.setQueryData(['dashboard', 'alerts'], []); }}>Dismiss All</button>
              </div>
-             
+
              <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-3">
                 {alerts.map((a, i) => (
-                  <div key={i} className="p-4 rounded-lg bg-white dark:bg-[var(--surface-hover)] shadow-sm flex gap-3 items-start border border-[#FEE2E2] dark:border-red-800/20 transition-transform duration-200">
-                    <div className={`w-6 h-6 rounded-[6px] flex items-center justify-center shrink-0 ${a.type === 'error' ? 'bg-[#FEF2F2] dark:bg-red-900/30 text-status-error' : 'bg-[#FFFBEB] dark:bg-amber-900/30 text-status-warning'}`}>
+                  <div key={i} className="p-4 rounded-lg bg-[var(--bg-panel-hover)] flex gap-3 items-start border border-[var(--border-subtle)]">
+                    <div className={`w-6 h-6 rounded-[6px] flex items-center justify-center shrink-0 ${a.type === 'error' ? 'bg-[var(--status-error-subtle)] text-[var(--status-error)]' : 'bg-[var(--status-warning-subtle)] text-[var(--status-warning)]'}`}>
                        <SvgIcon name="warning" width="14" height="14" />
                     </div>
                     <div className="flex-1">
-                      <div className="text-[0.82rem] font-semibold text-text-primary leading-normal">{a.msg}</div>
+                      <div className="text-[0.82rem] font-semibold text-[var(--text-primary)] leading-normal">{a.msg}</div>
                       <div className="flex gap-2 mt-2">
-                         <button className="bg-transparent border-none p-0 text-tux-navy text-[0.7rem] font-bold cursor-pointer underline" onClick={() => { if (a.actionUrl) navigate(a.actionUrl); }}>Take Action</button>
-                         <button className="bg-transparent border-none p-0 text-text-muted text-[0.7rem] cursor-pointer" onClick={() => { queryClient.setQueryData(['dashboard', 'alerts'], (prev: typeof alerts) => prev.filter((_, idx) => idx !== i)); }}>Ignore</button>
+                         <button className="bg-transparent border-none p-0 text-[var(--accent-gold-text)] text-[0.7rem] font-bold cursor-pointer underline" onClick={() => { if (a.actionUrl) navigate(a.actionUrl); }}>Take Action</button>
+                         <button className="bg-transparent border-none p-0 text-[var(--text-muted)] text-[0.7rem] cursor-pointer" onClick={() => { queryClient.setQueryData(['dashboard', 'alerts'], (prev: typeof alerts) => prev.filter((_, idx) => idx !== i)); }}>Ignore</button>
                       </div>
                     </div>
                   </div>
@@ -156,7 +147,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Two-column grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5 items-start">
         <RecentOrders orders={recentOrders.map((o: any) => ({
           id: o.id,
           orderNo: o.orderNo,

@@ -29,29 +29,30 @@ export const ProductGrid = memo(({
   });
 
   return (
-    <div className="flex flex-col bg-surface-bg overflow-hidden h-full">
+    <div className="flex flex-col bg-[var(--bg-canvas)] overflow-hidden h-full">
       {/* Search + category bar */}
-      <div className="search-container p-[14px_16px] bg-surface-card border-b border-surface-border m-0 gap-3">
-        <div className="search-input-wrapper input-with-icon flex-1 min-w-0 max-w-none">
+      <div className="p-4 border-b border-[var(--border-subtle)] bg-[var(--bg-panel)] flex gap-3 flex-wrap items-center">
+        <div className="input-with-icon flex-1 min-w-0">
           <span className="input-icon">
             <SvgIcon name="search" width="18" height="18" />
           </span>
           <input
             id="pos-search"
             ref={searchRef}
-            className="input"
-            placeholder="Search products or scan..."
+            className="input flex-1"
+            placeholder="Search products, SKU, category..."
+            type="search"
             value={search}
             onChange={e => { setSearch(e.target.value); }}
             autoFocus
           />
         </div>
-        <div className="filter-group shrink-0">
+        <div className="flex gap-1.5 flex-wrap shrink-0">
           {categories.map(cat => (
             <button
               key={cat}
               onClick={() => { setCategory(cat); }}
-              className={`btn btn-sm ${category === cat ? 'btn-primary' : 'btn-outline'} text-[0.75rem]`}
+              className={`btn btn-sm text-[0.75rem] ${category === cat ? 'bg-[var(--accent-gold)] text-[var(--text-inverse)]' : 'bg-[var(--bg-panel-hover)] text-[var(--text-secondary)]'}`}
             >
               {cat}
             </button>
@@ -60,7 +61,7 @@ export const ProductGrid = memo(({
       </div>
 
       {/* Products */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 overflow-y-auto">
         {filtered.length === 0 ? (
           <div className="empty-state">
             <div className="empty-state-icon">
@@ -69,15 +70,12 @@ export const ProductGrid = memo(({
             <p>No products found for "<strong>{search}</strong>"</p>
           </div>
         ) : (
-          <div className="pos-product-grid">
+          <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 p-4">
             {filtered.map(product => (
-              <div
+              <button
                 key={product.id}
-                className="pos-product-card"
+                className="panel p-4 text-left hover:bg-[var(--bg-panel-hover)] transition-colors cursor-pointer w-full focus-visible:outline-[3px] focus-visible:outline-[var(--focus-ring)]"
                 onClick={() => { onSelectProduct(product); }}
-                role="button"
-                tabIndex={0}
-                onKeyDown={e => { if (e.key === 'Enter') onSelectProduct(product); }}
               >
                 <div className="mb-2 flex justify-center">
                   <ProductImage
@@ -87,31 +85,30 @@ export const ProductGrid = memo(({
                     size="sm"
                   />
                 </div>
-                <div className="text-[0.8rem] font-bold text-text-primary mb-0.5 leading-tight">
-                  {product.name}
-                </div>
-                <div className="text-[0.7rem] text-text-muted mb-1.5">{product.sku}</div>
+                <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wide mb-1">{product.category}</p>
+                <p className="text-sm font-semibold text-[var(--text-primary)] mb-2 leading-snug">{product.name}</p>
+                <div className="text-[0.7rem] text-[var(--text-muted)] mb-1.5">{product.sku}</div>
                 {product.type === 'rental' ? (
                   <div>
-                    <div className="text-[0.85rem] font-extrabold text-text-primary">
+                    <p className="text-lg font-black tracking-tight text-[var(--accent-gold-text)]">
                       {fmt(product.rentalRate ?? 0)}<span className="font-normal text-[0.7rem]">/day</span>
-                    </div>
+                    </p>
                     <div className="badge badge-gold mt-1">Rental</div>
                   </div>
                 ) : (
-                  <div className="text-[0.9rem] font-extrabold text-text-primary">{fmt(product.price)}</div>
+                  <p className="text-lg font-black tracking-tight text-[var(--accent-gold-text)]">{fmt(product.price)}</p>
                 )}
                 <div
-                  className="text-[0.72rem] mt-1.5 font-semibold flex items-center justify-center gap-1"
+                  className="text-[0.72rem] mt-1.5 font-semibold flex items-center gap-1"
                   style={{ color: product.stock === 0 ? 'var(--status-error)' : product.stock < 5 ? 'var(--status-warning)' : 'var(--status-success)' }}
                 >
                   <div
-                    className="w-1.5 h-1.5 rounded-full"
+                    className="w-1.5 h-1.5 rounded-full shrink-0"
                     style={{ backgroundColor: product.stock === 0 ? 'var(--status-error)' : product.stock < 5 ? 'var(--status-warning)' : 'var(--status-success)' }}
                   />
                   {product.category === 'Services' ? 'Service' : `${product.stock} in stock`}
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         )}

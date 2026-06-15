@@ -38,7 +38,7 @@ export const PinForm: React.FC<PinFormProps> = ({ loading, onLogin, onSuccess, o
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} style={{
             width: 14, height: 14, borderRadius: '50%',
-            background: i < pin.length ? 'var(--tux-navy)' : 'var(--surface-border)',
+            background: i < pin.length ? 'var(--accent-gold)' : 'var(--border-subtle)',
             transition: 'background .15s',
             transform: i < pin.length ? 'scale(1.2)' : 'scale(1)',
           }} />
@@ -62,7 +62,7 @@ export const PinForm: React.FC<PinFormProps> = ({ loading, onLogin, onSuccess, o
               height: 60,
               borderRadius: 'var(--radius-md)',
               border: '1.5px solid var(--surface-border)',
-              background: key === '⌫' ? '#FEF2F2' : 'var(--surface-card)',
+              background: key === '⌫' ? 'var(--status-error-subtle)' : 'var(--bg-panel)',
               color: key === '⌫' ? 'var(--status-error)' : 'var(--text-primary)',
               fontSize: key === '⌫' ? '1.1rem' : '1.3rem',
               fontWeight: 700,

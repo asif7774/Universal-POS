@@ -71,7 +71,7 @@ export const NewRentalForm = ({ customers, onSubmit, isPending, onCancel }: NewR
   };
 
   return (
-    <div className="card" style={{ maxWidth: 600, margin: '0 auto' }}>
+    <div className="panel" style={{ maxWidth: 600, margin: '0 auto' }}>
       <h2 style={{ marginBottom: 20, fontFamily: "'Playfair Display', serif" }}>New Rental Booking</h2>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
@@ -123,7 +123,7 @@ export const NewRentalForm = ({ customers, onSubmit, isPending, onCancel }: NewR
                 <div key={i} style={{
                   display: 'flex', alignItems: 'center', gap: 8, padding: '7px 10px',
                   borderRadius: 'var(--radius-md)',
-                  background: 'var(--surface-hover)', border: '1px solid var(--surface-border)',
+                  background: 'var(--bg-panel-hover)', border: '1px solid var(--border-subtle)',
                 }}>
                   <SvgIcon name="tuxedo" width="14" height="14" style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
                   <span style={{ flex: 1, fontSize: '.875rem', color: 'var(--text-primary)' }}>{item.productName}</span>
@@ -154,7 +154,7 @@ export const NewRentalForm = ({ customers, onSubmit, isPending, onCancel }: NewR
         </div>
 
         <div style={{ display: 'flex', gap: 12, marginTop: 4, justifyContent: 'flex-end' }}>
-          <button type="button" className="btn btn-ghost" onClick={onCancel}>Cancel</button>
+          <button type="button" className="btn btn-outline" onClick={onCancel}>Cancel</button>
           <button type="submit" className="btn btn-gold" disabled={isPending || !canSubmit}>
             {isPending ? 'Booking...' : 'Book Rental'}
           </button>

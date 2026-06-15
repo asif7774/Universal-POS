@@ -50,7 +50,7 @@ export const NewTailoringJobModal: React.FC<{ onClose: () => void }> = ({ onClos
       onClose={onClose}
       title={
         <>
-          <SvgIcon name="scissors" width="20" height="20" style={{ color: 'var(--tux-gold)' }} />
+          <SvgIcon name="scissors" width="20" height="20" style={{ color: 'var(--accent-gold)' }} />
           New Tailoring Job
         </>
       }

@@ -96,7 +96,7 @@ export const InventoryDetailModal: React.FC<InventoryDetailModalProps> = ({ sele
         <>
           <span style={{ fontSize: '.85rem', color: 'var(--status-error)', fontWeight: 600 }}>Delete this product?</span>
           <button className="btn btn-outline" onClick={() => { setShowDeleteConfirm(false); }}>Cancel</button>
-          <button className="btn" style={{ background: 'var(--status-error)', color: 'white' }}
+          <button className="btn btn-danger"
             onClick={handleDelete} disabled={deleteItem.isPending}>
             {deleteItem.isPending ? 'Deleting...' : 'Yes, Delete'}
           </button>
@@ -117,7 +117,7 @@ export const InventoryDetailModal: React.FC<InventoryDetailModalProps> = ({ sele
       return (
         <>
           <button className="btn btn-outline" onClick={() => { setMode('view'); }}>Cancel</button>
-          <button className="btn btn-primary" onClick={saveStock} disabled={updateStock.isPending}>
+          <button className="btn btn-gold" onClick={saveStock} disabled={updateStock.isPending}>
             {updateStock.isPending ? 'Saving...' : 'Apply Stock Changes'}
           </button>
         </>
@@ -128,10 +128,10 @@ export const InventoryDetailModal: React.FC<InventoryDetailModalProps> = ({ sele
         <button className="btn btn-outline" onClick={startEditing} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
           <SvgIcon name="tailoring" width="14" height="14" /> Edit
         </button>
-        <button className="btn btn-primary" onClick={startStockAdjust} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+        <button className="btn btn-gold" onClick={startStockAdjust} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
           <SvgIcon name="inventory" width="14" height="14" /> Adjust Stock
         </button>
-        <button className="btn btn-ghost btn-sm text-[var(--status-error)]" onClick={() => { setShowDeleteConfirm(true); }}>Delete</button>
+        <button className="btn btn-danger btn-sm" onClick={() => { setShowDeleteConfirm(true); }}>Delete</button>
       </>
     );
   };
@@ -195,7 +195,7 @@ export const InventoryDetailModal: React.FC<InventoryDetailModalProps> = ({ sele
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 10 }}>
             {Object.entries(selected.sizes).map(([size, data]) => (
-              <div key={size} style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px', textAlign: 'center' }}>
+              <div key={size} style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px', textAlign: 'center' }}>
                 <div style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: 6 }}>{size}</div>
                 <div style={{ fontSize: '.78rem', marginBottom: 6 }}>
                   Current: <strong>{data.available}</strong> / {data.total}
@@ -223,7 +223,7 @@ export const InventoryDetailModal: React.FC<InventoryDetailModalProps> = ({ sele
               { label: 'Location', value: selected.location },
               { label: 'Low Stock Alert', value: `≤ ${selected.lowStockThreshold} units` },
             ].map(i => (
-              <div key={i.label} style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', padding: '8px 10px' }}>
+              <div key={i.label} style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '8px 10px' }}>
                 <div style={{ fontSize: '.7rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 3 }}>{i.label}</div>
                 <div style={{ fontSize: '.875rem', fontWeight: 700 }}>{i.value}</div>
               </div>
@@ -242,7 +242,7 @@ export const InventoryDetailModal: React.FC<InventoryDetailModalProps> = ({ sele
           </div>
           <div style={{ display: 'flex', gap: 16, fontSize: '.75rem', color: 'var(--text-muted)', flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><div style={{ width: 8, height: 8, borderRadius: 2, background: '#10B981' }} />Available / Total</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><div style={{ width: 8, height: 8, borderRadius: 2, background: 'var(--tux-navy)' }} />Out on rental</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><div style={{ width: 8, height: 8, borderRadius: 2, background: 'var(--accent-gold)' }} />Out on rental</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><div style={{ width: 8, height: 8, borderRadius: 2, background: '#7C3AED' }} />In cleaning</div>
           </div>
         </div>

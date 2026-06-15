@@ -3,33 +3,34 @@ import { StatProps } from 'types/dashboard';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 import { Sparkline } from './Sparkline';
 
-export const StatCard: React.FC<StatProps> = ({ label, value, change, positive, sparkData, color, icon }) => (
-  <div className="card py-5 px-6 relative overflow-hidden transition-[transform,box-shadow] duration-200 cursor-default shadow-sm hover:shadow-md hover:-translate-y-0.5">
-    <div className="flex justify-between items-start mb-3">
-      <div>
-        <div className="text-[0.7rem] font-bold text-text-muted uppercase tracking-tight mb-1">
-          {label}
-        </div>
-        <div className="text-[1.75rem] font-extrabold text-text-primary tracking-tight">
-          {value}
-        </div>
-      </div>
-      <div className="w-10 h-10 rounded-md flex items-center justify-center" style={{ background: `${color}10`, color }}>
-        <SvgIcon name={icon} width="20" height="20" />
-      </div>
-    </div>
+const ICON_BG: Record<string, string> = {
+  gold:    'bg-[var(--accent-gold-subtle)] text-[var(--accent-gold-text)]',
+  emerald: 'bg-[var(--accent-emerald-subtle)] text-[var(--accent-emerald-text)]',
+  error:   'bg-[var(--status-error-subtle)] text-[var(--status-error)]',
+  primary: 'bg-[rgba(255,255,255,0.07)] text-[var(--text-secondary)]',
+};
 
-    <div className="flex items-end justify-between gap-3">
-      <div className={`text-[0.8rem] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 ${positive ? 'text-status-success bg-status-success/10' : 'text-status-error bg-status-error/10'}`}>
-        {positive ? '↑' : '↓'} {change}
-        <span className="font-normal opacity-80 text-[0.7rem]">vs last week</span>
-      </div>
-      <div className="flex-1 h-8 max-w-[100px]">
-        <Sparkline data={sparkData} color={color} />
+export const StatCard: React.FC<StatProps> = ({ label, value, change, positive, sparkData, colorVariant = 'primary', icon }) => (
+  <div className="stat-card" role="region" aria-label={`${label} KPI`}>
+    <div className="flex justify-between items-start mb-2">
+      <p className="stat-label">{label}</p>
+      <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${ICON_BG[colorVariant] ?? ICON_BG.primary}`} aria-hidden="true">
+        <SvgIcon name={icon} width="18" height="18" />
       </div>
     </div>
-    
-    {/* Subtle bottom border accent */}
-    <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(to right, ${color}, transparent)` }} />
+    <p className={`stat-value stat-value-${colorVariant}`}>{value}</p>
+    {change && (
+      <span className={`badge ${positive ? 'badge-success' : 'badge-error'}`}>
+        <span aria-hidden="true">{positive ? '↑' : '↓'}</span>
+        <span className="sr-only">{positive ? 'up' : 'down'}</span>
+        {change}
+        <span className="font-normal opacity-80 text-[0.7rem]"> vs last week</span>
+      </span>
+    )}
+    {sparkData && sparkData.length > 1 && (
+      <div className="mt-3 h-8">
+        <Sparkline data={sparkData} colorVariant={colorVariant} />
+      </div>
+    )}
   </div>
 );

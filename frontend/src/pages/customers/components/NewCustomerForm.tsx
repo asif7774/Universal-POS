@@ -8,7 +8,7 @@ interface NewCustomerFormProps {
 
 export const NewCustomerForm = ({ onSubmit, isPending, onCancel }: NewCustomerFormProps) => {
   return (
-    <div className="card" style={{ maxWidth: 600, margin: '0 auto' }}>
+    <div className="panel" style={{ maxWidth: 600, margin: '0 auto' }}>
       <h2 style={{ marginBottom: 20, fontFamily: "'Playfair Display', serif" }}>New Customer Profile</h2>
       <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
@@ -40,7 +40,7 @@ export const NewCustomerForm = ({ onSubmit, isPending, onCancel }: NewCustomerFo
           <textarea name="notes" className="input" style={{ minHeight: 80, resize: 'vertical' }} />
         </div>
         <div style={{ display: 'flex', gap: 12, marginTop: 12, justifyContent: 'flex-end' }}>
-          <button type="button" className="btn btn-ghost" onClick={onCancel}>Cancel</button>
+          <button type="button" className="btn btn-outline" onClick={onCancel}>Cancel</button>
           <button type="submit" className="btn btn-gold" disabled={isPending}>
             {isPending ? 'Saving...' : 'Save Customer'}
           </button>

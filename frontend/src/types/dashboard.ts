@@ -4,7 +4,8 @@ export interface StatProps {
   change: string;
   positive: boolean;
   sparkData: number[];
-  color: string;
+  color?: string;
+  colorVariant?: string;
   icon: string;
 }
 

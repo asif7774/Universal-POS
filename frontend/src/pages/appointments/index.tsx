@@ -51,10 +51,10 @@ const Appointments: React.FC = () => {
     subtitle: isLoading ? 'Loading...' : error ? 'Error loading appointments' : `${todayCount} today · ${confirmedToday} confirmed · ${appointments.filter(a => a.status === 'No-Show').length} no-shows this week`,
     actions: (
       <div className="flex gap-2.5">
-        <div className="flex bg-[var(--surface-hover)] rounded-lg p-[3px]">
+        <div className="flex bg-[var(--bg-panel-hover)] rounded-lg p-[3px]">
           {(['week', 'list'] as const).map(v => (
             <button key={v} onClick={() => { setView(v); }}
-              className={`flex items-center gap-1.5 px-3.5 py-1.25 rounded-md border-none cursor-pointer font-semibold text-[0.78rem] transition-all duration-150 ${view === v ? 'bg-[var(--surface-card)] text-[var(--tux-navy)] shadow-[var(--shadow-sm)]' : 'bg-transparent text-[var(--text-muted)]'}`}>
+              className={`flex items-center gap-1.5 px-3.5 py-1.25 rounded-md border-none cursor-pointer font-semibold text-[0.78rem] transition-all duration-150 ${view === v ? 'bg-[var(--bg-panel)] text-[var(--text-primary)] shadow-[var(--shadow-sm)]' : 'bg-transparent text-[var(--text-muted)]'}`}>
               <SvgIcon name={v === 'week' ? 'appointments' : 'menu'} width="14" height="14" />
               {v === 'week' ? 'Week' : 'List'}
             </button>
@@ -74,7 +74,7 @@ const Appointments: React.FC = () => {
   DAYS.forEach(d => { apptsByDay[d] = appointments.filter(a => a.date === d).sort((a, b) => a.time.localeCompare(b.time)); });
 
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in bg-[var(--bg-canvas)] p-6">
       {/* Week strip */}
       <div className="flex items-center gap-2 mb-6 pb-1 pt-4">
         <button
@@ -97,7 +97,7 @@ const Appointments: React.FC = () => {
           const isSelected = d === selectedDay;
           return (
             <button key={d} onClick={() => { setSelectedDay(d); }}
-              className={`min-w-[72px] p-2.5 px-2 rounded-[var(--radius-lg)] border-2 text-center transition-all duration-150 cursor-pointer ${isSelected ? 'border-[var(--tux-navy)] bg-[var(--tux-navy)] text-white' : info.isToday ? 'border-[var(--tux-gold)] bg-[#FDF8E7] text-[var(--text-primary)]' : 'border-[var(--surface-border)] bg-[var(--surface-card)] text-[var(--text-primary)]'} ${info.isPast && !info.isToday ? 'opacity-60 text-[var(--text-muted)]' : 'opacity-100'}`}>
+              className={`min-w-[72px] p-2.5 px-2 rounded-[var(--radius-lg)] border-2 text-center transition-all duration-150 cursor-pointer ${isSelected ? 'border-[var(--accent-gold)] bg-[var(--accent-gold)] text-[var(--accent-gold-text)]' : info.isToday ? 'border-[var(--accent-gold)] bg-[var(--bg-panel-hover)] text-[var(--text-primary)]' : 'border-[var(--border-subtle)] bg-[var(--bg-panel)] text-[var(--text-primary)]'} ${info.isPast && !info.isToday ? 'opacity-60 text-[var(--text-muted)]' : 'opacity-100'}`}>
               <div className="text-[0.7rem] font-bold uppercase tracking-tight mb-0.5">
                 {info.weekday}
               </div>
@@ -105,7 +105,7 @@ const Appointments: React.FC = () => {
               <div className="text-[0.68rem] mt-0.5">{info.month}</div>
               {count > 0 && (
                 <div className="mt-1 flex justify-center">
-                  <div className={`w-[18px] h-[18px] rounded-full text-[0.65rem] font-bold flex items-center justify-center ${isSelected ? 'bg-white/30 text-white' : info.isToday ? 'bg-[var(--tux-gold)] text-[var(--text-secondary)]' : 'bg-[var(--surface-hover)] text-[var(--text-secondary)]'}`}>{count}</div>
+                  <div className={`w-[18px] h-[18px] rounded-full text-[0.65rem] font-bold flex items-center justify-center ${isSelected ? 'bg-white/30 text-white' : info.isToday ? 'bg-[var(--accent-gold)] text-[var(--accent-gold-text)]' : 'bg-[var(--bg-panel-hover)] text-[var(--text-secondary)]'}`}>{count}</div>
                 </div>
               )}
             </button>
@@ -137,10 +137,10 @@ const Appointments: React.FC = () => {
           </div>
 
           {/* Appointment slots */}
-          <div className="relative bg-[var(--surface-card)] rounded-[var(--radius-lg)] border border-[var(--surface-border)] overflow-hidden">
+          <div className="relative bg-[var(--bg-panel)] rounded-[var(--radius-lg)] border border-[var(--border-subtle)] overflow-hidden">
             {/* Hour dividers */}
             {HOURS.map((h, i) => (
-              <div key={h} className={`absolute left-0 right-0 h-[60px] ${i > 0 ? 'border-t border-[var(--surface-border)]' : 'border-none'} ${i % 2 === 0 ? 'border-solid' : 'border-dashed'}`} style={{ top: i * 60 }} />
+              <div key={h} className={`absolute left-0 right-0 h-[60px] ${i > 0 ? 'border-t border-[var(--border-subtle)]' : 'border-none'} ${i % 2 === 0 ? 'border-solid' : 'border-dashed'}`} style={{ top: i * 60 }} />
             ))}
 
             {/* Current time indicator (today only) */}
@@ -207,7 +207,7 @@ const Appointments: React.FC = () => {
 
       {/* List view */}
       {view === 'list' && (
-        <div className="card p-0 overflow-hidden">
+        <div className="panel p-0 overflow-hidden">
           <table className="data-table">
             <thead>
               <tr><th>Date</th><th>Time</th><th>Customer</th><th>Type</th><th>Duration</th><th>Assigned</th><th>Status</th><th>Notes</th><th></th></tr>
@@ -220,9 +220,9 @@ const Appointments: React.FC = () => {
                 return (
                   <tr key={appt.id} onClick={() => { setSelected(appt); }} className={appt.status === 'Cancelled' ? 'opacity-50' : 'opacity-100'}>
                     <td className="font-semibold text-[0.85rem] whitespace-nowrap">
-                      {appt.date === today ? <span className="text-[var(--tux-gold)] font-bold">Today</span> : `${dInfo.weekday} ${dInfo.day} ${dInfo.month}`}
+                      {appt.date === today ? <span className="text-[var(--accent-gold-text)] font-bold">Today</span> : `${dInfo.weekday} ${dInfo.day} ${dInfo.month}`}
                     </td>
-                    <td className="font-bold text-[0.85rem] text-[var(--tux-navy)] whitespace-nowrap">{appt.time}</td>
+                    <td className="font-bold text-[0.85rem] text-[var(--text-primary)] whitespace-nowrap">{appt.time}</td>
                     <td>
                       <div className="font-semibold text-[0.875rem]">{appt.customer}</div>
                       <div className="text-[0.72rem] text-[var(--text-muted)]">{appt.phone}</div>

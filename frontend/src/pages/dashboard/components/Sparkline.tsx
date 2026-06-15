@@ -1,6 +1,14 @@
 import React from 'react';
 
-export const Sparkline: React.FC<{ data: number[]; color: string }> = ({ data, color }) => {
+const VARIANT_COLOR: Record<string, string> = {
+  gold:    'var(--accent-gold)',
+  emerald: 'var(--accent-emerald)',
+  error:   'var(--status-error)',
+  primary: 'var(--text-secondary)',
+};
+
+export const Sparkline: React.FC<{ data: number[]; color?: string; colorVariant?: string }> = ({ data, color, colorVariant }) => {
+  const resolvedColor = colorVariant ? (VARIANT_COLOR[colorVariant] ?? VARIANT_COLOR.primary) : (color ?? VARIANT_COLOR.primary);
   const max = Math.max(...data);
   const min = Math.min(...data);
   const range = max - min || 1;
@@ -13,10 +21,10 @@ export const Sparkline: React.FC<{ data: number[]; color: string }> = ({ data, c
 
   return (
     <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{ overflow: 'visible' }}>
-      <polyline points={pts} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <polyline points={pts} fill="none" stroke={resolvedColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <polyline
         points={`0,${h} ${pts} ${w},${h}`}
-        fill={color} fillOpacity=".12" stroke="none"
+        fill={resolvedColor} fillOpacity=".12" stroke="none"
       />
     </svg>
   );

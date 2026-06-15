@@ -64,13 +64,13 @@ const Inventory: React.FC = () => {
   if (error) {return <div className="p-10 text-center text-red-500">Error loading inventory</div>;}
 
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in bg-[var(--bg-canvas)] p-6">
       <div className="search-container">
         {/* Summary stat cards */}
         <div className="grid grid-cols-4 gap-[14px] w-full mb-2.5">
           {[
-            { label: 'Total Items', value: totalItems, color: 'var(--tux-navy)', icon: 'inventory' },
-            { label: 'Out on Rental', value: totalOut, color: 'var(--tux-navy-light)', icon: 'rental' },
+            { label: 'Total Items', value: totalItems, color: 'var(--text-primary)', icon: 'inventory' },
+            { label: 'Out on Rental', value: totalOut, color: 'var(--text-secondary)', icon: 'rental' },
             { label: 'Low Stock', value: lowStockItems, color: 'var(--status-warning)', icon: 'warning' },
             { label: 'Out of Stock', value: outOfStock, color: 'var(--status-error)', icon: 'warning' },
           ].map(s => (
@@ -99,7 +99,7 @@ const Inventory: React.FC = () => {
         <div className="filter-group">
           {CATEGORIES.map(cat => (
             <button key={cat} onClick={() => { setCategory(cat); }}
-              className={`btn btn-sm ${category === cat ? 'btn-primary' : 'btn-outline'}`}>
+              className={`btn btn-sm ${category === cat ? 'btn-gold' : 'btn-outline'}`}>
               {cat}
             </button>
           ))}
@@ -109,12 +109,12 @@ const Inventory: React.FC = () => {
       {isAdding && <AddItemModal onClose={() => { setIsAdding(false); }} />}
 
       {/* Inventory cards */}
-      <div className="flex flex-col gap-[14px]">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
         {filtered.map(item => (
-          <InventoryCard 
-            key={item.id} 
-            item={item} 
-            onClick={() => { setSelected(item); }} 
+          <InventoryCard
+            key={item.id}
+            item={item}
+            onClick={() => { setSelected(item); }}
           />
         ))}
       </div>

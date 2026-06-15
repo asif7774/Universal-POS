@@ -51,11 +51,11 @@ export const OrderCompleteModal = ({
             <div style={{ flex: 1 }}>
               {/* PAID badge + Order ID */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                <span style={{ background: '#E8F5E9', color: '#2E7D32', fontSize: '.7rem', fontWeight: 800, padding: '3px 10px', borderRadius: 999, letterSpacing: '.04em' }}>
+                <span className="badge badge-success" style={{ fontSize: '.7rem', fontWeight: 800, letterSpacing: '.04em' }}>
                   PAID
                 </span>
                 <span style={{ fontSize: '.85rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
-                  Order ID: <strong style={{ color: 'var(--tux-navy)' }}>{orderId}</strong>
+                  Order ID: <strong style={{ color: 'var(--text-primary)' }}>{orderId}</strong>
                 </span>
               </div>
 
@@ -65,14 +65,14 @@ export const OrderCompleteModal = ({
                   {customerName}
                 </span>
                 {customer && (
-                  <span style={{ background: 'var(--tux-navy)', color: 'white', fontSize: '.65rem', fontWeight: 700, padding: '2px 8px', borderRadius: 4, letterSpacing: '.04em' }}>
+                  <span style={{ background: 'var(--sidebar-bg)', color: 'var(--text-inverse)', fontSize: '.65rem', fontWeight: 700, padding: '2px 8px', borderRadius: 4, letterSpacing: '.04em' }}>
                     CUSTOMER
                   </span>
                 )}
               </div>
 
               {/* Total */}
-              <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>
+              <div className="text-2xl font-black text-[var(--accent-gold-text)]" style={{ marginBottom: 6 }}>
                 {fmt(total)} <span style={{ fontSize: '.75rem', fontWeight: 400, color: 'var(--text-muted)' }}>(Incl. Tax)</span>
               </div>
 
@@ -96,7 +96,7 @@ export const OrderCompleteModal = ({
           </div>
 
           {/* Divider */}
-          <div style={{ borderTop: '1px solid var(--surface-border)', margin: '0 0 16px' }} />
+          <div style={{ borderTop: '1px solid var(--border-subtle)', margin: '0 0 16px' }} />
 
           {/* Items list */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20, flex: 1 }}>
@@ -106,10 +106,10 @@ export const OrderCompleteModal = ({
                   <span style={{ fontWeight: 600 }}>{item.product.name}</span>
                   <span style={{ color: 'var(--text-muted)', marginLeft: 6 }}>× {item.qty}</span>
                   {item.isRental && item.days && (
-                    <span style={{ color: 'var(--tux-gold)', fontSize: '.75rem', marginLeft: 6 }}>{item.days}d rental</span>
+                    <span style={{ color: 'var(--accent-gold-text)', fontSize: '.75rem', marginLeft: 6 }}>{item.days}d rental</span>
                   )}
                 </div>
-                <span style={{ fontWeight: 700, color: 'var(--tux-navy)' }}>{fmt(item.lineTotal)}</span>
+                <span style={{ fontWeight: 700, color: 'var(--accent-gold-text)' }}>{fmt(item.lineTotal)}</span>
               </div>
             ))}
           </div>
@@ -117,12 +117,8 @@ export const OrderCompleteModal = ({
           {/* Print receipt button — styled like "Add Another Member" */}
           <button
             onClick={onPrintReceipt}
-            style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-              background: '#FFF3E0', color: '#E65100', border: '1px solid #FFAB40',
-              borderRadius: 'var(--radius-md)', padding: '10px 16px',
-              fontSize: '.82rem', fontWeight: 700, cursor: 'pointer', width: '100%', marginBottom: 12,
-            }}
+            className="btn btn-outline w-full"
+            style={{ marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
           >
             <SvgIcon name="printer" width="16" height="16" />
             Print Receipt
@@ -149,8 +145,8 @@ export const OrderCompleteModal = ({
 
         {/* ── Right / Status card ── */}
         <div style={{
-          background: '#FFF8F5',
-          borderLeft: '1px solid var(--surface-border)',
+          background: 'var(--bg-panel-hover)',
+          borderLeft: '1px solid var(--border-subtle)',
           borderRadius: '0 var(--radius-lg) var(--radius-lg) 0',
           padding: '24px 20px',
           display: 'flex',
@@ -160,8 +156,8 @@ export const OrderCompleteModal = ({
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: '.65rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '.08em' }}>ORDER STATUS</span>
-            <div style={{ width: 24, height: 24, borderRadius: '50%', background: '#4CAF50', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <SvgIcon name="check-circle" width="14" height="14" style={{ color: 'white' }} />
+            <div className="w-6 h-6 rounded-full bg-[var(--status-success-subtle)] flex items-center justify-center">
+              <SvgIcon name="check-circle" width="14" height="14" style={{ color: 'var(--status-success)' }} />
             </div>
           </div>
 
@@ -204,13 +200,7 @@ export const OrderCompleteModal = ({
           </button>
 
           {/* Cancel / refund link */}
-          <button
-            style={{
-              background: 'none', border: '1px solid #D32F2F', borderRadius: 'var(--radius-md)',
-              color: '#D32F2F', fontWeight: 700, fontSize: '.75rem', padding: '8px',
-              cursor: 'pointer', letterSpacing: '.04em', width: '100%',
-            }}
-          >
+          <button className="btn btn-danger w-full" style={{ fontSize: '.75rem', letterSpacing: '.04em' }}>
             CANCEL ORDER &amp; REFUND
           </button>
         </div>

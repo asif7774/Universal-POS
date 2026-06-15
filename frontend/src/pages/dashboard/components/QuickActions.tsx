@@ -3,20 +3,26 @@ import { Link } from 'react-router-dom';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 export const QuickActions: React.FC = () => (
-  <div className="card">
-    <div className="card-title mb-3">Quick Actions</div>
-    <div className="grid grid-cols-2 gap-2">
+  <div className="panel">
+    <div className="panel-header">
+      <h2 className="panel-title">Quick Actions</h2>
+    </div>
+    <div className="p-4 grid grid-cols-2 gap-3">
       {[
-        { label: 'New Rental', icon: 'rental', path: '/rentals', color: 'var(--tux-navy)' },
-        { label: 'New Customer', icon: 'user', path: '/customers', color: 'var(--tux-navy)' },
-        { label: 'Take Measurement', icon: 'measurements', path: '/measurements', color: 'var(--tux-navy)' },
-        { label: 'New Appointment', icon: 'appointments', path: '/appointments', color: 'var(--tux-navy)' },
+        { label: 'New Rental',        icon: 'rental',       path: '/rentals' },
+        { label: 'New Customer',      icon: 'user',         path: '/customers' },
+        { label: 'Take Measurement',  icon: 'measurements', path: '/measurements' },
+        { label: 'New Appointment',   icon: 'appointments', path: '/appointments' },
       ].map(a => (
-        <Link key={a.label} to={a.path} className="flex flex-col items-center gap-1.5 py-3 px-2 rounded-[var(--radius-md)] border-[1.5px] border-[var(--surface-border)] bg-[var(--surface-hover)] cursor-pointer no-underline text-[var(--text-primary)] transition-all duration-150 text-[0.8rem] font-semibold hover:border-[var(--tux-navy)] hover:bg-[var(--surface-card)]">
-          <div className="text-[var(--tux-navy)] opacity-80">
-            <SvgIcon name={a.icon} width="22" height="22" />
+        <Link
+          key={a.label}
+          to={a.path}
+          className="flex flex-col items-center gap-2 p-3 rounded-[var(--radius-lg)] bg-[var(--bg-panel-hover)] hover:bg-[var(--bg-input)] transition-colors min-h-[44px] border border-[var(--border-subtle)] no-underline"
+        >
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[var(--accent-gold-subtle)] text-[var(--accent-gold-text)]" aria-hidden="true">
+            <SvgIcon name={a.icon} width="16" height="16" />
           </div>
-          {a.label}
+          <span className="text-xs font-semibold text-[var(--text-secondary)]">{a.label}</span>
         </Link>
       ))}
     </div>
