@@ -69,16 +69,16 @@ export const EmailForm: React.FC<EmailFormProps> = ({ loading, onLogin, onSucces
         </div>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <a href="#" style={{ fontSize: '.8rem', color: 'var(--tux-navy)', fontWeight: 500 }}>
+      <div className="flex justify-end">
+        <a href="#" className="text-xs text-[var(--accent-gold-text)] font-medium hover:underline">
           Forgot password?
         </a>
       </div>
 
       <button
         type="submit" disabled={loading}
-        className="btn btn-primary btn-lg"
-        style={{ width: '100%', marginTop: 4 }}
+        className="btn btn-gold w-full"
+        style={{ marginTop: 4 }}
       >
         {loading ? (
           <div style={{

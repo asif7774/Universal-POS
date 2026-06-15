@@ -26,56 +26,39 @@ const Login: React.FC = () => {
   const onError = (msg: string) => { setError(msg); };
 
   return (
-    <main className="login-page" id="main-content">
+    <div className="min-h-screen flex bg-[var(--bg-canvas)]" id="main-content">
       <BrandPanel />
 
-      <section className="login-form-panel">
-        <div style={{ width: '100%', maxWidth: 400 }}>
+      <main className="flex-1 flex items-center justify-center p-8">
+        <div className="w-full max-w-sm">
           {/* Mobile logo */}
-          <div style={{ display: 'none', marginBottom: 32, textAlign: 'center' }} className="mobile-logo">
-            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2rem', color: 'var(--tux-navy)' }}>
-              Tuxedo<span style={{ color: 'var(--tux-gold)' }}>POS</span>
+          <div className="lg:hidden mb-8 text-center">
+            <h1 className="text-3xl font-black tracking-tight text-[var(--text-primary)]">
+              Tuxedo<span className="text-[var(--accent-gold)]">POS</span>
             </h1>
           </div>
 
-          <header style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: '1.6rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>
+          <header className="mb-8">
+            <h2 className="text-2xl font-extrabold text-[var(--text-primary)] tracking-tight mb-1.5">
               Welcome back
             </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '.9rem' }}>
+            <p className="text-[var(--text-secondary)] text-sm">
               Sign in to your TuxedoPOS account
             </p>
           </header>
 
           {/* Tab switcher */}
-          <div style={{
-            display: 'flex',
-            background: 'var(--surface-hover)',
-            borderRadius: 'var(--radius-md)',
-            padding: 4,
-            marginBottom: 28,
-          }}>
+          <div className="flex bg-[var(--bg-panel)] rounded-[var(--radius-md)] p-1 mb-7 border border-[var(--border-subtle)]">
             {(['email', 'pin'] as const).map(t => (
               <button
                 key={t}
                 onClick={() => { setTab(t); setError(''); }}
-                style={{
-                  flex: 1,
-                  padding: '8px 0',
-                  borderRadius: 7,
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontWeight: 600,
-                  fontSize: '.875rem',
-                  transition: 'all .15s',
-                  background: tab === t ? 'var(--surface-card)' : 'transparent',
-                  color: tab === t ? 'var(--tux-navy)' : 'var(--text-muted)',
-                  boxShadow: tab === t ? 'var(--shadow-sm)' : 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 8,
-                }}
+                className={[
+                  'flex flex-1 items-center justify-center gap-2 py-2 rounded-[7px] border-none cursor-pointer font-semibold text-sm transition-all duration-150',
+                  tab === t
+                    ? 'bg-[var(--bg-canvas)] text-[var(--text-primary)] shadow-sm'
+                    : 'bg-transparent text-[var(--text-muted)]',
+                ].join(' ')}
               >
                 <SvgIcon name={t === 'email' ? 'mail' : 'lock'} width="16" height="16" />
                 {t === 'email' ? 'Email Login' : 'PIN Login'}
@@ -85,12 +68,7 @@ const Login: React.FC = () => {
 
           {/* Error */}
           {error && (
-            <div role="alert" style={{
-              background: '#FEF2F2', border: '1px solid #FECACA',
-              borderRadius: 'var(--radius-md)', padding: '10px 14px',
-              color: 'var(--status-error)', fontSize: '.85rem',
-              marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8,
-            }}>
+            <div role="alert" className="flex items-center gap-2 bg-[var(--status-error-subtle)] border border-[var(--status-error)] rounded-[var(--radius-md)] px-3.5 py-2.5 text-[var(--status-error)] text-sm mb-5">
               <SvgIcon name="warning" width="16" height="16" /> {error}
             </div>
           )}
@@ -102,29 +80,23 @@ const Login: React.FC = () => {
           )}
 
           {/* Demo credentials hint */}
-          <div style={{
-            marginTop: 32,
-            padding: '12px 16px',
-            background: 'var(--surface-hover)',
-            borderRadius: 'var(--radius-md)',
-            border: '1px dashed var(--surface-border)',
-          }}>
-            <p style={{ fontSize: '.75rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 4 }}>
-              DEMO CREDENTIALS
+          <div className="mt-8 px-4 py-3 bg-[var(--bg-panel)] rounded-[var(--radius-md)] border border-dashed border-[var(--border-subtle)]">
+            <p className="text-xs text-[var(--text-muted)] font-semibold mb-1 uppercase tracking-wide">
+              Demo Credentials
             </p>
-            <p style={{ fontSize: '.8rem', color: 'var(--text-secondary)' }}>
-              Email: <code style={{ color: 'var(--tux-navy)', fontWeight: 600 }}>james@tuxedopos.com</code>
+            <p className="text-sm text-[var(--text-secondary)]">
+              Email: <code className="text-[var(--accent-gold-text)] font-semibold">james@tuxedopos.com</code>
               <br />
-              Password: <code style={{ color: 'var(--tux-navy)', fontWeight: 600 }}>pass</code>
+              Password: <code className="text-[var(--accent-gold-text)] font-semibold">pass</code>
             </p>
           </div>
         </div>
-      </section>
+      </main>
 
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
-    </main>
+    </div>
   );
 };
 
