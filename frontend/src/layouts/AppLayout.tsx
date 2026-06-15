@@ -69,6 +69,14 @@ const AppLayout: React.FC = () => {
     return () => mq.removeEventListener('change', handler);
   }, []);
 
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') handleClose();
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [handleClose]);
+
   // Permanent = wide screen AND fine pointer (mouse/trackpad). iPads always drawer.
   const isSidebarPermanent = isDesktop && isPointerFine;
   const sidebarWidth = isCollapsed ? COLLAPSED_W : SIDEBAR_W;

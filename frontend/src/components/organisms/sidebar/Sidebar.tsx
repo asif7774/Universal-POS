@@ -119,6 +119,9 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside
+      id="sidebar-nav"
+      role="navigation"
+      aria-label="Main navigation"
       onMouseEnter={isPointerFine ? () => setIsHovered(true) : undefined}
       onMouseLeave={isPointerFine ? () => setIsHovered(false) : undefined}
       className={[
@@ -131,7 +134,6 @@ const Sidebar: React.FC<SidebarProps> = ({
         // Shadow only when collapsed sidebar is temporarily expanded
         isSidebarPermanent && isCollapsed && isHovered ? 'shadow-[4px_0_24px_rgba(0,0,0,0.2)]' : '',
       ].join(' ')}
-      aria-label="Main navigation"
     >
       {/* Logo */}
       <div className={`sidebar-logo ${isEffectivelyExpanded ? 'justify-start' : 'justify-center'}`}>
@@ -143,11 +145,10 @@ const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         <span className={[
-          'sidebar-logo-text whitespace-nowrap overflow-hidden',
-          'transition-all duration-200 ease-in-out',
+          'whitespace-nowrap overflow-hidden font-extrabold text-[14px] tracking-tight text-white transition-all duration-200 ease-in-out',
           isEffectivelyExpanded ? 'max-w-[150px] opacity-100' : 'max-w-0 opacity-0',
         ].join(' ')}>
-          Tuxedo<span>POS</span>
+          Tuxedo<span className="text-[var(--accent-gold)]">POS</span>
         </span>
 
         {/* Pin/unpin toggle — desktop pointer device only */}
@@ -174,7 +175,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           return (
             <div key={section.section}>
               {isEffectivelyExpanded && (
-                <div className="sidebar-section-label">{section.section}</div>
+                <div className="sidebar-section-label" aria-hidden="true">{section.section}</div>
               )}
               {visibleItems.map(item => {
                 const isEmoji = item.iconName && (item.iconName.length <= 2 || /\p{Emoji}/u.test(item.iconName));
@@ -183,6 +184,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     key={item.path}
                     to={item.path}
                     onClick={!isSidebarPermanent ? onCloseMobileDrawer : undefined}
+                    aria-label={!isEffectivelyExpanded ? item.label : undefined}
                     className={({ isActive }) =>
                       `nav-item transition-all duration-150 whitespace-nowrap ${isActive ? 'active' : ''} ${isEffectivelyExpanded ? 'justify-start' : 'justify-center'}`
                     }
