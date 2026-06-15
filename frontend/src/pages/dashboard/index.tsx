@@ -4,7 +4,7 @@ import { useAuth } from 'contexts/AuthContext';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../lib/apiClient';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
-import { useDashboardAlerts, useRecentOrders, useUpcomingRentals, useAppointmentCount, useSettings, useRevenueReport } from '../../lib/queries';
+import { useDashboardAlerts, useRecentOrders, useUpcomingRentals, useAppointmentCount, useSettings, useRevenueReport, useServerTime } from '../../lib/queries';
 import { StatProps } from 'types/dashboard';
 import { StatCard } from './components/StatCard';
 import { RecentOrders } from './components/RecentOrders';
@@ -19,11 +19,13 @@ const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const hour = new Date().getHours();
+  const { data: serverTime } = useServerTime();
+  const now = serverTime ? new Date(serverTime.timestamp) : new Date();
+  const hour = now.getHours();
   let greeting = 'Good evening';
   if (hour < 12) greeting = 'Good morning';
   else if (hour < 17) greeting = 'Good afternoon';
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = serverTime?.date ?? new Date().toISOString().split('T')[0];
 
   const { data: orderSummary, isLoading: isLoadingSummary } = useQuery({
     queryKey: ['orders-summary', todayStr],
@@ -37,7 +39,7 @@ const Dashboard: React.FC = () => {
 
   // Sprint 2 — Live data hooks
   const { data: alerts = [] } = useDashboardAlerts();
-  const { data: recentOrders = [] } = useRecentOrders(5);
+  const { data: recentOrders = [] } = useRecentOrders(5, todayStr);
   const { data: upcomingRentals = [] } = useUpcomingRentals(3);
   const { data: appointmentData, isLoading: isLoadingAppts } = useAppointmentCount(todayStr);
   const { data: settings } = useSettings();
@@ -48,16 +50,24 @@ const Dashboard: React.FC = () => {
   // Set the page header
   usePageHeader({
     title: `${greeting}, ${user?.name?.split(' ')[0] ?? 'User'}`,
-    subtitle: `${settings?.name || 'TuxedoPOS'} · ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}`,
+    subtitle: `${settings?.name || 'TuxedoPOS'} · ${now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}`,
     actions: (
-      <div className="flex gap-3">
-        <button className="btn btn-outline bg-[var(--surface-card)] border-[1.5px]" onClick={() => { navigate('/pos'); }}>
+      <div className="flex gap-3 items-center">
+        <button
+          className="btn btn-outline bg-[var(--surface-card)] border-[1.5px] lg:hidden"
+          onClick={() => { window.dispatchEvent(new CustomEvent('mobile-menu-open')); }}
+          aria-label="Open navigation"
+        >
+          <SvgIcon name="menu" width="20" height="20" />
+        </button>
+        <button className="btn btn-outline bg-[var(--surface-card)] border-[1.5px] hidden sm:flex" onClick={() => { navigate('/pos'); }}>
           <SvgIcon name="search" width="16" height="16" />
           Quick Search
         </button>
         <Link to="/pos" className="btn btn-gold py-3 px-6 shadow-gold">
           <SvgIcon name="pos" width="20" height="20" />
-          Open POS Terminal
+          <span className="hidden sm:inline">Open POS Terminal</span>
+          <span className="sm:hidden">POS</span>
         </Link>
       </div>
     ),
@@ -66,10 +76,10 @@ const Dashboard: React.FC = () => {
   if (isLoadingDashboard) {
     return (
       <div className="animate-fade-in">
-        <div className="mt-4 grid grid-cols-4 gap-4 mb-8">
+        <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
            {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} height={120} className="rounded-lg" />)}
         </div>
-        <div className="grid grid-cols-[1fr_340px] gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5">
            <Skeleton height={400} className="rounded-xl" />
            <div className="flex flex-col gap-5">
               <Skeleton height={200} className="rounded-xl" />
@@ -82,7 +92,7 @@ const Dashboard: React.FC = () => {
 
   const STATS: StatProps[] = [
     { label: "Today's Revenue", value: `$${orderSummary?.revenue?.toFixed(2) ?? '0.00'}`, change: '', positive: true, icon: 'banknote', color: 'var(--tux-navy)', sparkData: revenueData.length ? revenueData.map(d => parseFloat(String(d.revenue)) || 0) : [0] },
-    { label: 'Active Rentals', value: `${rentalStats?.out ?? 0}`, change: '', positive: true, icon: 'rental', color: 'var(--tux-gold)', sparkData: Array.from({ length: 7 }, () => rentalStats?.out ?? 0) },
+    { label: 'Active Rentals', value: `${rentalStats?.out ?? 0}`, change: '', positive: true, icon: 'tuxedo', color: 'var(--tux-gold)', sparkData: Array.from({ length: 7 }, () => rentalStats?.out ?? 0) },
     { label: 'Appointments Today', value: `${appointmentData?.count ?? 0}`, change: '', positive: true, icon: 'appointments', color: 'var(--status-success)', sparkData: Array.from({ length: 7 }, () => appointmentData?.count ?? 0) },
     { label: 'Overdue Returns', value: `${rentalStats?.overdue ?? 0}`, change: '', positive: false, icon: 'warning', color: 'var(--status-error)', sparkData: Array.from({ length: 7 }, () => rentalStats?.overdue ?? 0) },
   ];
@@ -146,7 +156,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Two-column grid */}
-      <div className="grid grid-cols-[1fr_340px] gap-5 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5 items-start">
         <RecentOrders orders={recentOrders.map((o: any) => ({
           id: o.id,
           orderNo: o.orderNo,

@@ -7,6 +7,15 @@ import { eq, and, lt } from 'drizzle-orm';
 @Controller('dashboard')
 @UseGuards(JwtAuthGuard)
 export class DashboardController {
+  @Get('time')
+  getServerTime() {
+    const now = new Date();
+    return {
+      timestamp: now.toISOString(),
+      date: now.toISOString().split('T')[0],
+    };
+  }
+
   @Get('alerts')
   async getAlerts(@Request() req: any) {
     const today = new Date().toISOString().split('T')[0];

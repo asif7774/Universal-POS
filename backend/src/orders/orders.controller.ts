@@ -18,8 +18,12 @@ export class OrdersController {
   }
 
   @Get('recent')
-  findRecent(@Request() req: any, @Query('limit') limit = '5') {
-    return this.svc.findRecent(req.user.tenantId, +limit);
+  findRecent(
+    @Request() req: any,
+    @Query('limit') limit = '5',
+    @Query('date') date?: string,
+  ) {
+    return this.svc.findRecent(req.user.tenantId, +limit, date);
   }
 
   @Get(':id')

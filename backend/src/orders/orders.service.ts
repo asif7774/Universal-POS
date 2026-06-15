@@ -115,7 +115,7 @@ export class OrdersService {
   async getDailySummary(tenantId: string, date: string) {
     // Basic memory filter for MVP to avoid complex date functions in SQLite/PG
     const all = await db.select().from(orders).where(and(eq(orders.tenantId, tenantId), eq(orders.status, 'completed')));
-    const dayOrders = all.filter(o => o.createdAt.toISOString().split('T')[0] === date);
+    const dayOrders = all.filter(o => new Date(o.createdAt).toISOString().split('T')[0] === date);
     
     const revenue = dayOrders.reduce((s, o) => s + parseFloat(o.total as unknown as string), 0);
     const count = dayOrders.length;
@@ -124,7 +124,7 @@ export class OrdersService {
     return { date, revenue, count, rentalCount, orders: dayOrders };
   }
 
-  async findRecent(tenantId: string, limit = 5): Promise<Order[]> {
+  async findRecent(tenantId: string, limit = 5, date?: string): Promise<Order[]> {
     const res = await db.select({
       order: orders,
       customer: {
@@ -136,11 +136,19 @@ export class OrdersService {
     .leftJoin(customers, eq(orders.customerId, customers.id))
     .where(eq(orders.tenantId, tenantId))
     .orderBy(desc(orders.createdAt))
-    .limit(limit);
+    .limit(date ? 200 : limit);
 
-    return res.map(row => ({ 
-      ...row.order, 
-      customerName: row.customer?.firstName ? `${row.customer.firstName} ${row.customer.lastName || ''}`.trim() : 'Guest'
-    })) as any;
+    const mapped = res.map(row => ({
+      ...row.order,
+      customerName: row.customer?.firstName
+        ? `${row.customer.firstName} ${row.customer.lastName || ''}`.trim()
+        : 'Guest'
+    })) as any[];
+
+    if (!date) return mapped.slice(0, limit);
+
+    return mapped
+      .filter(o => new Date(o.createdAt).toISOString().split('T')[0] === date)
+      .slice(0, limit);
   }
 }

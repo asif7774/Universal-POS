@@ -67,7 +67,7 @@ export const PredictiveAnalytics: React.FC = () => {
                 p.risk === 'medium' ? 'bg-status-warning/10 text-status-warning' :
                 'bg-status-success/10 text-status-success'
               }`}>
-                {p.risk} stock
+                {p.risk === 'high' ? 'Low Stock' : p.risk === 'medium' ? 'Moderate' : 'In Stock'}
               </span>
             </div>
 
