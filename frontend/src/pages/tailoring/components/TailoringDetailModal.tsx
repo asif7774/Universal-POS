@@ -83,7 +83,7 @@ export const TailoringDetailModal: React.FC<TailoringDetailModalProps> = ({ sele
               <SvgIcon name="tailoring" width="14" height="14" /> Edit Job
             </button>
             {selected.status !== 'Delivered' && selected.status !== 'Ready' && (
-              <button className="btn btn-primary" disabled={updateStatus.isPending} onClick={() => {
+              <button className="btn btn-gold" disabled={updateStatus.isPending} onClick={() => {
                 const currentIdx = STAGES.indexOf(selected.status);
                 if (currentIdx < STAGES.length - 1) {
                   updateStatus.mutate({ id: selected.id, status: STAGES[currentIdx + 1] });
@@ -167,7 +167,7 @@ export const TailoringDetailModal: React.FC<TailoringDetailModalProps> = ({ sele
             <StatusPipeline current={selected.status} />
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
               {STAGES.filter(s => s !== 'Delivered').map(s => (
-                <span key={s} style={{ fontSize: '.6rem', color: s === selected.status ? 'var(--tux-navy)' : 'var(--text-muted)', textAlign: 'center', flex: 1, fontWeight: s === selected.status ? 800 : 400 }}>{s}</span>
+                <span key={s} style={{ fontSize: '.6rem', color: s === selected.status ? 'var(--text-primary)' : 'var(--text-muted)', textAlign: 'center', flex: 1, fontWeight: s === selected.status ? 800 : 400 }}>{s}</span>
               ))}
             </div>
           </div>
@@ -181,14 +181,14 @@ export const TailoringDetailModal: React.FC<TailoringDetailModalProps> = ({ sele
               { label: 'Due Date', value: fmtDate(selected.dueDate) },
               { label: 'Price', value: fmt(selected.price) },
             ].map(i => (
-              <div key={i.label} style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px', border: '1px solid var(--surface-border)' }}>
+              <div key={i.label} style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px', border: '1px solid var(--border-subtle)' }}>
                 <div style={{ fontSize: '.7rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 4 }}>{i.label}</div>
                 <div style={{ fontSize: '.875rem', fontWeight: 700 }}>{i.value}</div>
               </div>
             ))}
           </div>
 
-          <div style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', padding: '12px', border: '1px solid var(--surface-border)' }}>
+          <div style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '12px', border: '1px solid var(--border-subtle)' }}>
             <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: 8, letterSpacing: '.05em' }}>WORK DESCRIPTION</div>
             <p style={{ fontSize: '.875rem', margin: 0, color: 'var(--text-primary)', lineHeight: 1.5 }}>{selected.description || 'No description provided.'}</p>
           </div>

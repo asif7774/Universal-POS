@@ -47,10 +47,10 @@ const Tailoring: React.FC = () => {
     actions: (
       <div className="flex gap-3 items-center">
         {/* View toggle */}
-        <div className="flex bg-[var(--surface-hover)] rounded-[10px] p-[3px]">
+        <div className="flex bg-[var(--bg-panel-hover)] rounded-[10px] p-[3px]">
           {(['kanban', 'list'] as const).map(v => (
             <button key={v} onClick={() => { setView(v); }}
-              className={`btn btn-sm px-3 py-1.5 text-[0.75rem] rounded-lg ${view === v ? 'btn-primary' : 'btn-ghost'}`}>
+              className={`btn btn-sm px-3 py-1.5 text-[0.75rem] rounded-lg ${view === v ? 'btn-gold' : 'btn-ghost'}`}>
               <SvgIcon name={v === 'kanban' ? 'chart-bar' : 'clipboard'} width="14" height="14" />
               {v === 'kanban' ? 'Kanban' : 'List'}
             </button>
@@ -62,7 +62,7 @@ const Tailoring: React.FC = () => {
   });
 
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in bg-[var(--bg-canvas)]">
       <div className="search-container">
         <div className="search-input-wrapper input-with-icon">
           <span className="input-icon">
@@ -109,7 +109,7 @@ const Tailoring: React.FC = () => {
                 <tbody>
                   {filtered.map(j => (
                     <tr key={j.id} onClick={() => { setSelected(j); }}>
-                      <td><code className="text-[0.8rem] text-[var(--tux-gold)] font-bold">{j.jobNo}</code></td>
+                      <td><code className="text-[0.8rem] text-[var(--accent-gold-text)] font-bold">{j.jobNo}</code></td>
                       <td className="font-semibold text-[0.875rem]">{j.customerName}</td>
                       <td className="text-[var(--text-secondary)] text-[0.85rem]">{j.garment}</td>
                       <td><span className={`badge ${TYPE_BADGE[j.type] || 'badge-gray'}`}>{j.type}</span></td>
