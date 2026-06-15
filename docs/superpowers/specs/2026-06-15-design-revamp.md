@@ -310,8 +310,27 @@ All other pages (POS, Rentals, Customers, etc.) will inherit token changes from 
 
 ---
 
-## 11. Out of Scope
+## 11. All Pages In Scope
 
-- Per-page redesign beyond dashboard (POS terminal, Rentals, Reports, etc.) — tokens will cascade but layout polish is a follow-up
-- Animation/transition redesign beyond existing durations
+Every page gets the full token-driven reskin. The token replacement in `index.css` cascades automatically to all pages; each page then gets targeted layout and component polish to match the Dark Luxury spec.
+
+| Page | Key changes |
+|---|---|
+| Dashboard | KPI grid, panels, sidebar, header — primary reference implementation |
+| POS Terminal | Sales grid, product cards, cart panel, numpad, payment modal |
+| Rentals | Rental list table, status badges, rental detail panel |
+| Appointments | Calendar/list view, appointment cards, booking modal |
+| Inventory | Product grid/table, stock progress bars, category filters |
+| Tailoring Jobs | Job cards, status pipeline, assignment badges |
+| Customers | Customer list table, customer detail sidebar, loyalty badge |
+| Measurements | Measurement cards, form inputs, body diagram |
+| Reports | Chart containers (bar/line), revenue table, period selector |
+| Settings | Form sections, toggle switches, save/cancel actions |
+| Login | Auth card centered, brand identity, input focus states |
+
+**Approach:** Token replacement first (Task 1) makes every page ~80% correct instantly. Per-page tasks then apply structural layout fixes and component-level polish.
+
+## 12. Out of Scope
+
 - New features or data — visual redesign only
+- Animation/motion redesign beyond existing transition durations
