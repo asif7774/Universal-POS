@@ -1,0 +1,6 @@
+interface:
+  display_name: "Universal POS"
+  short_description: "Repo-specific patterns and workflows for Universal-POS"
+  default_prompt: "Use the Universal-POS repo skill to follow existing architecture, testing, and workflow conventions."
+policy:
+  allow_implicit_invocation: true

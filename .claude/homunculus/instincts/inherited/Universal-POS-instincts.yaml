@@ -1,0 +1,406 @@
+# Instincts generated from https://github.com/asif7774/Universal-POS
+# Generated: 2026-06-15T03:24:46.478Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: Universal-POS-commit-conventional
+trigger: "when writing a commit message"
+confidence: 0.85
+domain: git
+source: repo-analysis
+source_repo: https://github.com/asif7774/Universal-POS
+---
+
+# Universal POS Commit Conventional
+
+## Action
+
+Use conventional commit format with prefixes: fix
+
+## Evidence
+
+- 7 commits analyzed
+- Detected conventional commit pattern
+- Examples: fix(theme): prevent flash by applying dark class synchronously before paint, fix(orders): handle string createdAt when filtering daily revenue summary
+
+---
+id: Universal-POS-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/asif7774/Universal-POS
+---
+
+# Universal POS Commit Length
+
+## Action
+
+Write moderate-length commit messages (~74 characters)
+
+## Evidence
+
+- Average commit message length: 74 chars
+- Based on 7 commits
+
+---
+id: Universal-POS-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/asif7774/Universal-POS
+---
+
+# Universal POS Naming Files
+
+## Action
+
+Use camelCase naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: camelCase
+
+---
+id: Universal-POS-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/asif7774/Universal-POS
+---
+
+# Universal POS Export Style
+
+## Action
+
+Prefer named exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: named
+
+---
+id: Universal-POS-arch-type-based
+trigger: "when adding new code"
+confidence: 0.8
+domain: architecture
+source: repo-analysis
+source_repo: https://github.com/asif7774/Universal-POS
+---
+
+# Universal POS Arch Type Based
+
+## Action
+
+Place code in the appropriate type folder (components/, services/, utils/, etc.)
+
+## Evidence
+
+- Type-based module organization detected
+- Folders: 
+
+---
+id: Universal-POS-test-separate
+trigger: "when writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/asif7774/Universal-POS
+---
+
+# Universal POS Test Separate
+
+## Action
+
+Place tests in the tests/ or __tests__/ directory, mirroring src structure
+
+## Evidence
+
+- Separate test directory pattern detected
+- Tests live in dedicated test folders
+
+---
+id: Universal-POS-workflow-dashboard-backend-frontend-sync-fix
+trigger: "when doing dashboard backend frontend sync fix"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/asif7774/Universal-POS
+---
+
+# Universal POS Workflow Dashboard Backend Frontend Sync Fix
+
+## Action
+
+Follow the dashboard-backend-frontend-sync-fix workflow:
+1. Update backend controller and/or service logic for dashboard or orders.
+2. Update frontend query utilities to match backend changes.
+3. Update frontend dashboard page to reflect new or fixed data.
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: backend/src/orders/orders.controller.ts, backend/src/orders/orders.service.ts, backend/src/dashboard/dashboard.controller.ts
+
+---
+id: Universal-POS-workflow-dashboard-ui-component-update
+trigger: "when doing dashboard ui component update"
+confidence: 0.65
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/asif7774/Universal-POS
+---
+
+# Universal POS Workflow Dashboard Ui Component Update
+
+## Action
+
+Follow the dashboard-ui-component-update workflow:
+1. Modify dashboard page or its child components.
+2. Adjust relevant component files (e.g., sidebar, analytics, KPI cards).
+3. Test changes in the dashboard view.
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~3x per month
+- Files: frontend/src/pages/dashboard/index.tsx, frontend/src/pages/dashboard/components/PredictiveAnalytics.tsx, frontend/src/components/organisms/sidebar/Sidebar.tsx
+
+---
+id: universal-pos-instinct-camelcase-files
+trigger: "When creating or renaming a file in the codebase"
+confidence: 0.85
+domain: code-style
+source: repo-analysis
+source_repo: asif7774/Universal-POS
+---
+
+# Universal Pos Instinct Camelcase Files
+
+## Action
+
+Use camelCase for file names
+
+## Evidence
+
+- Pattern in namingConventions.files: camelCase
+
+---
+id: universal-pos-instinct-camelcase-functions
+trigger: "When defining a function"
+confidence: 0.85
+domain: code-style
+source: repo-analysis
+source_repo: asif7774/Universal-POS
+---
+
+# Universal Pos Instinct Camelcase Functions
+
+## Action
+
+Name the function using camelCase
+
+## Evidence
+
+- Pattern in namingConventions.functions: camelCase
+
+---
+id: universal-pos-instinct-pascalcase-classes
+trigger: "When defining a class"
+confidence: 0.85
+domain: code-style
+source: repo-analysis
+source_repo: asif7774/Universal-POS
+---
+
+# Universal Pos Instinct Pascalcase Classes
+
+## Action
+
+Name the class using PascalCase
+
+## Evidence
+
+- Pattern in namingConventions.classes: PascalCase
+
+---
+id: universal-pos-instinct-screaming-constants
+trigger: "When declaring a constant"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: asif7774/Universal-POS
+---
+
+# Universal Pos Instinct Screaming Constants
+
+## Action
+
+Name the constant using SCREAMING_SNAKE_CASE
+
+## Evidence
+
+- Pattern in namingConventions.constants: SCREAMING_SNAKE_CASE
+
+---
+id: universal-pos-instinct-mixed-imports
+trigger: "When importing modules"
+confidence: 0.75
+domain: code-style
+source: repo-analysis
+source_repo: asif7774/Universal-POS
+---
+
+# Universal Pos Instinct Mixed Imports
+
+## Action
+
+Use a mixed import style (default and named imports as appropriate)
+
+## Evidence
+
+- Pattern in importStyle: mixed
+
+---
+id: universal-pos-instinct-named-exports
+trigger: "When exporting modules or functions"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: asif7774/Universal-POS
+---
+
+# Universal Pos Instinct Named Exports
+
+## Action
+
+Prefer named exports
+
+## Evidence
+
+- Pattern in exportStyle: named
+
+---
+id: universal-pos-instinct-try-catch-errors
+trigger: "When handling errors in code"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: asif7774/Universal-POS
+---
+
+# Universal Pos Instinct Try Catch Errors
+
+## Action
+
+Use try-catch blocks for error handling
+
+## Evidence
+
+- Pattern in errorHandling.style: try-catch
+
+---
+id: universal-pos-instinct-separate-tests
+trigger: "When adding or organizing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: asif7774/Universal-POS
+---
+
+# Universal Pos Instinct Separate Tests
+
+## Action
+
+Place test files in a separate directory from source code
+
+## Evidence
+
+- Pattern in architecture.folderStructure.testLocation: separate
+
+---
+id: universal-pos-instinct-conventional-commits-fix
+trigger: "When committing a bug fix"
+confidence: 0.9
+domain: git
+source: repo-analysis
+source_repo: asif7774/Universal-POS
+---
+
+# Universal Pos Instinct Conventional Commits Fix
+
+## Action
+
+Use the 'fix' prefix in the commit message following conventional commit format
+
+## Evidence
+
+- Pattern in commits.prefixes: fix
+- Seen in commit: fix(theme): prevent flash by applying dark class synchronously before paint
+
+---
+id: universal-pos-instinct-commit-length
+trigger: "When writing a commit message"
+confidence: 0.7
+domain: git
+source: repo-analysis
+source_repo: asif7774/Universal-POS
+---
+
+# Universal Pos Instinct Commit Length
+
+## Action
+
+Aim for a commit message length around 74 characters
+
+## Evidence
+
+- Pattern in commits.averageLength: 74
+
+---
+id: universal-pos-instinct-dashboard-backend-frontend-sync-fix
+trigger: "When dashboard metrics or filtering need to be fixed or updated, requiring changes in both backend and frontend"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: asif7774/Universal-POS
+---
+
+# Universal Pos Instinct Dashboard Backend Frontend Sync Fix
+
+## Action
+
+Synchronize backend controller/service logic, update frontend query utilities, and update frontend dashboard page to reflect changes
+
+## Evidence
+
+- Workflow: dashboard-backend-frontend-sync-fix
+- Files: backend/src/orders/orders.controller.ts, backend/src/orders/orders.service.ts, backend/src/dashboard/dashboard.controller.ts, frontend/src/lib/queries.ts, frontend/src/pages/dashboard/index.tsx
+
+---
+id: universal-pos-instinct-dashboard-ui-component-update
+trigger: "When fixing a UI bug or improving a dashboard component's appearance or behavior"
+confidence: 0.88
+domain: workflow
+source: repo-analysis
+source_repo: asif7774/Universal-POS
+---
+
+# Universal Pos Instinct Dashboard Ui Component Update
+
+## Action
+
+Modify dashboard page/components, adjust relevant component files, and test changes in the dashboard view
+
+## Evidence
+
+- Workflow: dashboard-ui-component-update
+- Files: frontend/src/pages/dashboard/index.tsx, frontend/src/pages/dashboard/components/PredictiveAnalytics.tsx, frontend/src/components/organisms/sidebar/Sidebar.tsx
+
