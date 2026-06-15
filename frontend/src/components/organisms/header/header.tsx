@@ -19,7 +19,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ isSidebarPermanent, onOpenMobil
           <button
             onClick={onOpenMobileDrawer}
             aria-label="Open navigation"
-            className="btn btn-ghost btn-sm p-2 shrink-0"
+            className="btn btn-ghost p-2 shrink-0"
           >
             <SvgIcon name="menu" width="22" height="22" aria-hidden="true" />
           </button>
