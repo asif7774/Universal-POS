@@ -115,7 +115,7 @@ export class OrdersService {
   async getDailySummary(tenantId: string, date: string) {
     // Basic memory filter for MVP to avoid complex date functions in SQLite/PG
     const all = await db.select().from(orders).where(and(eq(orders.tenantId, tenantId), eq(orders.status, 'completed')));
-    const dayOrders = all.filter(o => o.createdAt.toISOString().split('T')[0] === date);
+    const dayOrders = all.filter(o => new Date(o.createdAt).toISOString().split('T')[0] === date);
     
     const revenue = dayOrders.reduce((s, o) => s + parseFloat(o.total as unknown as string), 0);
     const count = dayOrders.length;
