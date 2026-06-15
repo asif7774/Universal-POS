@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from 'contexts/AuthContext';
 import { usePlugins } from 'contexts/PluginContext';
@@ -68,7 +68,7 @@ const Sidebar: React.FC = () => {
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isDark) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');

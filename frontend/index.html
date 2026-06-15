@@ -55,6 +55,17 @@
     
     <!-- Theme Color -->
     <meta name="theme-color" content="#2563eb" />
+
+    <!-- Theme initialization — must run synchronously before first paint -->
+    <script>
+      (function() {
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || (!saved && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <!-- Skip Links for Accessibility -->
