@@ -52,14 +52,22 @@ const Dashboard: React.FC = () => {
     title: `${greeting}, ${user?.name?.split(' ')[0] ?? 'User'}`,
     subtitle: `${settings?.name || 'TuxedoPOS'} · ${now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}`,
     actions: (
-      <div className="flex gap-3">
-        <button className="btn btn-outline bg-[var(--surface-card)] border-[1.5px]" onClick={() => { navigate('/pos'); }}>
+      <div className="flex gap-3 items-center">
+        <button
+          className="btn btn-outline bg-[var(--surface-card)] border-[1.5px] lg:hidden"
+          onClick={() => { window.dispatchEvent(new CustomEvent('mobile-menu-open')); }}
+          aria-label="Open navigation"
+        >
+          <SvgIcon name="menu" width="20" height="20" />
+        </button>
+        <button className="btn btn-outline bg-[var(--surface-card)] border-[1.5px] hidden sm:flex" onClick={() => { navigate('/pos'); }}>
           <SvgIcon name="search" width="16" height="16" />
           Quick Search
         </button>
         <Link to="/pos" className="btn btn-gold py-3 px-6 shadow-gold">
           <SvgIcon name="pos" width="20" height="20" />
-          Open POS Terminal
+          <span className="hidden sm:inline">Open POS Terminal</span>
+          <span className="sm:hidden">POS</span>
         </Link>
       </div>
     ),
@@ -68,10 +76,10 @@ const Dashboard: React.FC = () => {
   if (isLoadingDashboard) {
     return (
       <div className="animate-fade-in">
-        <div className="mt-4 grid grid-cols-4 gap-4 mb-8">
+        <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
            {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} height={120} className="rounded-lg" />)}
         </div>
-        <div className="grid grid-cols-[1fr_340px] gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5">
            <Skeleton height={400} className="rounded-xl" />
            <div className="flex flex-col gap-5">
               <Skeleton height={200} className="rounded-xl" />
@@ -148,7 +156,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Two-column grid */}
-      <div className="grid grid-cols-[1fr_340px] gap-5 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5 items-start">
         <RecentOrders orders={recentOrders.map((o: any) => ({
           id: o.id,
           orderNo: o.orderNo,

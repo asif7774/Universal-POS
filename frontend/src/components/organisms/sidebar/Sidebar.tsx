@@ -60,6 +60,7 @@ const Sidebar: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [isPointerFine, setIsPointerFine] = useState(true);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
   
   // Theme state
   const [isDark, setIsDark] = useState(() => {
@@ -84,6 +85,12 @@ const Sidebar: React.FC = () => {
     const handler = (e: MediaQueryListEvent) => { setIsPointerFine(e.matches); };
     mediaQuery.addEventListener('change', handler);
     return () => { mediaQuery.removeEventListener('change', handler); };
+  }, []);
+
+  useEffect(() => {
+    const handler = () => { setIsMobileOpen(true); };
+    window.addEventListener('mobile-menu-open', handler);
+    return () => { window.removeEventListener('mobile-menu-open', handler); };
   }, []);
 
   const pluginNavItems = getNavItems() || [];
@@ -113,11 +120,22 @@ const Sidebar: React.FC = () => {
 
   return (
     <>
-      {/* Spacer to maintain layout without shifting content */}
-      <div className={`shrink-0 transition-[width] duration-200 ease-in-out ${collapsed ? 'w-[68px]' : 'w-[260px]'}`} />
+      {/* Spacer to maintain layout without shifting content — hidden on mobile */}
+      <div className={`hidden lg:block shrink-0 transition-[width] duration-200 ease-in-out ${collapsed ? 'w-[68px]' : 'w-[260px]'}`} />
+
+      {/* Mobile overlay */}
+      {isMobileOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+          onClick={() => { setIsMobileOpen(false); }}
+        />
+      )}
 
       <nav
-        className={`sidebar fixed left-0 top-0 bottom-0 z-50 transition-[width] duration-200 ease-in-out ${isEffectivelyExpanded ? 'w-[260px]' : 'w-[68px]'} ${(collapsed && isEffectivelyExpanded) ? 'shadow-[4px_0_24px_rgba(0,0,0,0.2)]' : 'shadow-none'}`}
+        className={`sidebar fixed left-0 top-0 bottom-0 z-50 transition-[width,transform] duration-200 ease-in-out
+          ${isEffectivelyExpanded ? 'w-[260px]' : 'w-[68px]'}
+          ${(collapsed && isEffectivelyExpanded) ? 'shadow-[4px_0_24px_rgba(0,0,0,0.2)]' : 'shadow-none'}
+          lg:translate-x-0 ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
         aria-label="Main navigation"
         onMouseEnter={isPointerFine ? () => { setIsHovered(true); } : undefined}
         onMouseLeave={isPointerFine ? () => { setIsHovered(false); } : undefined}
