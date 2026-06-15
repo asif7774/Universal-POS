@@ -22,7 +22,7 @@ const fmt = (n: number | string | null | undefined) => `$${parseFloat((n as stri
 const fmtDate = (d: string | null | undefined) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Never';
 
 const MeasurementRow = ({ label, value }: { label: string; value: string | null | undefined }) => (
-  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid var(--surface-border)', fontSize: '.85rem' }}>
+  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid var(--border-subtle)', fontSize: '.85rem' }}>
     <span style={{ color: 'var(--text-secondary)' }}>{label}</span>
     <span style={{ fontWeight: 700 }}>{value || '-'}</span>
   </div>
@@ -128,7 +128,7 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
       maxWidth={580}
       title={(
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <div className="avatar" style={{ width: 40, height: 40, fontSize: '.9rem', background: selected.tags?.includes('VIP') ? 'var(--tux-gold)' : 'var(--tux-navy)', color: selected.tags?.includes('VIP') ? 'var(--tux-navy-dark)' : 'white' }}>
+          <div className="avatar" style={{ width: 40, height: 40, fontSize: '.9rem', background: selected.tags?.includes('VIP') ? 'var(--accent-gold-subtle)' : 'var(--bg-panel-hover)', color: selected.tags?.includes('VIP') ? 'var(--accent-gold-text)' : 'var(--text-primary)' }}>
             {selected.firstName[0]}{selected.lastName[0]}
           </div>
           <div style={{ textAlign: 'left' }}>
@@ -144,7 +144,7 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
           <>
             <span style={{ fontSize: '.85rem', color: 'var(--status-error)', fontWeight: 600 }}>Delete this customer permanently?</span>
             <button className="btn btn-outline" onClick={() => { setShowDeleteConfirm(false); }}>Cancel</button>
-            <button className="btn" style={{ background: 'var(--status-error)', color: 'white' }}
+            <button className="btn btn-danger"
               onClick={handleDelete} disabled={deleteCustomer.isPending}>
               {deleteCustomer.isPending ? 'Deleting...' : 'Yes, Delete'}
             </button>
@@ -179,15 +179,15 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
     >
       <div style={{ margin: '-16px -20px 0' }}>
         {/* Tabs */}
-        <div style={{ display: 'flex', borderBottom: '1px solid var(--surface-border)', background: 'var(--surface-hover)' }}>
+        <div style={{ display: 'flex', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-panel-hover)' }}>
           {(['profile', 'measurements', 'history'] as const).map(tab => (
             <button key={tab} onClick={() => { setActiveTab(tab); setIsEditing(false); setIsEditingMeasurements(false); }}
               style={{
                 flex: 1, padding: '12px 10px', border: 'none', background: 'none',
                 cursor: 'pointer', fontWeight: 600, fontSize: '.8rem',
                 textTransform: 'capitalize', letterSpacing: '.02em',
-                color: activeTab === tab ? 'var(--tux-navy)' : 'var(--text-muted)',
-                borderBottom: activeTab === tab ? '2px solid var(--tux-navy)' : '2px solid transparent',
+                color: activeTab === tab ? 'var(--accent-gold-text)' : 'var(--text-muted)',
+                borderBottom: activeTab === tab ? '2px solid var(--accent-gold)' : '2px solid transparent',
                 transition: 'all .15s',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6
               }}>
@@ -241,7 +241,7 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
                     { label: 'Loyalty Points', value: `${selected.loyaltyPoints} pts` },
                     { label: 'Value as Credit', value: fmt(selected.loyaltyPoints * 0.01) },
                   ].map(item => (
-                    <div key={item.label} style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
+                    <div key={item.label} style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
                       <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 4 }}>{item.label}</div>
                       <div style={{ fontSize: '.95rem', fontWeight: 700 }}>{item.value}</div>
                     </div>
@@ -334,7 +334,7 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
                     </div>
                   </div>
                   {measurements[0].notes && (
-                    <div style={{ marginTop: 14, padding: '10px 12px', background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', fontSize: '.82rem', color: 'var(--text-secondary)', display: 'flex', gap: 8 }}>
+                    <div style={{ marginTop: 14, padding: '10px 12px', background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', fontSize: '.82rem', color: 'var(--text-secondary)', display: 'flex', gap: 8 }}>
                       <SvgIcon name="tailoring" width="16" height="16" style={{ marginTop: 2 }} /> {measurements[0].notes}
                     </div>
                   )}
@@ -358,16 +358,16 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
 
           {activeTab === 'history' && (
             rentalHistory.length > 0 ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div className="flex flex-col gap-2">
                 {rentalHistory.map(r => (
-                  <div key={r.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--surface-border)' }}>
+                  <div key={r.id} className="table-row flex justify-between items-center">
                     <div>
-                      <div style={{ fontWeight: 700, fontSize: '.875rem', color: 'var(--tux-navy)' }}>{r.rentalNo}</div>
+                      <div className="font-bold text-sm text-[var(--accent-gold-text)]">{r.rentalNo}</div>
                       <div style={{ fontSize: '.75rem', color: 'var(--text-secondary)' }}>
                         {r.eventName || 'No event'} · {new Date(r.pickupDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </div>
                     </div>
-                    <span className={`badge badge-${r.status === 'returned' ? 'gray' : r.status === 'out' ? 'navy' : r.status === 'overdue' ? 'red' : 'gold'}`}>
+                    <span className={`badge badge-${r.status === 'returned' ? 'neutral' : r.status === 'out' ? 'neutral' : r.status === 'overdue' ? 'error' : 'gold'}`}>
                       {r.status}
                     </span>
                   </div>

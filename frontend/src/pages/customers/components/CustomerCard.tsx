@@ -10,44 +10,50 @@ interface CustomerCardProps {
 const fmt = (n: number | string | null | undefined) => `$${parseFloat((n as string) ?? '0').toFixed(2)}`;
 
 export const CustomerCard = memo(({ c, onClick }: CustomerCardProps) => (
-  <div className="card" data-id={c.id} style={{ cursor: 'pointer', transition: 'all .15s' }}
+  <div
+    className="panel hover:bg-[var(--bg-panel-hover)] cursor-pointer p-4 transition-all"
+    data-id={c.id}
     onClick={onClick}
     onMouseEnter={e => (e.currentTarget.style.transform = 'translateY(-2px)')}
     onMouseLeave={e => (e.currentTarget.style.transform = 'none')}
   >
-    <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-      <div className="avatar" style={{ width: 44, height: 44, fontSize: '.9rem', flexShrink: 0, background: c.tags?.includes('VIP') ? 'var(--tux-gold)' : 'var(--tux-navy)', color: c.tags?.includes('VIP') ? 'var(--tux-navy-dark)' : 'white' }}>
+    <div className="flex gap-3 items-start">
+      <div className="w-10 h-10 rounded-full bg-[var(--accent-gold-subtle)] text-[var(--accent-gold-text)] font-black text-sm flex items-center justify-center shrink-0">
         {c.firstName[0]}{c.lastName[0]}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
-          <span style={{ fontWeight: 700, fontSize: '.95rem' }}>{c.firstName} {c.lastName}</span>
+        <div className="flex items-center gap-1.5 mb-0.5">
+          <span className="text-[var(--text-primary)] font-semibold text-[0.95rem]">{c.firstName} {c.lastName}</span>
           {c.tags?.includes('VIP') && <span className="badge badge-gold">VIP</span>}
         </div>
-        <div style={{ fontSize: '.8rem', color: 'var(--text-secondary)', marginBottom: 1 }}>{c.email}</div>
-        <div style={{ fontSize: '.8rem', color: 'var(--text-muted)' }}>{c.phone}</div>
+        <div className="text-[var(--text-muted)] text-xs mb-0.5">{c.email}</div>
+        <div className="text-[var(--text-muted)] text-xs">{c.phone}</div>
       </div>
     </div>
 
     <div className="divider" />
 
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, textAlign: 'center' }}>
-      {[
-        { label: 'Orders', value: c.totalOrders },
-        { label: 'Spent', value: fmt(c.totalSpent) },
-        { label: 'Points', value: c.loyaltyPoints },
-      ].map(s => (
-        <div key={s.label}>
-          <div style={{ fontSize: '.9rem', fontWeight: 800, color: 'var(--text-primary)' }}>{s.value}</div>
-          <div style={{ fontSize: '.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.05em' }}>{s.label}</div>
+      <div>
+        <div className="text-[0.9rem] font-extrabold text-[var(--text-primary)]">{c.totalOrders}</div>
+        <div className="text-[0.7rem] text-[var(--text-muted)] uppercase tracking-wide">Orders</div>
+      </div>
+      <div>
+        <div className="text-sm font-bold text-[var(--accent-gold-text)]">{fmt(c.totalSpent)}</div>
+        <div className="text-[0.7rem] text-[var(--text-muted)] uppercase tracking-wide">Spent</div>
+      </div>
+      <div>
+        <div>
+          <span className="badge badge-gold">{c.loyaltyPoints}</span>
         </div>
-      ))}
+        <div className="text-[0.7rem] text-[var(--text-muted)] uppercase tracking-wide mt-0.5">Points</div>
+      </div>
     </div>
 
     {c.tags && c.tags.length > 0 && (
-      <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginTop: 10 }}>
+      <div className="flex gap-1 flex-wrap mt-2.5">
         {c.tags.filter(t => t !== 'VIP').map(tag => (
-          <span key={tag} className={`badge ${tag === 'Overdue' ? 'badge-red' : tag === 'Corporate' ? 'badge-navy' : 'badge-gray'}`}>
+          <span key={tag} className={`badge ${tag === 'Overdue' ? 'badge-error' : tag === 'Corporate' ? 'badge-neutral' : 'badge-neutral'}`}>
             {tag}
           </span>
         ))}
@@ -55,7 +61,7 @@ export const CustomerCard = memo(({ c, onClick }: CustomerCardProps) => (
     )}
 
     {c.notes && (
-      <div style={{ marginTop: 8, fontSize: '.75rem', color: 'var(--status-warning)', borderTop: '1px solid var(--surface-border)', paddingTop: 8, display: 'flex', gap: 6, alignItems: 'center' }}>
+      <div style={{ marginTop: 8, fontSize: '.75rem', color: 'var(--status-warning)', borderTop: '1px solid var(--border-subtle)', paddingTop: 8, display: 'flex', gap: 6, alignItems: 'center' }}>
         <SvgIcon name="warning" width="12" height="12" /> {c.notes}
       </div>
     )}
