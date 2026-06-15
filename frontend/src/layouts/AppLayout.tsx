@@ -56,6 +56,10 @@ const AppLayout: React.FC = () => {
     () => window.matchMedia('(pointer: fine)').matches
   );
 
+  const handleToggle = useCallback(() => setIsCollapsed(c => !c), []);
+  const handleOpen = useCallback(() => setIsMobileOpen(true), []);
+  const handleClose = useCallback(() => setIsMobileOpen(false), []);
+
   useEffect(() => {
     const handleResize = () => setIsDesktop(window.innerWidth >= 1025);
     window.addEventListener('resize', handleResize);
@@ -71,19 +75,15 @@ const AppLayout: React.FC = () => {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') handleClose();
+      if (e.key === 'Escape' && isMobileOpen) handleClose();
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, [handleClose]);
+  }, [handleClose, isMobileOpen]);
 
   // Permanent = wide screen AND fine pointer (mouse/trackpad). iPads always drawer.
   const isSidebarPermanent = isDesktop && isPointerFine;
   const sidebarWidth = isCollapsed ? COLLAPSED_W : SIDEBAR_W;
-
-  const handleToggle = useCallback(() => setIsCollapsed(c => !c), []);
-  const handleOpen = useCallback(() => setIsMobileOpen(true), []);
-  const handleClose = useCallback(() => setIsMobileOpen(false), []);
 
   if (loading) {return <AppSkeleton />;}
   if (!isAuthenticated) {return <Navigate to="/login" replace />;}
