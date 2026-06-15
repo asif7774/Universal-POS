@@ -72,7 +72,7 @@ const Dashboard: React.FC = () => {
         <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
            {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} height={120} className="rounded-lg" />)}
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5">
            <Skeleton height={400} className="rounded-xl" />
            <div className="flex flex-col gap-5">
               <Skeleton height={200} className="rounded-xl" />
@@ -84,10 +84,10 @@ const Dashboard: React.FC = () => {
   }
 
   const STATS: StatProps[] = [
-    { label: "Today's Revenue", value: `$${orderSummary?.revenue?.toFixed(2) ?? '0.00'}`, change: '', positive: true, icon: 'banknote', color: 'var(--tux-navy)', sparkData: revenueData.length ? revenueData.map(d => parseFloat(String(d.revenue)) || 0) : [0] },
-    { label: 'Active Rentals', value: `${rentalStats?.out ?? 0}`, change: '', positive: true, icon: 'tuxedo', color: 'var(--tux-gold)', sparkData: Array.from({ length: 7 }, () => rentalStats?.out ?? 0) },
-    { label: 'Appointments Today', value: `${appointmentData?.count ?? 0}`, change: '', positive: true, icon: 'appointments', color: 'var(--status-success)', sparkData: Array.from({ length: 7 }, () => appointmentData?.count ?? 0) },
-    { label: 'Overdue Returns', value: `${rentalStats?.overdue ?? 0}`, change: '', positive: false, icon: 'warning', color: 'var(--status-error)', sparkData: Array.from({ length: 7 }, () => rentalStats?.overdue ?? 0) },
+    { label: "Today's Revenue",    value: `$${orderSummary?.revenue?.toFixed(2) ?? '0.00'}`, change: '', positive: true,  icon: 'banknote',     colorVariant: 'gold',    sparkData: revenueData.length ? revenueData.map(d => parseFloat(String(d.revenue)) || 0) : [0] },
+    { label: 'Active Rentals',     value: `${rentalStats?.out ?? 0}`,                        change: '', positive: true,  icon: 'tuxedo',       colorVariant: 'emerald', sparkData: Array.from({ length: 7 }, () => rentalStats?.out ?? 0) },
+    { label: 'Appointments Today', value: `${appointmentData?.count ?? 0}`,                  change: '', positive: true,  icon: 'appointments', colorVariant: 'primary', sparkData: Array.from({ length: 7 }, () => appointmentData?.count ?? 0) },
+    { label: 'Overdue Returns',    value: `${rentalStats?.overdue ?? 0}`,                    change: '', positive: false, icon: 'warning',      colorVariant: 'error',   sparkData: Array.from({ length: 7 }, () => rentalStats?.overdue ?? 0) },
   ];
 
   const rentalFleet = [
@@ -100,11 +100,9 @@ const Dashboard: React.FC = () => {
   return (
     <div className="animate-fade-in">
       <div className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-           <h2 className="text-[0.75rem] font-bold text-text-muted uppercase tracking-wider whitespace-nowrap">
-             Business Pulse
-           </h2>
-           <div className="h-px flex-1 bg-surface-border opacity-50" />
+        <div className="section-divider">
+          <span className="section-divider-label">Business Pulse</span>
+          <div className="section-divider-line" />
         </div>
         
         {/* Stat cards grid */}
@@ -149,7 +147,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Two-column grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5 items-start">
         <RecentOrders orders={recentOrders.map((o: any) => ({
           id: o.id,
           orderNo: o.orderNo,
