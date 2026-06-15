@@ -53,6 +53,9 @@ coverage/
 .env.development
 .env.production
 
+# Superpowers brainstorm artifacts
+.superpowers/
+
 #Playwright
 .cache/
 frontend/playwright-report/
