@@ -34,7 +34,7 @@ export const NewApptModal: React.FC<{ onClose: () => void; defaultDate?: string 
       <div className="modal animate-slide-up" onClick={e => { e.stopPropagation(); }} style={{ maxWidth: 480 }}>
         <div className="modal-header">
           <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <SvgIcon name="appointments" width="18" height="18" style={{ color: 'var(--tux-gold)' }} />
+            <SvgIcon name="appointments" width="18" height="18" style={{ color: 'var(--accent-gold)' }} />
             New Appointment
           </h3>
           <button className="btn btn-ghost btn-icon" onClick={onClose}>

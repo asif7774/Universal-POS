@@ -1,6 +1,15 @@
 import React from 'react';
 import { PieChart, Pie, Cell, Legend, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
-import { fmt, COLORS } from 'constants/reports';
+import { fmt } from 'constants/reports';
+
+const CHART_COLORS = {
+  gold: '#c9a84c',
+  emerald: '#3d9970',
+  error: '#f87171',
+  navy: '#06111f',
+};
+
+const PIE_COLORS = [CHART_COLORS.gold, CHART_COLORS.emerald, CHART_COLORS.navy, CHART_COLORS.error];
 
 interface PaymentMethodsChartProps {
   data: Array<{ name: string; value: number }>;
@@ -9,13 +18,13 @@ interface PaymentMethodsChartProps {
 
 export const PaymentMethodsChart: React.FC<PaymentMethodsChartProps> = ({ data, isLoading }) => {
   return (
-    <div className="card" style={{ display: 'flex', flexDirection: 'column' }}>
-      <div className="card-header">
-        <span className="card-title">Payment Methods</span>
+    <div className="panel" style={{ display: 'flex', flexDirection: 'column' }}>
+      <div className="panel-header">
+        <span className="panel-title">Payment Methods</span>
       </div>
       <div style={{ flex: 1, minHeight: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
         {isLoading && (
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.6)', zIndex: 5, borderRadius: 8 }}>
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.15)', zIndex: 5, borderRadius: 8 }}>
             <div className="spinner" />
           </div>
         )}
@@ -31,10 +40,13 @@ export const PaymentMethodsChart: React.FC<PaymentMethodsChartProps> = ({ data, 
               dataKey="value"
             >
               {data.map((_, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
               ))}
             </Pie>
-            <RechartsTooltip formatter={(value: any) => fmt(Number(value))} />
+            <RechartsTooltip
+              formatter={(value: any) => fmt(Number(value))}
+              contentStyle={{ background: 'var(--bg-panel)', border: '1px solid var(--border-subtle)', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)', color: 'var(--text-primary)' }}
+            />
             <Legend verticalAlign="bottom" height={36} iconType="circle" />
           </PieChart>
         </ResponsiveContainer>

@@ -55,7 +55,7 @@ export const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose
       onClose={onClose}
       title={(
         <>
-          <SvgIcon name="measurements" width="20" height="20" style={{ color: 'var(--tux-gold)' }} />
+          <SvgIcon name="measurements" width="20" height="20" style={{ color: 'var(--accent-gold)' }} />
           New Measurement Record
         </>
       )}

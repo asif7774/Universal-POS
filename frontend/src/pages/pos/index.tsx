@@ -269,7 +269,7 @@ const POS: React.FC = () => {
   });
 
   return (
-    <div className={`grid h-screen gap-0 -mx-[28px] -my-[24px] overflow-hidden transition-[grid-template-columns] duration-300 ease-in-out ${cart.length > 0 ? 'grid-cols-[1fr_360px]' : 'grid-cols-1'}`}>
+    <div className={`grid h-screen gap-0 -mx-[28px] -my-[24px] overflow-hidden transition-[grid-template-columns] duration-300 ease-in-out bg-[var(--bg-canvas)] ${cart.length > 0 ? 'grid-cols-[1fr_360px]' : 'grid-cols-1'}`}>
       {isLoadingProducts ? (
         <div className="p-8"><TableSkeleton rows={10} cols={4} /></div>
       ) : (

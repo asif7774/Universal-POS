@@ -47,7 +47,7 @@ const Reports: React.FC = () => {
       <div className="flex gap-2">
         {(['today', 'week', 'month'] as const).map(p => (
           <button key={p} onClick={() => { setPeriod(p); }}
-            className={`btn btn-sm capitalize ${period === p ? 'btn-primary' : 'btn-outline'}`}>
+            className={`btn btn-sm capitalize ${period === p ? 'btn btn-gold btn-sm' : 'btn btn-outline btn-sm'}`}>
             {p}
           </button>
         ))}
@@ -56,7 +56,7 @@ const Reports: React.FC = () => {
   });
 
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in bg-[var(--bg-canvas)]">
       <KPICards 
         isLoading={isLoading} 
         revenue={revenue} 

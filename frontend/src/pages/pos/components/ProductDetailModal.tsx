@@ -47,7 +47,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
           )}
           {canRent && !outOfStock && (
             <button
-              className="btn btn-primary"
+              className="btn btn-gold"
               style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
               onClick={() => { handleAdd(true); }}
             >
@@ -85,18 +85,18 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
             {canSell && (
-              <div style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
+              <div style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
                 <div style={{ fontSize: '.7rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 3 }}>SALE PRICE</div>
-                <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--tux-navy)' }}>{fmt(product.price)}</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--accent-gold-text)' }}>{fmt(product.price)}</div>
               </div>
             )}
             {canRent && (
-              <div style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
+              <div style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
                 <div style={{ fontSize: '.7rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 3 }}>RENTAL RATE</div>
-                <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--tux-gold)' }}>{fmt(product.rentalRate ?? 0)}<span style={{ fontSize: '.7rem', fontWeight: 400 }}>/day</span></div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--accent-gold-text)' }}>{fmt(product.rentalRate ?? 0)}<span style={{ fontSize: '.7rem', fontWeight: 400 }}>/day</span></div>
               </div>
             )}
-            <div style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
+            <div style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
               <div style={{ fontSize: '.7rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 3 }}>IN STOCK</div>
               <div style={{ fontSize: '1.1rem', fontWeight: 800, color: outOfStock ? 'var(--status-error)' : lowStock ? 'var(--status-warning)' : 'var(--status-success)' }}>
                 {product.stock} {outOfStock ? '— unavailable' : lowStock ? '— low' : ''}

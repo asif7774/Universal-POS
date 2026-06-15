@@ -7,27 +7,27 @@ interface TaxesTabProps {
 }
 
 export const TaxesTab: React.FC<TaxesTabProps> = ({ store, set }) => (
-  <div className="card">
-    <div className="card-header"><span className="card-title">💰 Tax & Fee Configuration</span></div>
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+  <div className="panel">
+    <div className="panel-header"><span className="panel-title">Tax &amp; Fee Configuration</span></div>
+    <div className="modal-body" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
       {[
-        { key: 'taxRate',         label: 'Sales Tax Rate (%)',          hint: 'Applied to all taxable items. NY default: 8.875%' },
-        { key: 'lateFeePerDay',  label: 'Late Return Fee (per day)',   hint: 'Charged each day a rental is overdue.' },
-        { key: 'depositPct',      label: 'Security Deposit (%)',        hint: '% of rental total charged as deposit.' },
-        { key: 'rentalBuffer',    label: 'Return Buffer (days)',        hint: 'Grace days before late fee kicks in.' },
+        { key: 'taxRate',        label: 'Sales Tax Rate (%)',         hint: 'Applied to all taxable items. NY default: 8.875%' },
+        { key: 'lateFeePerDay', label: 'Late Return Fee (per day)',  hint: 'Charged each day a rental is overdue.' },
+        { key: 'depositPct',     label: 'Security Deposit (%)',       hint: '% of rental total charged as deposit.' },
+        { key: 'rentalBuffer',   label: 'Return Buffer (days)',       hint: 'Grace days before late fee kicks in.' },
       ].map(f => (
         <div key={f.key} className="input-group">
-          <label className="input-label">{f.label}</label>
+          <label>{f.label}</label>
           <input className="input" type="number" step="0.001"
-            value={(store as Record<string,string>)[f.key]}
+            value={(store as Record<string, string>)[f.key]}
             onChange={e => { set(f.key, e.target.value); }} />
           <p style={{ fontSize: '.72rem', color: 'var(--text-muted)', marginTop: 4 }}>{f.hint}</p>
         </div>
       ))}
     </div>
-    <div className="divider" />
-    <div style={{ padding: '12px 16px', background: 'var(--surface-hover)', borderRadius: 'var(--radius-md)', fontSize: '.85rem' }}>
-      <div style={{ fontWeight: 700, marginBottom: 8 }}>💡 Preview — $100 rental for 3 days</div>
+    <div className="section-divider" style={{ margin: '8px 0' }} />
+    <div style={{ margin: '0 24px 20px', padding: '12px 16px', background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-md)', fontSize: '.85rem', border: '1px solid var(--border-subtle)' }}>
+      <div style={{ fontWeight: 700, marginBottom: 8, color: 'var(--text-primary)' }}>Preview — $100 rental for 3 days</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
         {[
           ['Subtotal', '$100.00'],
@@ -37,7 +37,7 @@ export const TaxesTab: React.FC<TaxesTabProps> = ({ store, set }) => (
         ].map(([l, v]) => (
           <div key={l} style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span style={{ color: 'var(--text-secondary)' }}>{l}</span>
-            <span style={{ fontWeight: 700 }}>{v}</span>
+            <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{v}</span>
           </div>
         ))}
       </div>

@@ -81,19 +81,19 @@ export const ReceiptsTab: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="card">
-        <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <SvgIcon name="printer" width="16" height="16" style={{ color: 'var(--tux-navy)' }} />
-          <span className="card-title">Receipt Configuration</span>
-          <span className="ml-auto text-[0.7rem] text-text-muted">Saved on this device</span>
+      <div className="panel">
+        <div className="panel-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <SvgIcon name="printer" width="16" height="16" style={{ color: 'var(--text-primary)' }} />
+          <span className="panel-title">Receipt Configuration</span>
+          <span className="ml-auto text-[0.7rem] text-[var(--text-muted)]">Saved on this device</span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {CHECKBOX_OPTIONS.map(opt => (
-            <label key={opt.key} style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', padding: '8px 0', borderBottom: '1px solid var(--surface-border)' }}>
+            <label key={opt.key} style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', padding: '8px 0', borderBottom: '1px solid var(--border-subtle)' }}>
               <input type="checkbox"
                 checked={prefs[opt.key] ?? opt.defaultChecked}
                 onChange={() => { togglePref(opt.key); }}
-                style={{ width: 16, height: 16, accentColor: 'var(--tux-navy)', cursor: 'pointer' }} />
+                style={{ width: 16, height: 16, accentColor: 'var(--text-primary)', cursor: 'pointer' }} />
               <span style={{ fontSize: '.875rem' }}>{opt.label}</span>
             </label>
           ))}
@@ -109,22 +109,22 @@ export const ReceiptsTab: React.FC = () => {
         </div>
       </div>
 
-      <div className="card">
-        <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <SvgIcon name="wrench" width="16" height="16" style={{ color: 'var(--tux-gold)' }} />
-          <span className="card-title">Hardware Diagnostics</span>
+      <div className="panel">
+        <div className="panel-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <SvgIcon name="wrench" width="16" height="16" style={{ color: 'var(--accent-gold)' }} />
+          <span className="panel-title">Hardware Diagnostics</span>
         </div>
 
         <div className="grid grid-cols-1 gap-3">
           {/* Printer */}
-          <div className="flex items-center justify-between p-4 rounded-lg bg-surface-bg border border-surface-border">
+          <div className="flex items-center justify-between p-4 rounded-lg bg-[var(--bg-canvas)] border border-[var(--border-subtle)]">
             <div className="flex items-center gap-3">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${hwStatus.printer.connected ? 'bg-status-success/10 text-status-success' : 'bg-status-error/10 text-status-error'}`}>
                 <SvgIcon name="printer" width="16" height="16" />
               </div>
               <div>
                 <div className="text-[0.875rem] font-bold">Receipt Printer</div>
-                <div className="text-[0.7rem] text-text-muted">{hwStatus.printer.connected ? hwStatus.printer.model : 'Disconnected'}</div>
+                <div className="text-[0.7rem] text-[var(--text-muted)]">{hwStatus.printer.connected ? hwStatus.printer.model : 'Disconnected'}</div>
               </div>
             </div>
             <div className="flex gap-2">
@@ -141,14 +141,14 @@ export const ReceiptsTab: React.FC = () => {
           </div>
 
           {/* Scanner */}
-          <div className="flex items-center justify-between p-4 rounded-lg bg-surface-bg border border-surface-border">
+          <div className="flex items-center justify-between p-4 rounded-lg bg-[var(--bg-canvas)] border border-[var(--border-subtle)]">
             <div className="flex items-center gap-3">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${hwStatus.scanner.connected ? 'bg-status-success/10 text-status-success' : 'bg-status-error/10 text-status-error'}`}>
                 <SvgIcon name="search" width="16" height="16" />
               </div>
               <div>
                 <div className="text-[0.875rem] font-bold">Barcode Scanner</div>
-                <div className="text-[0.7rem] text-text-muted">{hwStatus.scanner.connected ? `${hwStatus.scanner.model} (${hwStatus.scanner.batteryLevel}% Battery)` : 'Disconnected'}</div>
+                <div className="text-[0.7rem] text-[var(--text-muted)]">{hwStatus.scanner.connected ? `${hwStatus.scanner.model} (${hwStatus.scanner.batteryLevel}% Battery)` : 'Disconnected'}</div>
               </div>
             </div>
             <div className="flex gap-2">
@@ -164,14 +164,14 @@ export const ReceiptsTab: React.FC = () => {
           </div>
 
           {/* Cash Drawer */}
-          <div className="flex items-center justify-between p-4 rounded-lg bg-surface-bg border border-surface-border">
+          <div className="flex items-center justify-between p-4 rounded-lg bg-[var(--bg-canvas)] border border-[var(--border-subtle)]">
             <div className="flex items-center gap-3">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${hwStatus.cashDrawer.connected ? 'bg-status-success/10 text-status-success' : 'bg-status-error/10 text-status-error'}`}>
                 <SvgIcon name="banknote" width="16" height="16" />
               </div>
               <div>
                 <div className="text-[0.875rem] font-bold">Cash Drawer</div>
-                <div className="text-[0.7rem] text-text-muted">{hwStatus.cashDrawer.connected ? hwStatus.cashDrawer.model : 'Disconnected'}</div>
+                <div className="text-[0.7rem] text-[var(--text-muted)]">{hwStatus.cashDrawer.connected ? hwStatus.cashDrawer.model : 'Disconnected'}</div>
               </div>
             </div>
             <div className="flex gap-2">

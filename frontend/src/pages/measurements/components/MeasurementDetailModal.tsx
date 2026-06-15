@@ -66,7 +66,7 @@ export const MeasurementDetailModal: React.FC<MeasurementDetailModalProps> = ({ 
         <>
           <span style={{ fontSize: '.85rem', color: 'var(--status-error)', fontWeight: 600 }}>Delete this measurement record?</span>
           <button className="btn btn-outline" onClick={() => { setShowDeleteConfirm(false); }}>Cancel</button>
-          <button className="btn" style={{ background: 'var(--status-error)', color: 'white' }}
+          <button className="btn btn-danger"
             onClick={handleDelete} disabled={deleteMeasurement.isPending}>
             {deleteMeasurement.isPending ? 'Deleting...' : 'Yes, Delete'}
           </button>
@@ -88,7 +88,7 @@ export const MeasurementDetailModal: React.FC<MeasurementDetailModalProps> = ({ 
         <button className="btn btn-outline" onClick={startEditing} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
           <SvgIcon name="tailoring" width="14" height="14" /> Edit
         </button>
-        <button className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+        <button className="btn btn-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
           onClick={() => { window.print(); }}>
           <SvgIcon name="printer" width="14" height="14" /> Print Card
         </button>
@@ -138,14 +138,14 @@ export const MeasurementDetailModal: React.FC<MeasurementDetailModalProps> = ({ 
             {/* Measurement grid */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 32px' }}>
               {FIELDS.filter(f => selected[f.key]).map(f => (
-                <div key={f.key} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--surface-border)', fontSize: '.875rem' }}>
+                <div key={f.key} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--border-subtle)', fontSize: '.875rem' }}>
                   <span style={{ color: 'var(--text-secondary)' }}>{f.label}</span>
                   <span style={{ fontWeight: 700 }}>{String(selected[f.key])}</span>
                 </div>
               ))}
             </div>
             {selected.notes && (
-              <div style={{ marginTop: 16, padding: '10px 12px', background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', fontSize: '.85rem' }}>
+              <div style={{ marginTop: 16, padding: '10px 12px', background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', fontSize: '.85rem' }}>
                 <div style={{ fontWeight: 600, marginBottom: 4, color: 'var(--text-secondary)', fontSize: '.75rem', textTransform: 'uppercase' }}>Tailor Notes</div>
                 {selected.notes}
               </div>

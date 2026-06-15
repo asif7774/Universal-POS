@@ -39,7 +39,7 @@ export const AddItemModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
       onClose={onClose} 
       title={(
         <>
-          <SvgIcon name="inventory" width="20" height="20" style={{ color: 'var(--tux-gold)' }} />
+          <SvgIcon name="inventory" width="20" height="20" style={{ color: 'var(--accent-gold)' }} />
           Add New Product
         </>
       )} 

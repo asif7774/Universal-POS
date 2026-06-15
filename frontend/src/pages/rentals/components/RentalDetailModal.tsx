@@ -58,7 +58,7 @@ export const RentalDetailModal = ({ selected, setSelected }: RentalDetailModalPr
       footer={
         <>
           {selected.status === 'out' && !showCheckinForm && (
-            <button className="btn btn-primary" onClick={() => { setShowCheckinForm(true); }}>
+            <button className="btn btn-gold" onClick={() => { setShowCheckinForm(true); }}>
               Mark as Returned
             </button>
           )}
@@ -66,7 +66,7 @@ export const RentalDetailModal = ({ selected, setSelected }: RentalDetailModalPr
             <>
               <button className="btn btn-outline" onClick={() => { setShowCheckinForm(false); }}>Cancel</button>
               <button
-                className="btn btn-primary"
+                className="btn btn-gold"
                 onClick={() => { checkin.mutate(); }}
                 disabled={checkin.isPending}
               >
@@ -89,7 +89,7 @@ export const RentalDetailModal = ({ selected, setSelected }: RentalDetailModalPr
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         {/* Customer */}
-        <div style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-md)', padding: '12px 14px', border: '1px solid var(--surface-border)' }}>
+        <div style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-md)', padding: '12px 14px', border: '1px solid var(--border-subtle)' }}>
           <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', marginBottom: 6, fontWeight: 700, letterSpacing: '.05em' }}>CUSTOMER</div>
           <div style={{ fontWeight: 700, fontSize: '.95rem' }}>{selected.customer ? `${selected.customer.firstName} ${selected.customer.lastName}` : 'Unknown'}</div>
           <div style={{ fontSize: '.85rem', color: 'var(--text-secondary)' }}>{selected.customer?.phone}</div>
@@ -106,8 +106,8 @@ export const RentalDetailModal = ({ selected, setSelected }: RentalDetailModalPr
           <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', marginBottom: 8, fontWeight: 700, letterSpacing: '.05em' }}>RENTED ITEMS</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {selected.items?.map((item, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--surface-border)' }}>
-                <SvgIcon name="inventory" width="14" height="14" style={{ color: 'var(--tux-navy)', opacity: 0.7 }} />
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+                <SvgIcon name="inventory" width="14" height="14" style={{ color: 'var(--text-primary)', opacity: 0.7 }} />
                 <span style={{ fontSize: '.875rem', fontWeight: 500 }}>{item.productName}</span>
               </div>
             ))}
@@ -121,7 +121,7 @@ export const RentalDetailModal = ({ selected, setSelected }: RentalDetailModalPr
             { label: 'Return Date', value: fmtDate(selected.returnDate) },
             { label: 'Deposit Paid', value: fmt(selected.depositPaid) },
           ].map(item => (
-            <div key={item.label} style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
+            <div key={item.label} style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
               <div style={{ fontSize: '.7rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 4 }}>{item.label}</div>
               <div style={{ fontSize: '.92rem', fontWeight: 700 }}>{item.value}</div>
             </div>
@@ -129,7 +129,7 @@ export const RentalDetailModal = ({ selected, setSelected }: RentalDetailModalPr
         </div>
 
         {showCheckinForm && (
-          <div style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-md)', padding: '14px', border: '1px solid var(--surface-border)', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-md)', padding: '14px', border: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '.05em' }}>RETURN DETAILS</div>
             <div>
               <label className="label" style={{ fontSize: '.78rem' }}>Condition</label>

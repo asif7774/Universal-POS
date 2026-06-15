@@ -83,7 +83,7 @@ const Rentals: React.FC = () => {
   });
 
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in bg-[var(--bg-canvas)] p-6">
       {!isAdding && (
         <div className="search-container">
           <div className="search-input-wrapper input-with-icon">
@@ -95,13 +95,14 @@ const Rentals: React.FC = () => {
           <div className="filter-group">
             {statuses.map(s => {
               const count = s === 'all' ? rentals.length : (counts[s] ?? 0);
+              const badgeClass = s === 'booked' ? 'badge-gold' : s === 'out' ? 'badge-emerald' : s === 'overdue' ? 'badge-error' : s === 'returned' ? 'badge-success' : 'badge-neutral';
               return (
                 <button key={s} onClick={() => { setStatusFilter(s); }}
-                  className={`btn btn-sm capitalize rounded-full ${statusFilter === s ? 'btn-primary' : 'btn-outline'}`}>
+                  className={`btn btn-sm capitalize rounded-full ${statusFilter === s ? 'btn-gold' : 'btn-outline'}`}>
                   {s === 'overdue' && <SvgIcon name="warning" width="14" height="14" />}
                   {s}
                   {count > 0 && (
-                    <span className={`ml-1.5 opacity-80 rounded-full px-1.5 py-0.5 text-[0.7rem] ${statusFilter === s ? 'bg-white/20' : 'bg-[var(--surface-hover)]'}`}>
+                    <span className={`badge ${badgeClass} ml-1.5 text-[0.7rem]`}>
                       {count}
                     </span>
                   )}

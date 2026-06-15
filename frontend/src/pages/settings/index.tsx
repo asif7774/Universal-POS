@@ -81,14 +81,14 @@ const Settings: React.FC = () => {
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 20 }}>
           {/* Sidebar nav */}
-          <div className="card" style={{ padding: 8, alignSelf: 'start' }}>
+          <div className="panel" style={{ padding: 8, alignSelf: 'start' }}>
             {TABS.map(t => (
               <button key={t.id} onClick={() => { setTab(t.id); }}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 10, width: '100%',
                   padding: '10px 12px', border: 'none', borderRadius: 'var(--radius-md)',
-                  background: tab === t.id ? 'var(--tux-navy)' : 'transparent',
-                  color: tab === t.id ? 'white' : 'var(--text-secondary)',
+                  background: tab === t.id ? 'var(--accent-gold)' : 'transparent',
+                  color: tab === t.id ? 'var(--bg-canvas)' : 'var(--text-secondary)',
                   cursor: 'pointer', fontSize: '.875rem', fontWeight: tab === t.id ? 700 : 500,
                   transition: 'all .15s', textAlign: 'left', marginBottom: 2,
                 }}>
@@ -107,10 +107,10 @@ const Settings: React.FC = () => {
 
             {/* ── Plugin Settings ── */}
             {activePluginPage && (
-              <div className="card">
-                <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <SvgIcon name="settings" width="18" height="18" style={{ color: 'var(--tux-gold)' }} />
-                  <span className="card-title">{activePluginPage.title}</span>
+              <div className="panel">
+                <div className="panel-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <SvgIcon name="settings" width="18" height="18" style={{ color: 'var(--accent-gold-text)' }} />
+                  <span className="panel-title">{activePluginPage.title}</span>
                 </div>
                 {activePluginPage.component}
               </div>

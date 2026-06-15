@@ -3,11 +3,18 @@ import { Rental, RentalStatus } from 'types/rentals';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 
 export const STATUS_CONFIG: Record<RentalStatus, { cls: string; icon: string }> = {
-  booked:    { cls: 'rental-booked',    icon: 'calendar' },
-  out:       { cls: 'rental-out',       icon: 'pos' },
-  returned:  { cls: 'rental-available', icon: 'check-circle' },
-  overdue:   { cls: 'rental-overdue',   icon: 'warning' },
-  cancelled: { cls: 'badge-gray',       icon: 'close' },
+  booked:    { cls: 'badge-gold',    icon: 'calendar' },
+  out:       { cls: 'badge-emerald', icon: 'pos' },
+  returned:  { cls: 'badge-success', icon: 'check-circle' },
+  overdue:   { cls: 'badge-error',   icon: 'warning' },
+  cancelled: { cls: 'badge-neutral', icon: 'close' },
+};
+
+const STATUS_BADGE: Record<string, string> = {
+  booked:   'badge-gold',
+  out:      'badge-emerald',
+  overdue:  'badge-error',
+  returned: 'badge-success',
 };
 
 export const fmt = (n: number | string | null | undefined) => `$${parseFloat((n as string) ?? '0').toFixed(2)}`;
@@ -21,18 +28,18 @@ interface RentalTableProps {
 
 export const RentalTable = memo(({ filtered, setSelected }: RentalTableProps) => {
   return (
-    <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+    <div className="panel" style={{ padding: 0, overflow: 'hidden' }}>
       <table className="data-table">
         <thead>
           <tr>
-            <th>Order</th>
-            <th>Customer</th>
-            <th>Items</th>
-            <th>Event</th>
-            <th>Pickup</th>
-            <th>Return</th>
-            <th>Deposit</th>
-            <th>Status</th>
+            <th className="text-[var(--text-muted)] text-xs font-bold uppercase tracking-wide">Order</th>
+            <th className="text-[var(--text-muted)] text-xs font-bold uppercase tracking-wide">Customer</th>
+            <th className="text-[var(--text-muted)] text-xs font-bold uppercase tracking-wide">Items</th>
+            <th className="text-[var(--text-muted)] text-xs font-bold uppercase tracking-wide">Event</th>
+            <th className="text-[var(--text-muted)] text-xs font-bold uppercase tracking-wide">Pickup</th>
+            <th className="text-[var(--text-muted)] text-xs font-bold uppercase tracking-wide">Return</th>
+            <th className="text-[var(--text-muted)] text-xs font-bold uppercase tracking-wide">Deposit</th>
+            <th className="text-[var(--text-muted)] text-xs font-bold uppercase tracking-wide">Status</th>
             <th></th>
           </tr>
         </thead>
@@ -41,13 +48,13 @@ export const RentalTable = memo(({ filtered, setSelected }: RentalTableProps) =>
             const isOverdue = r.status === 'out' && daysLeft(r.returnDate) < 0;
             const computedStatus = isOverdue ? 'overdue' : r.status;
             const days = daysLeft(r.returnDate);
-            const cfg = STATUS_CONFIG[computedStatus as RentalStatus] || { cls: 'badge-gray', icon: 'help-circle' };
+            const cfg = STATUS_CONFIG[computedStatus as RentalStatus] || { cls: 'badge-neutral', icon: 'help-circle' };
             const customerName = r.customer ? `${r.customer.firstName} ${r.customer.lastName}` : 'Unknown';
             const phone = r.customer ? r.customer.phone : '';
-            
+
             return (
-              <tr key={r.id} onClick={() => { setSelected(r); }}>
-                <td><code style={{ fontSize: '.8rem', color: 'var(--tux-gold)', fontWeight: 700 }}>{r.rentalNo}</code></td>
+              <tr key={r.id} className="table-row" onClick={() => { setSelected(r); }}>
+                <td><code style={{ fontSize: '.8rem', color: 'var(--accent-gold-text)', fontWeight: 700 }}>{r.rentalNo}</code></td>
                 <td>
                   <div style={{ fontWeight: 600, fontSize: '.875rem' }}>{customerName}</div>
                   <div style={{ fontSize: '.75rem', color: 'var(--text-muted)' }}>{phone}</div>
@@ -69,9 +76,9 @@ export const RentalTable = memo(({ filtered, setSelected }: RentalTableProps) =>
                     <div style={{ fontSize: '.7rem', color: 'var(--status-success)' }}>{days}d left</div>
                   )}
                 </td>
-                <td style={{ fontWeight: 600 }}>{fmt(r.depositPaid)}</td>
+                <td className="text-[var(--accent-gold-text)] font-bold">{fmt(r.depositPaid)}</td>
                 <td>
-                  <span className={`badge ${cfg.cls}`} style={{ textTransform: 'capitalize', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <span className={`badge ${STATUS_BADGE[computedStatus] ?? 'badge-neutral'}`} style={{ textTransform: 'capitalize', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                     <SvgIcon name={cfg.icon} width="12" height="12" /> {computedStatus}
                   </span>
                   {r.notes && (

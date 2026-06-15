@@ -10,45 +10,46 @@ interface KanbanColProps {
 }
 
 export const KanbanCol = memo(({ status, jobs, onSelect }: KanbanColProps) => (
-  <div style={{ background: 'var(--surface-hover)', borderRadius: 'var(--radius-lg)', padding: 12, minWidth: 200, flex: '1 1 200px' }}>
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+  <div className="bg-[var(--bg-panel-hover)] rounded-[var(--radius-xl)] p-3" style={{ minWidth: 200, flex: '1 1 200px' }}>
+    <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center gap-1.5">
         <div style={{ width: 10, height: 10, borderRadius: '50%', background: STATUS_COLOR[status] }} />
-        <span style={{ fontWeight: 700, fontSize: '.8rem' }}>{status}</span>
+        <span className="panel-title text-sm">{status}</span>
       </div>
-      <span className="badge badge-gray">{jobs.length}</span>
+      <span className="badge badge-neutral">{jobs.length}</span>
     </div>
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+    <div className="flex flex-col gap-2">
       {jobs.map(job => (
         <div key={job.id} onClick={() => { onSelect(job); }}
+          className="panel p-3 mb-0 cursor-grab active:cursor-grabbing hover:bg-[var(--bg-panel-hover)] transition-all"
           style={{
-            background: 'var(--surface-card)', borderRadius: 'var(--radius-md)',
-            padding: '10px 12px', cursor: 'pointer', transition: 'all .15s',
-            border: `1px solid ${job.type === 'Rush' ? '#FECACA' : 'var(--surface-border)'}`,
             borderLeft: `3px solid ${STATUS_COLOR[status] || '#94A3B8'}`,
+            border: `1px solid ${job.type === 'Rush' ? '#FECACA' : 'var(--border-subtle)'}`,
+            borderLeftWidth: 3,
+            borderLeftColor: STATUS_COLOR[status] || '#94A3B8',
           }}
           onMouseEnter={e => (e.currentTarget.style.boxShadow = 'var(--shadow-md)')}
           onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-            <code style={{ fontSize: '.72rem', color: 'var(--text-muted)', fontWeight: 700 }}>{job.jobNo}</code>
-            <span className={`badge ${TYPE_BADGE[job.type] || 'badge-gray'}`} style={{ fontSize: '.65rem' }}>{job.type}</span>
+          <div className="flex justify-between mb-1">
+            <code className="text-[0.72rem] text-[var(--text-muted)] font-bold">{job.jobNo}</code>
+            <span className={`badge ${TYPE_BADGE[job.type] || 'badge-neutral'}`} style={{ fontSize: '.65rem' }}>{job.type}</span>
           </div>
-          <div style={{ fontWeight: 700, fontSize: '.82rem', marginBottom: 2 }}>{job.customerName}</div>
-          <div style={{ fontSize: '.75rem', color: 'var(--text-secondary)', marginBottom: 6 }}>{job.garment}</div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '.72rem', color: isOverdue(job.dueDate, job.status) ? 'var(--status-error)' : 'var(--text-muted)', fontWeight: isOverdue(job.dueDate, job.status) ? 700 : 400, display: 'flex', alignItems: 'center', gap: 4 }}>
+          <div className="text-sm font-semibold text-[var(--text-primary)] mb-0.5">{job.customerName}</div>
+          <div className="text-xs text-[var(--text-muted)] mb-1.5">{job.garment}</div>
+          <div className="flex justify-between items-center">
+            <span className={`flex items-center gap-1 ${isOverdue(job.dueDate, job.status) ? 'text-xs text-[var(--status-error)] font-semibold' : 'text-xs text-[var(--text-muted)]'}`}>
               <SvgIcon name={isOverdue(job.dueDate, job.status) ? 'warning' : 'calendar'} width="12" height="12" /> Due {fmtDate(job.dueDate)}
             </span>
-            <span style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>{fmt(job.price)}</span>
+            <span className="text-xs font-bold text-[var(--text-primary)]">{fmt(job.price)}</span>
           </div>
-          <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+          <div className="text-[0.72rem] text-[var(--text-muted)] mt-1 flex items-center gap-1">
             <SvgIcon name="user" width="10" height="10" /> {job.assignedToName}
           </div>
         </div>
       ))}
       {jobs.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '20px 8px', color: 'var(--text-muted)', fontSize: '.8rem' }}>Empty</div>
+        <div className="text-center py-5 text-[var(--text-muted)] text-xs">Empty</div>
       )}
     </div>
   </div>
