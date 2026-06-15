@@ -45,6 +45,7 @@ export const QK = {
   settings:    ()            => ['settings'] as const,
   staff:       ()            => ['staff'] as const,
   // Sprint 2 — Dashboard & Reports
+  serverTime:         ()                  => ['server-time'] as const,
   dashboardAlerts:    ()                  => ['dashboard', 'alerts'] as const,
   recentOrders:       (limit?: number, date?: string) => ['orders', 'recent', limit, date] as const,
   upcomingRentals:    (limit?: number)    => ['rentals', 'upcoming', limit] as const,
@@ -519,3 +520,12 @@ export const useRedeemLoyalty = () => {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['customers'] }),
   });
 };
+
+// ── Server Time ──────────────────────────────────────────────
+export const useServerTime = () =>
+  useQuery({
+    queryKey: QK.serverTime(),
+    queryFn:  () => apiClient.get<{ timestamp: string; date: string }>('/dashboard/time'),
+    staleTime: 60 * 1000,
+    refetchInterval: 5 * 60 * 1000,
+  });

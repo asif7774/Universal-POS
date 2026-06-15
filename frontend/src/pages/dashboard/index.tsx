@@ -4,7 +4,7 @@ import { useAuth } from 'contexts/AuthContext';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../lib/apiClient';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
-import { useDashboardAlerts, useRecentOrders, useUpcomingRentals, useAppointmentCount, useSettings, useRevenueReport } from '../../lib/queries';
+import { useDashboardAlerts, useRecentOrders, useUpcomingRentals, useAppointmentCount, useSettings, useRevenueReport, useServerTime } from '../../lib/queries';
 import { StatProps } from 'types/dashboard';
 import { StatCard } from './components/StatCard';
 import { RecentOrders } from './components/RecentOrders';
@@ -19,11 +19,13 @@ const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const hour = new Date().getHours();
+  const { data: serverTime } = useServerTime();
+  const now = serverTime ? new Date(serverTime.timestamp) : new Date();
+  const hour = now.getHours();
   let greeting = 'Good evening';
   if (hour < 12) greeting = 'Good morning';
   else if (hour < 17) greeting = 'Good afternoon';
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = serverTime?.date ?? new Date().toISOString().split('T')[0];
 
   const { data: orderSummary, isLoading: isLoadingSummary } = useQuery({
     queryKey: ['orders-summary', todayStr],
@@ -48,7 +50,7 @@ const Dashboard: React.FC = () => {
   // Set the page header
   usePageHeader({
     title: `${greeting}, ${user?.name?.split(' ')[0] ?? 'User'}`,
-    subtitle: `${settings?.name || 'TuxedoPOS'} · ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}`,
+    subtitle: `${settings?.name || 'TuxedoPOS'} · ${now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}`,
     actions: (
       <div className="flex gap-3">
         <button className="btn btn-outline bg-[var(--surface-card)] border-[1.5px]" onClick={() => { navigate('/pos'); }}>
