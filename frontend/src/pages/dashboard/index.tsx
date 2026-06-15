@@ -37,7 +37,7 @@ const Dashboard: React.FC = () => {
 
   // Sprint 2 — Live data hooks
   const { data: alerts = [] } = useDashboardAlerts();
-  const { data: recentOrders = [] } = useRecentOrders(5);
+  const { data: recentOrders = [] } = useRecentOrders(5, todayStr);
   const { data: upcomingRentals = [] } = useUpcomingRentals(3);
   const { data: appointmentData, isLoading: isLoadingAppts } = useAppointmentCount(todayStr);
   const { data: settings } = useSettings();

@@ -46,7 +46,7 @@ export const QK = {
   staff:       ()            => ['staff'] as const,
   // Sprint 2 — Dashboard & Reports
   dashboardAlerts:    ()                  => ['dashboard', 'alerts'] as const,
-  recentOrders:       (limit?: number)    => ['orders', 'recent', limit] as const,
+  recentOrders:       (limit?: number, date?: string) => ['orders', 'recent', limit, date] as const,
   upcomingRentals:    (limit?: number)    => ['rentals', 'upcoming', limit] as const,
   appointmentCount:   (date?: string)     => ['appointments', 'count', date] as const,
   revenueReport:      (period?: string)   => ['reports', 'revenue', period] as const,
@@ -279,10 +279,12 @@ export const useDashboardAlerts = () =>
     refetchInterval: 60 * 1000,
   });
 
-export const useRecentOrders = (limit = 5) =>
+export const useRecentOrders = (limit = 5, date?: string) =>
   useQuery({
-    queryKey: QK.recentOrders(limit),
-    queryFn:  () => apiClient.get<Order[]>(`/orders/recent?limit=${limit}`),
+    queryKey: QK.recentOrders(limit, date),
+    queryFn:  () => apiClient.get<Order[]>(
+      `/orders/recent?limit=${limit}${date ? `&date=${date}` : ''}`
+    ),
     staleTime: 30 * 1000,
     refetchInterval: 60 * 1000,
   });
