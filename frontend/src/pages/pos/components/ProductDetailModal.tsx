@@ -47,7 +47,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
           )}
           {canRent && !outOfStock && (
             <button
-              className="btn btn-primary"
+              className="btn btn-gold"
               style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
               onClick={() => { handleAdd(true); }}
             >

@@ -31,7 +31,7 @@ export const NewTenantModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
       onClose={onClose}
       title={
         <>
-          <SvgIcon name="building" width="20" height="20" style={{ color: 'var(--tux-gold)' }} />
+          <SvgIcon name="building" width="20" height="20" style={{ color: 'var(--accent-gold)' }} />
           New Tenant
         </>
       }

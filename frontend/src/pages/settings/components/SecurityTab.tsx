@@ -88,17 +88,17 @@ export const SecurityTab: React.FC = () => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <div className="card">
         <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <SvgIcon name="lock" width="16" height="16" style={{ color: 'var(--tux-navy)' }} />
+          <SvgIcon name="lock" width="16" height="16" style={{ color: 'var(--accent-gold-text)' }} />
           <span className="card-title">Session & Access</span>
           <span className="ml-auto text-[0.7rem] text-text-muted">Saved on this device</span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {CHECKBOX_OPTIONS.map(opt => (
-            <label key={opt.key} style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', padding: '8px 0', borderBottom: '1px solid var(--surface-border)' }}>
+            <label key={opt.key} style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', padding: '8px 0', borderBottom: '1px solid var(--border-subtle)' }}>
               <input type="checkbox"
                 checked={prefs[opt.key] ?? opt.defaultChecked}
                 onChange={() => { togglePref(opt.key); }}
-                style={{ width: 16, height: 16, accentColor: 'var(--tux-navy)', cursor: 'pointer' }} />
+                style={{ width: 16, height: 16, accentColor: 'var(--accent-gold-text)', cursor: 'pointer' }} />
               <span style={{ fontSize: '.875rem' }}>{opt.label}</span>
             </label>
           ))}
@@ -107,7 +107,7 @@ export const SecurityTab: React.FC = () => {
 
       <div className="card">
         <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <SvgIcon name="key" width="16" height="16" style={{ color: 'var(--tux-navy)' }} />
+          <SvgIcon name="key" width="16" height="16" style={{ color: 'var(--accent-gold-text)' }} />
           <span className="card-title">Change Password</span>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
@@ -128,7 +128,7 @@ export const SecurityTab: React.FC = () => {
           </div>
         </div>
         <div style={{ marginTop: 14 }}>
-          <button className="btn btn-primary" onClick={() => { void updatePassword(); }} disabled={changingPw}>
+          <button className="btn btn-gold" onClick={() => { void updatePassword(); }} disabled={changingPw}>
             {changingPw ? 'Updating...' : 'Update Password'}
           </button>
         </div>
@@ -140,7 +140,7 @@ export const SecurityTab: React.FC = () => {
           <span className="card-title" style={{ color: 'var(--status-error)' }}>Danger Zone</span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--surface-border)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--border-subtle)' }}>
             <div>
               <div style={{ fontWeight: 600, fontSize: '.875rem' }}>Export All Data</div>
               <div style={{ fontSize: '.78rem', color: 'var(--text-muted)' }}>Download a CSV export of all orders, customers, and inventory.</div>
@@ -150,7 +150,7 @@ export const SecurityTab: React.FC = () => {
               Export All Data
             </button>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--surface-border)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--border-subtle)' }}>
             <div>
               <div style={{ fontWeight: 600, fontSize: '.875rem' }}>Clear Test Data</div>
               <div style={{ fontSize: '.78rem', color: 'var(--text-muted)' }}>Remove all sample data. Cannot be undone.</div>
