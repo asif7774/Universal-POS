@@ -84,7 +84,7 @@ const Dashboard: React.FC = () => {
 
   const STATS: StatProps[] = [
     { label: "Today's Revenue", value: `$${orderSummary?.revenue?.toFixed(2) ?? '0.00'}`, change: '', positive: true, icon: 'banknote', color: 'var(--tux-navy)', sparkData: revenueData.length ? revenueData.map(d => parseFloat(String(d.revenue)) || 0) : [0] },
-    { label: 'Active Rentals', value: `${rentalStats?.out ?? 0}`, change: '', positive: true, icon: 'rental', color: 'var(--tux-gold)', sparkData: Array.from({ length: 7 }, () => rentalStats?.out ?? 0) },
+    { label: 'Active Rentals', value: `${rentalStats?.out ?? 0}`, change: '', positive: true, icon: 'tuxedo', color: 'var(--tux-gold)', sparkData: Array.from({ length: 7 }, () => rentalStats?.out ?? 0) },
     { label: 'Appointments Today', value: `${appointmentData?.count ?? 0}`, change: '', positive: true, icon: 'appointments', color: 'var(--status-success)', sparkData: Array.from({ length: 7 }, () => appointmentData?.count ?? 0) },
     { label: 'Overdue Returns', value: `${rentalStats?.overdue ?? 0}`, change: '', positive: false, icon: 'warning', color: 'var(--status-error)', sparkData: Array.from({ length: 7 }, () => rentalStats?.overdue ?? 0) },
   ];
