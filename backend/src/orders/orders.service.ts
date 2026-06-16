@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { db } from '../db';
 import { orders, orderItems, customers } from '../db/schema';
-import { eq, and, desc, or, sql } from 'drizzle-orm';
+import { eq, and, desc, or, gte, lte, sql } from 'drizzle-orm';
 
 export interface OrderItem {
   id: string;
