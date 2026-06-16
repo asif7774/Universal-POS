@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { db } from '../db';
 import { orders, orderItems, customers } from '../db/schema';
-import { eq, and, desc, or } from 'drizzle-orm';
+import { eq, and, desc, or, gte, lte } from 'drizzle-orm';
 
 export interface OrderItem {
   id: string;
@@ -113,14 +113,17 @@ export class OrdersService {
   }
 
   async getDailySummary(tenantId: string, date: string) {
-    // Include any order that is completed OR has been paid — covers all revenue-generating transactions
-    const all = await db.select().from(orders).where(
+    const start = new Date(`${date}T00:00:00.000Z`);
+    const end   = new Date(`${date}T23:59:59.999Z`);
+
+    const dayOrders = await db.select().from(orders).where(
       and(
         eq(orders.tenantId, tenantId),
         or(eq(orders.status, 'completed'), eq(orders.paymentStatus, 'paid')),
+        gte(orders.createdAt, start),
+        lte(orders.createdAt, end),
       ),
     );
-    const dayOrders = all.filter(o => new Date(o.createdAt).toISOString().split('T')[0] === date);
 
     const revenue = Math.round(
       dayOrders.reduce((sum, o) => {
@@ -128,37 +131,43 @@ export class OrdersService {
         return sum + (isNaN(t) ? 0 : t);
       }, 0) * 100,
     ) / 100;
-    const count = dayOrders.length;
-    const rentalCount = dayOrders.filter(o => o.type === 'rental' || o.type === 'mixed').length;
 
-    return { date, revenue, count, rentalCount };
+    return {
+      date,
+      revenue,
+      count: dayOrders.length,
+      rentalCount: dayOrders.filter(o => o.type === 'rental' || o.type === 'mixed').length,
+    };
   }
 
   async findRecent(tenantId: string, limit = 5, date?: string): Promise<Order[]> {
+    const conditions = [eq(orders.tenantId, tenantId)];
+
+    if (date) {
+      const start = new Date(`${date}T00:00:00.000Z`);
+      const end   = new Date(`${date}T23:59:59.999Z`);
+      conditions.push(gte(orders.createdAt, start));
+      conditions.push(lte(orders.createdAt, end));
+    }
+
     const res = await db.select({
       order: orders,
       customer: {
         firstName: customers.firstName,
         lastName: customers.lastName,
-      }
+      },
     })
     .from(orders)
     .leftJoin(customers, eq(orders.customerId, customers.id))
-    .where(eq(orders.tenantId, tenantId))
+    .where(and(...conditions))
     .orderBy(desc(orders.createdAt))
-    .limit(date ? 200 : limit);
+    .limit(limit);
 
-    const mapped = res.map(row => ({
+    return res.map(row => ({
       ...row.order,
       customerName: row.customer?.firstName
         ? `${row.customer.firstName} ${row.customer.lastName || ''}`.trim()
-        : 'Guest'
+        : 'Guest',
     })) as any[];
-
-    if (!date) return mapped.slice(0, limit);
-
-    return mapped
-      .filter(o => new Date(o.createdAt).toISOString().split('T')[0] === date)
-      .slice(0, limit);
   }
 }

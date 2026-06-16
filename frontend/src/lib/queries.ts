@@ -286,8 +286,13 @@ export const useRecentOrders = (limit = 5, date?: string) =>
     queryFn:  () => apiClient.get<Order[]>(
       `/orders/recent?limit=${limit}${date ? `&date=${date}` : ''}`
     ),
-    staleTime: 30 * 1000,
+    // Date-scoped queries must never serve cached data from a previous date context.
+    // staleTime:0 + refetchOnMount:'always' ensures a fresh fetch whenever the date
+    // changes or the user navigates back to the dashboard.
+    staleTime: date ? 0 : 30 * 1000,
+    refetchOnMount: date ? 'always' : true,
     refetchInterval: 60 * 1000,
+    gcTime: date ? 0 : 5 * 60 * 1000,
   });
 
 export interface UpcomingRental {
