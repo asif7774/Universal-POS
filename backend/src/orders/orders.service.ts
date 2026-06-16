@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { db } from '../db';
 import { orders, orderItems, customers } from '../db/schema';
-import { eq, and, desc, or, gte, lte } from 'drizzle-orm';
+import { eq, and, desc, or, sql } from 'drizzle-orm';
 
 export interface OrderItem {
   id: string;
@@ -113,30 +113,26 @@ export class OrdersService {
   }
 
   async getDailySummary(tenantId: string, date: string) {
-    const start = new Date(`${date}T00:00:00.000Z`);
-    const end   = new Date(`${date}T23:59:59.999Z`);
-
-    const dayOrders = await db.select().from(orders).where(
-      and(
-        eq(orders.tenantId, tenantId),
-        or(eq(orders.status, 'completed'), eq(orders.paymentStatus, 'paid')),
-        gte(orders.createdAt, start),
-        lte(orders.createdAt, end),
-      ),
-    );
-
-    const revenue = Math.round(
-      dayOrders.reduce((sum, o) => {
-        const t = parseFloat(String(o.total ?? '0'));
-        return sum + (isNaN(t) ? 0 : t);
-      }, 0) * 100,
-    ) / 100;
+    const [agg] = await db
+      .select({
+        revenue:      sql<string>`COALESCE(SUM(${orders.total}), 0)`,
+        count:        sql<number>`COUNT(*)::int`,
+        rentalCount:  sql<number>`COUNT(*) FILTER (WHERE ${orders.type} IN ('rental', 'mixed'))::int`,
+      })
+      .from(orders)
+      .where(
+        and(
+          eq(orders.tenantId, tenantId),
+          or(eq(orders.status, 'completed'), eq(orders.paymentStatus, 'paid')),
+          sql`${orders.createdAt}::date = ${date}::date`,
+        ),
+      );
 
     return {
       date,
-      revenue,
-      count: dayOrders.length,
-      rentalCount: dayOrders.filter(o => o.type === 'rental' || o.type === 'mixed').length,
+      revenue: Math.round(parseFloat(agg?.revenue ?? '0') * 100) / 100,
+      count: agg?.count ?? 0,
+      rentalCount: agg?.rentalCount ?? 0,
     };
   }
 

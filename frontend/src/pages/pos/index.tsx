@@ -21,7 +21,7 @@ const POS: React.FC = () => {
   const { showSnackbar } = useSnackbar();
   const { getCheckoutExtensions } = usePlugins();
   const { data: settings } = useSettings();
-  const TAX_RATE = settings?.taxRate ? parseFloat(settings.taxRate) / 100 : 0.0875;
+  const TAX_RATE = settings?.taxRate ? parseFloat(settings.taxRate) : 0.0875;
 
   // -- State --
   const [cart, setCart] = useState<CartItem[]>([]);
