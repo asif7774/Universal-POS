@@ -30,9 +30,11 @@ const Inventory: React.FC = () => {
 
   const totalItems = inventory.reduce((s, i) => s + Object.values(i.sizes).reduce((a, b) => a + b.total, 0), 0);
   const totalOut = inventory.reduce((s, i) => s + Object.values(i.sizes).reduce((a, b) => a + b.out, 0), 0);
-  const lowStockItems = inventory.filter(i =>
-    Object.values(i.sizes).some(s => s.available <= i.lowStockThreshold && s.available > 0)
-  ).length;
+  const lowStockItems = inventory.filter(i => {
+    const avail = Object.values(i.sizes).reduce((s, v) => s + v.available, 0);
+    const total = Object.values(i.sizes).reduce((s, v) => s + v.total, 0);
+    return avail > 0 && total > 0 && avail / total < 0.2;
+  }).length;
   const outOfStock = inventory.filter(i =>
     Object.values(i.sizes).some(s => s.available === 0)
   ).length;

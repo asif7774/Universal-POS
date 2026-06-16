@@ -25,7 +25,7 @@ export const PredictiveAnalytics: React.FC = () => {
       .slice(0, 4)
       .map(([category, data]) => {
         const ratio = data.total > 0 ? data.available / data.total : 1;
-        const risk: 'low' | 'medium' | 'high' = ratio < 0.3 ? 'high' : ratio < 0.6 ? 'medium' : 'low';
+        const risk: 'low' | 'medium' | 'high' = ratio < 0.2 ? 'high' : ratio < 0.5 ? 'medium' : 'low';
         return { category, available: data.available, total: data.total, risk };
       })
       .sort((a, b) => {

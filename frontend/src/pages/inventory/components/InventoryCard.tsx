@@ -13,11 +13,11 @@ const fmt = (n: number) => `$${n.toFixed(2)}`;
 export const InventoryCard = memo(({ item, onClick }: InventoryCardProps) => {
   const totalAvail = Object.values(item.sizes).reduce((s, v) => s + v.available, 0);
   const totalAll = Object.values(item.sizes).reduce((s, v) => s + v.total, 0);
-  const hasLow = Object.values(item.sizes).some(s => s.available <= item.lowStockThreshold && s.available > 0);
   const hasOut = Object.values(item.sizes).some(s => s.available === 0);
 
   const ratio = totalAll > 0 ? totalAvail / totalAll : 0;
-  const fillClass = ratio < 0.3 ? 'progress-fill-error' : ratio < 0.6 ? 'progress-fill-gold' : 'progress-fill-emerald';
+  const hasLow = totalAvail > 0 && ratio < 0.2;
+  const fillClass = ratio < 0.2 ? 'progress-fill-error' : ratio < 0.5 ? 'progress-fill-gold' : 'progress-fill-emerald';
 
   return (
     <div className="panel hover:bg-[var(--bg-panel-hover)] transition-colors cursor-pointer" onClick={onClick}>
@@ -68,7 +68,7 @@ export const InventoryCard = memo(({ item, onClick }: InventoryCardProps) => {
             <div className="text-[0.75rem] text-[var(--text-muted)]">Total Available</div>
             <div
               className="text-[1.2rem] font-black"
-              style={{ color: totalAvail === 0 ? 'var(--status-error)' : totalAvail <= item.lowStockThreshold ? 'var(--status-warning)' : 'var(--status-success)' }}
+              style={{ color: totalAvail === 0 ? 'var(--status-error)' : ratio < 0.2 ? 'var(--status-warning)' : 'var(--status-success)' }}
             >
               {totalAvail} / {totalAll}
             </div>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: none;">
-  <!-- Generated SVG Sprite - 2026-05-15T16:35:32.236Z -->
+  <!-- Generated SVG Sprite - 2026-06-16T15:51:48.548Z -->
   <!-- Total Icons: 59 -->
   <symbol id="accessory" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M2 10l6 4l-6 4v-8z" /><path d="M22 10l-6 4l6 4v-8z" /><circle cx="12" cy="14" r="2" />
@@ -167,7 +167,7 @@
   </symbol>
 
   <symbol id="rental" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+    <path d="M12 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" /><path d="M12 5v3" /><path d="M12 8L3 16h18L12 8Z" />
   </symbol>
 
   <symbol id="reports" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
