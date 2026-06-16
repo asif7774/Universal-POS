@@ -19,17 +19,21 @@ const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { data: serverTime } = useServerTime();
-  const now = serverTime ? new Date(serverTime.timestamp) : new Date();
-  const hour = now.getHours();
+  const { data: serverTime, isLoading: isLoadingTime } = useServerTime();
+  // todayStr must never fall back to the client clock — a tampered OS clock would
+  // let any user shift revenue into or out of "today". Block rendering until the
+  // server-authoritative date arrives.
+  const todayStr = serverTime?.date;
+  const now = serverTime ? new Date(serverTime.timestamp) : null;
+  const hour = now?.getHours() ?? 12;
   let greeting = 'Good evening';
   if (hour < 12) greeting = 'Good morning';
   else if (hour < 17) greeting = 'Good afternoon';
-  const todayStr = serverTime?.date ?? new Date().toISOString().split('T')[0];
 
   const { data: orderSummary, isLoading: isLoadingSummary } = useQuery({
     queryKey: ['orders-summary', todayStr],
     queryFn: () => apiClient.get<{ revenue: number, count: number }>(`/orders/summary?date=${todayStr}`),
+    enabled: !!todayStr,
   });
 
   const { data: rentalStats, isLoading: isLoadingStats } = useQuery({
@@ -45,12 +49,12 @@ const Dashboard: React.FC = () => {
   const { data: settings } = useSettings();
   const { data: revenueData = [] } = useRevenueReport('week');
 
-  const isLoadingDashboard = isLoadingSummary || isLoadingStats || isLoadingAppts;
+  const isLoadingDashboard = isLoadingTime || !todayStr || isLoadingSummary || isLoadingStats || isLoadingAppts;
 
   // Set the page header
   usePageHeader({
     title: `${greeting}, ${user?.name?.split(' ')[0] ?? 'User'}`,
-    subtitle: `${settings?.name || 'TuxedoPOS'} · ${now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}`,
+    subtitle: `${settings?.name || 'TuxedoPOS'} · ${now?.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }) ?? ''}`,
     actions: (
       <div className="flex gap-3">
         <button className="btn btn-outline hidden sm:flex" onClick={() => { navigate('/pos'); }}>

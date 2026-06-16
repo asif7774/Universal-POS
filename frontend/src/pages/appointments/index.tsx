@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../lib/apiClient';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
@@ -7,20 +7,25 @@ import { HOURS, TYPE_CONFIG, STATUS_CONFIG, fmtDay } from 'constants/appointment
 import { NewApptModal } from './components/NewApptModal';
 import { AppointmentDetailModal } from './components/AppointmentDetailModal';
 import { usePageHeader } from 'contexts/PageHeaderContext';
+import { useServerTime } from '../../lib/queries';
 
 const Appointments: React.FC = () => {
-  const today = useMemo(() => new Date().toISOString().split('T')[0], []);
+  const { data: serverTime } = useServerTime();
+  const today = serverTime?.date ?? '';
   const [weekOffset, setWeekOffset] = useState(0);
   const DAYS = useMemo(() => {
+    if (!today) return [];
     const days: string[] = [];
     for (let i = weekOffset - 1; i < weekOffset + 7; i++) {
-      const d = new Date(today);
-      d.setDate(d.getDate() + i);
+      const d = new Date(`${today}T12:00:00Z`);
+      d.setUTCDate(d.getUTCDate() + i);
       days.push(d.toISOString().split('T')[0]);
     }
     return days;
   }, [today, weekOffset]);
-  const [selectedDay, setSelectedDay] = useState(() => new Date().toISOString().split('T')[0]);
+  // selectedDay initialises to '' and syncs to today once serverTime arrives
+  const [selectedDay, setSelectedDay] = useState('');
+  useEffect(() => { if (today && !selectedDay) setSelectedDay(today); }, [today, selectedDay]);
   const [view, setView] = useState<'week' | 'list'>('week');
   const [selected, setSelected] = useState<Appointment | null>(null);
   const [showNew, setShowNew] = useState(false);
@@ -92,7 +97,7 @@ const Appointments: React.FC = () => {
         </button>
         <div className="flex gap-2 overflow-x-auto flex-1">
         {DAYS.map(d => {
-          const info = fmtDay(d);
+          const info = fmtDay(d, today);
           const count = apptsByDay[d]?.filter(a => a.status !== 'Cancelled').length ?? 0;
           const isSelected = d === selectedDay;
           return (
@@ -216,7 +221,7 @@ const Appointments: React.FC = () => {
               {appointments.slice().sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`)).map(appt => {
                 const cfg = TYPE_CONFIG[appt.type] || TYPE_CONFIG['Consultation'];
                 const scfg = STATUS_CONFIG[appt.status];
-                const dInfo = fmtDay(appt.date);
+                const dInfo = fmtDay(appt.date, today);
                 return (
                   <tr key={appt.id} onClick={() => { setSelected(appt); }} className={appt.status === 'Cancelled' ? 'opacity-50' : 'opacity-100'}>
                     <td className="font-semibold text-[0.85rem] whitespace-nowrap">

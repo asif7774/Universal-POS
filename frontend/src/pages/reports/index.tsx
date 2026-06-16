@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../lib/apiClient';
-import { useRevenueReport, useCategorySales, usePaymentMethods } from '../../lib/queries';
+import { useRevenueReport, useCategorySales, usePaymentMethods, useServerTime } from '../../lib/queries';
 import { DailySummary } from 'types/reports';
 import { KPICards } from './components/KPICards';
 import { RevenueChart } from './components/RevenueChart';
@@ -13,11 +13,13 @@ import { usePageHeader } from 'contexts/PageHeaderContext';
 const Reports: React.FC = () => {
   const [period, setPeriod] = useState<'today' | 'week' | 'month'>('week');
 
-  const today = new Date().toISOString().split('T')[0];
+  const { data: serverTime } = useServerTime();
+  const today = serverTime?.date; // never fall back to client clock for business queries
 
   const { data: summary, isLoading: summaryLoading } = useQuery<DailySummary>({
     queryKey: ['orders-summary', today],
     queryFn: () => apiClient.get(`/orders/summary?date=${today}`),
+    enabled: !!today,
     refetchInterval: 30000,
   });
 
@@ -42,7 +44,7 @@ const Reports: React.FC = () => {
 
   usePageHeader({
     title: 'Advanced Reporting',
-    subtitle: `Live analytics · ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}`,
+    subtitle: `Live analytics · ${serverTime ? new Date(serverTime.timestamp).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) : ''}`,
     actions: (
       <div className="flex gap-2">
         {(['today', 'week', 'month'] as const).map(p => (

@@ -1,18 +1,10 @@
 import { AppointmentType, AppointmentStatus } from 'types/appointments';
 
-export const TODAY = new Date().toISOString().split('T')[0];
+// TODAY and DAYS are intentionally removed — computing them at module-load time
+// from the client clock means they freeze the wrong date if the app stays open
+// overnight, and can be trivially spoofed. Consumers receive `today` from the
+// server via useServerTime() and pass it into fmtDay().
 
-export const getDays = () => {
-  const days = [];
-  for (let i = -1; i < 7; i++) {
-    const d = new Date(TODAY);
-    d.setDate(d.getDate() + i);
-    days.push(d.toISOString().split('T')[0]);
-  }
-  return days;
-};
-
-export const DAYS = getDays();
 export const HOURS = ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30'];
 
 export const TYPE_CONFIG: Record<AppointmentType, { color: string; icon: string; bg: string }> = {
@@ -31,13 +23,14 @@ export const STATUS_CONFIG: Record<AppointmentStatus, { cls: string; dot: string
   'No-Show':  { cls: 'badge-neutral', dot: '#94A3B8' },
 };
 
-export const fmtDay = (d: string) => {
-  const date = new Date(`${d  }T12:00:00`);
+// today must be passed in from the server-authoritative date, never from new Date()
+export const fmtDay = (d: string, today = '') => {
+  const date = new Date(`${d}T12:00:00Z`);
   return {
     weekday: date.toLocaleDateString('en-US', { weekday: 'short' }),
-    day: date.getDate(),
+    day: date.getUTCDate(),
     month: date.toLocaleDateString('en-US', { month: 'short' }),
-    isToday: d === TODAY,
-    isPast: d < TODAY,
+    isToday: d === today,
+    isPast: today ? d < today : false,
   };
 };
