@@ -18,6 +18,7 @@ const Inventory: React.FC = () => {
   const { data: inventory = [], isLoading, error } = useQuery<InventoryItem[]>({
     queryKey: ['inventory'],
     queryFn: async () => await apiClient.get<InventoryItem[]>('/inventory'),
+    staleTime: 0, // always fetch fresh so new products appear immediately
   });
 
   const CATEGORIES = ['All', ...Array.from(new Set(inventory.map(i => i.category)))];
@@ -28,15 +29,18 @@ const Inventory: React.FC = () => {
     return matchCat && matchSearch;
   });
 
-  const totalItems = inventory.reduce((s, i) => s + Object.values(i.sizes).reduce((a, b) => a + b.total, 0), 0);
-  const totalOut = inventory.reduce((s, i) => s + Object.values(i.sizes).reduce((a, b) => a + b.out, 0), 0);
+  // Use Number() coercions so string values from JSON don't break arithmetic
+  const sizeEntries = (i: InventoryItem) => Object.values(i.sizes).filter(s => Number(s.total) > 0);
+
+  const totalItems    = inventory.reduce((s, i) => s + sizeEntries(i).reduce((a, b) => a + Number(b.total), 0), 0);
+  const totalOut      = inventory.reduce((s, i) => s + sizeEntries(i).reduce((a, b) => a + Number(b.out), 0), 0);
   const lowStockItems = inventory.filter(i => {
-    const avail = Object.values(i.sizes).reduce((s, v) => s + v.available, 0);
-    const total = Object.values(i.sizes).reduce((s, v) => s + v.total, 0);
+    const avail = sizeEntries(i).reduce((s, v) => s + Number(v.available), 0);
+    const total = sizeEntries(i).reduce((s, v) => s + Number(v.total), 0);
     return avail > 0 && total > 0 && avail / total < 0.2;
   }).length;
   const outOfStock = inventory.filter(i =>
-    Object.values(i.sizes).some(s => s.available === 0)
+    sizeEntries(i).some(s => Number(s.available) === 0)
   ).length;
 
   usePageHeader({

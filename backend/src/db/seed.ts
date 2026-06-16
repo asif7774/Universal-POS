@@ -135,6 +135,31 @@ async function seed() {
     }))
   );
 
+  // Ivory Dinner Jacket: fully out of stock (all sizes rented out, available=0)
+  const [outOfStockProduct] = await db.insert(products).values({
+    tenantId,
+    sku: 'TUX-IVR-004',
+    name: 'Ivory Dinner Jacket',
+    type: 'rental',
+    category: 'Tuxedos',
+    rentalRatePerDay: '120.00',
+    taxable: true,
+    isActive: true,
+    trackInventory: true,
+  }).returning();
+
+  await db.insert(inventory).values(
+    sizes.map(size => ({
+      tenantId, storeId,
+      productId: outOfStockProduct.id,
+      size,
+      totalQty: 8,
+      availableQty: 0,      // 0/64 total = 0% → OUT OF STOCK
+      rentedQty: 8,
+      location: 'B-3',
+    }))
+  );
+
   // 5. Customers & Measurements
   const customerList = [
     { firstName: 'Marcus', lastName: 'Johnson', email: 'marcus@example.com', phone: '555-0101', loyaltyPoints: 450, totalOrders: 3, totalSpent: '850.00' },
