@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { db } from '../db';
 import { orders, orderItems, customers } from '../db/schema';
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, and, desc, or } from 'drizzle-orm';
 
 export interface OrderItem {
   id: string;
@@ -113,15 +113,25 @@ export class OrdersService {
   }
 
   async getDailySummary(tenantId: string, date: string) {
-    // Basic memory filter for MVP to avoid complex date functions in SQLite/PG
-    const all = await db.select().from(orders).where(and(eq(orders.tenantId, tenantId), eq(orders.status, 'completed')));
+    // Include any order that is completed OR has been paid — covers all revenue-generating transactions
+    const all = await db.select().from(orders).where(
+      and(
+        eq(orders.tenantId, tenantId),
+        or(eq(orders.status, 'completed'), eq(orders.paymentStatus, 'paid')),
+      ),
+    );
     const dayOrders = all.filter(o => new Date(o.createdAt).toISOString().split('T')[0] === date);
-    
-    const revenue = dayOrders.reduce((s, o) => s + parseFloat(o.total as unknown as string), 0);
+
+    const revenue = Math.round(
+      dayOrders.reduce((sum, o) => {
+        const t = parseFloat(String(o.total ?? '0'));
+        return sum + (isNaN(t) ? 0 : t);
+      }, 0) * 100,
+    ) / 100;
     const count = dayOrders.length;
     const rentalCount = dayOrders.filter(o => o.type === 'rental' || o.type === 'mixed').length;
-    
-    return { date, revenue, count, rentalCount, orders: dayOrders };
+
+    return { date, revenue, count, rentalCount };
   }
 
   async findRecent(tenantId: string, limit = 5, date?: string): Promise<Order[]> {
