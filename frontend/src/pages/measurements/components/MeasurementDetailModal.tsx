@@ -64,7 +64,7 @@ export const MeasurementDetailModal: React.FC<MeasurementDetailModalProps> = ({ 
     if (showDeleteConfirm) {
       return (
         <>
-          <span style={{ fontSize: '.85rem', color: 'var(--status-error)', fontWeight: 600 }}>Delete this measurement record?</span>
+          <span className="text-[.85rem] text-[var(--status-error)] font-semibold">Delete this measurement record?</span>
           <button className="btn btn-outline" onClick={() => { setShowDeleteConfirm(false); }}>Cancel</button>
           <button className="btn btn-danger"
             onClick={handleDelete} disabled={deleteMeasurement.isPending}>
@@ -85,10 +85,10 @@ export const MeasurementDetailModal: React.FC<MeasurementDetailModalProps> = ({ 
     }
     return (
       <>
-        <button className="btn btn-outline" onClick={startEditing} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+        <button className="btn btn-outline inline-flex items-center gap-1.5" onClick={startEditing}>
           <SvgIcon name="tailoring" width="14" height="14" /> Edit
         </button>
-        <button className="btn btn-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+        <button className="btn btn-gold inline-flex items-center gap-1.5"
           onClick={() => { window.print(); }}>
           <SvgIcon name="printer" width="14" height="14" /> Print Card
         </button>
@@ -107,8 +107,8 @@ export const MeasurementDetailModal: React.FC<MeasurementDetailModalProps> = ({ 
     >
       {selected && (
         isEditing ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 24px' }}>
+          <div className="flex flex-col gap-3">
+            <div className="grid grid-cols-2 gap-x-6 gap-y-2.5">
               {FIELDS.map(f => (
                 <div key={f.key} className="input-group">
                   <label className="input-label">{f.label}</label>
@@ -119,40 +119,38 @@ export const MeasurementDetailModal: React.FC<MeasurementDetailModalProps> = ({ 
             </div>
             <div className="input-group">
               <label className="input-label">Tailor Notes</label>
-              <textarea className="input" rows={2} value={editForm.notes ?? ''}
-                onChange={e => { setEditForm(form => ({ ...form, notes: e.target.value })); }}
-                style={{ resize: 'vertical' }} />
+              <textarea className="input resize-y" rows={2} value={editForm.notes ?? ''}
+                onChange={e => { setEditForm(form => ({ ...form, notes: e.target.value })); }} />
             </div>
             <div className="input-group">
               <label className="input-label">Fitting Notes</label>
-              <textarea className="input" rows={2} value={editForm.fittingNotes ?? ''}
-                onChange={e => { setEditForm(form => ({ ...form, fittingNotes: e.target.value })); }}
-                style={{ resize: 'vertical' }} />
+              <textarea className="input resize-y" rows={2} value={editForm.fittingNotes ?? ''}
+                onChange={e => { setEditForm(form => ({ ...form, fittingNotes: e.target.value })); }} />
             </div>
           </div>
         ) : (
           <>
-            <div style={{ fontSize: '.8rem', color: 'var(--text-muted)', marginTop: -16, marginBottom: 16 }}>
+            <div className="text-[.8rem] text-[var(--text-muted)] -mt-4 mb-4">
               Measured {fmtDate(selected.date)} · by {selected.takenBy}
             </div>
             {/* Measurement grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 32px' }}>
+            <div className="grid grid-cols-2 gap-x-8">
               {FIELDS.filter(f => selected[f.key]).map(f => (
-                <div key={f.key} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--border-subtle)', fontSize: '.875rem' }}>
-                  <span style={{ color: 'var(--text-secondary)' }}>{f.label}</span>
-                  <span style={{ fontWeight: 700 }}>{String(selected[f.key])}</span>
+                <div key={f.key} className="flex justify-between py-2 border-b border-[var(--border-subtle)] text-[.875rem]">
+                  <span className="text-[var(--text-secondary)]">{f.label}</span>
+                  <span className="font-bold">{String(selected[f.key])}</span>
                 </div>
               ))}
             </div>
             {selected.notes && (
-              <div style={{ marginTop: 16, padding: '10px 12px', background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', fontSize: '.85rem' }}>
-                <div style={{ fontWeight: 600, marginBottom: 4, color: 'var(--text-secondary)', fontSize: '.75rem', textTransform: 'uppercase' }}>Tailor Notes</div>
+              <div className="mt-4 px-3 py-2.5 bg-[var(--bg-panel-hover)] rounded-[var(--radius-sm)] text-[.85rem]">
+                <div className="font-semibold mb-1 text-[var(--text-secondary)] text-[.75rem] uppercase">Tailor Notes</div>
                 {selected.notes}
               </div>
             )}
             {selected.fittingNotes && (
-              <div style={{ marginTop: 10, padding: '10px 12px', background: '#FDF8E7', border: '1px solid #FDE68A', borderRadius: 'var(--radius-sm)', fontSize: '.85rem', color: '#92400E' }}>
-                <div style={{ fontWeight: 600, marginBottom: 4, fontSize: '.75rem', textTransform: 'uppercase' }}>Fitting Notes</div>
+              <div className="mt-2.5 px-3 py-2.5 bg-[#FDF8E7] border border-[#FDE68A] rounded-[var(--radius-sm)] text-[.85rem] text-[#92400E]">
+                <div className="font-semibold mb-1 text-[.75rem] uppercase">Fitting Notes</div>
                 {selected.fittingNotes}
               </div>
             )}

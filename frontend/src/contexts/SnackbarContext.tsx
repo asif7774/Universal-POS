@@ -27,7 +27,7 @@ export const SnackbarProvider: React.FC<{ children: ReactNode }> = ({ children }
   const showSnackbar = useCallback((message: string, type: SnackbarType = 'info') => {
     const id = Math.random().toString(36).substring(2, 9);
     setSnackbars(prev => [...prev, { id, message, type }]);
-    
+
     setTimeout(() => {
       setSnackbars(prev => prev.filter(s => s.id !== id));
     }, 3000);
@@ -40,19 +40,15 @@ export const SnackbarProvider: React.FC<{ children: ReactNode }> = ({ children }
   return (
     <SnackbarContext.Provider value={{ showSnackbar }}>
       {children}
-      <div style={{
-        position: 'fixed', top: 24, right: 24,
-        display: 'flex', flexDirection: 'column', gap: 8, zIndex: 9999,
-        pointerEvents: 'none'
-      }}>
+      <div className="fixed top-6 right-6 flex flex-col gap-2 z-[9999] pointer-events-none">
         {snackbars.map(s => (
-          <div key={s.id} className={`toast toast-${s.type} animate-slide-down`} style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <SvgIcon 
-              name={s.type === 'success' ? 'success' : s.type === 'error' ? 'warning' : s.type === 'warning' ? 'warning' : 'info'} 
-              width="18" height="18" 
+          <div key={s.id} className={`toast toast-${s.type} animate-slide-down pointer-events-auto flex items-center gap-[10px]`}>
+            <SvgIcon
+              name={s.type === 'success' ? 'success' : s.type === 'error' ? 'warning' : s.type === 'warning' ? 'warning' : 'info'}
+              width="18" height="18"
             />
-            <span style={{ flex: 1 }}>{s.message}</span>
-            <button onClick={() => { removeSnackbar(s.id); }} style={{ marginLeft: 8, background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+            <span className="flex-1">{s.message}</span>
+            <button onClick={() => { removeSnackbar(s.id); }} className="ml-2 bg-transparent border-none text-inherit cursor-pointer p-1 flex items-center justify-center">✕</button>
           </div>
         ))}
       </div>

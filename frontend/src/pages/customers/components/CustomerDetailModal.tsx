@@ -22,9 +22,9 @@ const fmt = (n: number | string | null | undefined) => `$${parseFloat((n as stri
 const fmtDate = (d: string | null | undefined) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Never';
 
 const MeasurementRow = ({ label, value }: { label: string; value: string | null | undefined }) => (
-  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid var(--border-subtle)', fontSize: '.85rem' }}>
-    <span style={{ color: 'var(--text-secondary)' }}>{label}</span>
-    <span style={{ fontWeight: 700 }}>{value || '-'}</span>
+  <div className="flex justify-between py-[7px] border-b border-[var(--border-subtle)] text-[.85rem]">
+    <span className="text-[var(--text-secondary)]">{label}</span>
+    <span className="font-bold">{value || '-'}</span>
   </div>
 );
 
@@ -127,13 +127,13 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
       onClose={() => { setSelected(null); setIsEditing(false); setShowDeleteConfirm(false); setIsEditingMeasurements(false); }}
       maxWidth={580}
       title={(
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <div className="avatar" style={{ width: 40, height: 40, fontSize: '.9rem', background: selected.tags?.includes('VIP') ? 'var(--accent-gold-subtle)' : 'var(--bg-panel-hover)', color: selected.tags?.includes('VIP') ? 'var(--accent-gold-text)' : 'var(--text-primary)' }}>
+        <div className="flex gap-3 items-center">
+          <div className="avatar w-10 h-10 text-[.9rem]" style={{ background: selected.tags?.includes('VIP') ? 'var(--accent-gold-subtle)' : 'var(--bg-panel-hover)', color: selected.tags?.includes('VIP') ? 'var(--accent-gold-text)' : 'var(--text-primary)' }}>
             {selected.firstName[0]}{selected.lastName[0]}
           </div>
-          <div style={{ textAlign: 'left' }}>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.1rem', lineHeight: 1.2 }}>{selected.firstName} {selected.lastName}</div>
-            <div style={{ fontSize: '.75rem', color: 'var(--text-secondary)', fontWeight: 400 }}>
+          <div className="text-left">
+            <div className="font-['Playfair_Display',serif] text-[1.1rem] leading-[1.2]">{selected.firstName} {selected.lastName}</div>
+            <div className="text-[.75rem] text-[var(--text-secondary)] font-normal">
               {selected.email} · {selected.phone}
             </div>
           </div>
@@ -142,7 +142,7 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
       footer={
         showDeleteConfirm ? (
           <>
-            <span style={{ fontSize: '.85rem', color: 'var(--status-error)', fontWeight: 600 }}>Delete this customer permanently?</span>
+            <span className="text-[.85rem] text-[var(--status-error)] font-semibold">Delete this customer permanently?</span>
             <button className="btn btn-outline" onClick={() => { setShowDeleteConfirm(false); }}>Cancel</button>
             <button className="btn btn-danger"
               onClick={handleDelete} disabled={deleteCustomer.isPending}>
@@ -165,10 +165,10 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
           </>
         ) : (
           <>
-            <button className="btn btn-outline" onClick={startEditing} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <button className="btn btn-outline inline-flex items-center gap-[6px]" onClick={startEditing}>
               <SvgIcon name="tailoring" width="14" height="14" /> Edit
             </button>
-            <button className="btn btn-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+            <button className="btn btn-gold inline-flex items-center gap-[6px]"
               onClick={() => { setSelected(null); navigate('/rentals'); }}>
               <SvgIcon name="rental" width="14" height="14" /> + New Rental
             </button>
@@ -177,19 +177,15 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
         )
       }
     >
-      <div style={{ margin: '-16px -20px 0' }}>
+      <div className="-mx-5 -mt-4">
         {/* Tabs */}
-        <div style={{ display: 'flex', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-panel-hover)' }}>
+        <div className="flex border-b border-[var(--border-subtle)] bg-[var(--bg-panel-hover)]">
           {(['profile', 'measurements', 'history'] as const).map(tab => (
             <button key={tab} onClick={() => { setActiveTab(tab); setIsEditing(false); setIsEditingMeasurements(false); }}
+              className="flex-1 py-3 px-[10px] border-none bg-none cursor-pointer font-semibold text-[.8rem] capitalize tracking-[.02em] transition-all duration-[.15s] flex items-center justify-center gap-[6px]"
               style={{
-                flex: 1, padding: '12px 10px', border: 'none', background: 'none',
-                cursor: 'pointer', fontWeight: 600, fontSize: '.8rem',
-                textTransform: 'capitalize', letterSpacing: '.02em',
                 color: activeTab === tab ? 'var(--accent-gold-text)' : 'var(--text-muted)',
                 borderBottom: activeTab === tab ? '2px solid var(--accent-gold)' : '2px solid transparent',
-                transition: 'all .15s',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6
               }}>
               <SvgIcon name={tab === 'measurements' ? 'measurements' : tab === 'history' ? 'clipboard' : 'user'} width="14" height="14" />
               {tab}
@@ -197,11 +193,11 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
           ))}
         </div>
 
-        <div style={{ padding: '20px' }}>
+        <div className="p-5">
           {activeTab === 'profile' && (
             isEditing ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div className="flex flex-col gap-[14px]">
+                <div className="grid grid-cols-2 gap-3">
                   <div className="input-group">
                     <label className="input-label">First Name</label>
                     <input className="input" value={editForm.firstName}
@@ -225,14 +221,13 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
                 </div>
                 <div className="input-group">
                   <label className="input-label">Notes</label>
-                  <textarea className="input" rows={2} value={editForm.notes}
-                    onChange={e => { setEditForm(f => ({ ...f, notes: e.target.value })); }}
-                    style={{ resize: 'vertical' }} />
+                  <textarea className="input resize-y" rows={2} value={editForm.notes}
+                    onChange={e => { setEditForm(f => ({ ...f, notes: e.target.value })); }} />
                 </div>
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div className="flex flex-col gap-4">
+                <div className="grid grid-cols-2 gap-3">
                   {[
                     { label: 'Member Since', value: fmtDate(selected.createdAt) },
                     { label: 'Last Visit', value: fmtDate(selected.lastVisitAt) },
@@ -241,30 +236,30 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
                     { label: 'Loyalty Points', value: `${selected.loyaltyPoints} pts` },
                     { label: 'Value as Credit', value: fmt(selected.loyaltyPoints * 0.01) },
                   ].map(item => (
-                    <div key={item.label} style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
-                      <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 4 }}>{item.label}</div>
-                      <div style={{ fontSize: '.95rem', fontWeight: 700 }}>{item.value}</div>
+                    <div key={item.label} className="bg-[var(--bg-panel-hover)] rounded-sm p-[10px_12px]">
+                      <div className="text-[.72rem] text-[var(--text-muted)] font-semibold mb-1">{item.label}</div>
+                      <div className="text-[.95rem] font-bold">{item.value}</div>
                     </div>
                   ))}
                 </div>
 
                 {/* Add loyalty points */}
-                <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
-                  <div className="input-group" style={{ flex: 1 }}>
+                <div className="flex gap-2 items-end">
+                  <div className="input-group flex-1">
                     <label className="input-label">Add Loyalty Points</label>
                     <input className="input" type="number" placeholder="e.g. 100" value={loyaltyInput}
                       onChange={e => { setLoyaltyInput(e.target.value); }} />
                   </div>
-                  <button className="btn btn-gold btn-sm" onClick={handleAddLoyalty}
-                    disabled={addLoyalty.isPending} style={{ height: 38 }}>
+                  <button className="btn btn-gold btn-sm h-[38px]" onClick={handleAddLoyalty}
+                    disabled={addLoyalty.isPending}>
                     {addLoyalty.isPending ? '...' : '+ Add'}
                   </button>
                 </div>
 
                 {selected.tags && selected.tags.length > 0 && (
                   <div>
-                    <div style={{ fontSize: '.75rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 6 }}>TAGS</div>
-                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                    <div className="text-[.75rem] text-[var(--text-muted)] font-semibold mb-[6px]">TAGS</div>
+                    <div className="flex gap-[6px] flex-wrap">
                       {selected.tags.map(tag => (
                         <span key={tag} className={`badge ${tag === 'VIP' ? 'badge-gold' : tag === 'Overdue' ? 'badge-red' : tag === 'Corporate' ? 'badge-navy' : 'badge-gray'}`}>{tag}</span>
                       ))}
@@ -272,8 +267,8 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
                   </div>
                 )}
                 {selected.notes && (
-                  <div style={{ padding: '10px 12px', background: '#FFFBEB', borderRadius: 'var(--radius-sm)', border: '1px solid #FDE68A', fontSize: '.85rem', color: '#92400E', display: 'flex', gap: 8 }}>
-                    <SvgIcon name="warning" width="16" height="16" style={{ marginTop: 2 }} /> {selected.notes}
+                  <div className="p-[10px_12px] bg-[#FFFBEB] rounded-sm border border-[#FDE68A] text-[.85rem] text-[#92400E] flex gap-2">
+                    <SvgIcon name="warning" width="16" height="16" className="mt-[2px]" /> {selected.notes}
                   </div>
                 )}
               </div>
@@ -283,7 +278,7 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
           {activeTab === 'measurements' && (
             measurements && measurements.length > 0 ? (
               isEditingMeasurements ? (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 20px' }}>
+                <div className="grid grid-cols-2 gap-x-5 gap-y-[10px]">
                   {[
                     { key: 'jacketSize', label: 'Jacket Size' },
                     { key: 'chest',      label: 'Chest'       },
@@ -302,22 +297,20 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
                         onChange={e => { setMeasurementForm(fm => ({ ...fm, [f.key]: e.target.value })); }} />
                     </div>
                   ))}
-                  <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+                  <div className="input-group col-span-full">
                     <label className="input-label">Tailor Notes</label>
-                    <textarea className="input" rows={2} value={measurementForm.notes ?? ''}
-                      onChange={e => { setMeasurementForm(fm => ({ ...fm, notes: e.target.value })); }}
-                      style={{ resize: 'vertical' }} />
+                    <textarea className="input resize-y" rows={2} value={measurementForm.notes ?? ''}
+                      onChange={e => { setMeasurementForm(fm => ({ ...fm, notes: e.target.value })); }} />
                   </div>
-                  <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+                  <div className="input-group col-span-full">
                     <label className="input-label">Fitting Notes</label>
-                    <textarea className="input" rows={2} value={measurementForm.fittingNotes ?? ''}
-                      onChange={e => { setMeasurementForm(fm => ({ ...fm, fittingNotes: e.target.value })); }}
-                      style={{ resize: 'vertical' }} />
+                    <textarea className="input resize-y" rows={2} value={measurementForm.fittingNotes ?? ''}
+                      onChange={e => { setMeasurementForm(fm => ({ ...fm, fittingNotes: e.target.value })); }} />
                   </div>
                 </div>
               ) : (
                 <div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 24px' }}>
+                  <div className="grid grid-cols-2 gap-x-6">
                     <div>
                       <MeasurementRow label="Jacket Size" value={measurements[0].jacketSize} />
                       <MeasurementRow label="Chest" value={measurements[0].chest} />
@@ -334,11 +327,11 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
                     </div>
                   </div>
                   {measurements[0].notes && (
-                    <div style={{ marginTop: 14, padding: '10px 12px', background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', fontSize: '.82rem', color: 'var(--text-secondary)', display: 'flex', gap: 8 }}>
-                      <SvgIcon name="tailoring" width="16" height="16" style={{ marginTop: 2 }} /> {measurements[0].notes}
+                    <div className="mt-[14px] p-[10px_12px] bg-[var(--bg-panel-hover)] rounded-sm text-[.82rem] text-[var(--text-secondary)] flex gap-2">
+                      <SvgIcon name="tailoring" width="16" height="16" className="mt-[2px]" /> {measurements[0].notes}
                     </div>
                   )}
-                  <button className="btn btn-outline" style={{ marginTop: 16, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+                  <button className="btn btn-outline mt-4 w-full flex items-center justify-center gap-2"
                     onClick={() => { startEditingMeasurements(measurements[0]); }}>
                     <SvgIcon name="scissors" width="14" height="14" /> Edit Measurements
                   </button>
@@ -347,10 +340,10 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
             ) : (
               <div className="empty-state">
                 <div className="empty-state-icon">
-                  <SvgIcon name="measurements" width="48" height="48" style={{ opacity: 0.3 }} />
+                  <SvgIcon name="measurements" width="48" height="48" className="opacity-30" />
                 </div>
                 <p>No measurements on file</p>
-                <button className="btn btn-gold" style={{ marginTop: 12 }}
+                <button className="btn btn-gold mt-3"
                   onClick={() => { setSelected(null); navigate('/measurements'); }}>Add Measurements</button>
               </div>
             )
@@ -363,7 +356,7 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
                   <div key={r.id} className="table-row flex justify-between items-center">
                     <div>
                       <div className="font-bold text-sm text-[var(--accent-gold-text)]">{r.rentalNo}</div>
-                      <div style={{ fontSize: '.75rem', color: 'var(--text-secondary)' }}>
+                      <div className="text-[.75rem] text-[var(--text-secondary)]">
                         {r.eventName || 'No event'} · {new Date(r.pickupDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </div>
                     </div>
@@ -376,7 +369,7 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
             ) : (
               <div className="empty-state">
                 <div className="empty-state-icon">
-                  <SvgIcon name="clipboard" width="48" height="48" style={{ opacity: 0.3 }} />
+                  <SvgIcon name="clipboard" width="48" height="48" className="opacity-30" />
                 </div>
                 <p>No rental history found</p>
               </div>

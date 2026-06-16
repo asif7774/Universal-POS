@@ -33,19 +33,19 @@ export const NewApptModal: React.FC<{ onClose: () => void; defaultDate?: string 
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal animate-slide-up" onClick={e => { e.stopPropagation(); }} style={{ maxWidth: 480 }}>
+      <div className="modal animate-slide-up max-w-[480px]" onClick={e => { e.stopPropagation(); }}>
         <div className="modal-header">
-          <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <SvgIcon name="appointments" width="18" height="18" style={{ color: 'var(--accent-gold)' }} />
+          <h3 className="font-['Playfair_Display',serif] text-[1.1rem] flex items-center gap-2">
+            <SvgIcon name="appointments" width="18" height="18" className="text-[var(--accent-gold)]" />
             New Appointment
           </h3>
           <button className="btn btn-ghost btn-icon" onClick={onClose}>
             <SvgIcon name="close" width="16" height="16" />
           </button>
         </div>
-        <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <div className="input-group" style={{ gridColumn: '1/-1' }}>
+        <div className="modal-body flex flex-col gap-[14px]">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="input-group col-span-full">
               <label className="input-label">Customer Name</label>
               <input className="input" placeholder="John Smith" value={form.customer} onChange={e => { set('customer', e.target.value); }} />
             </div>
@@ -75,7 +75,7 @@ export const NewApptModal: React.FC<{ onClose: () => void; defaultDate?: string 
                 {[15,20,30,45,60,90].map(d => <option key={d} value={d}>{d} min</option>)}
               </select>
             </div>
-            <div className="input-group" style={{ gridColumn: '1/-1' }}>
+            <div className="input-group col-span-full">
               <label className="input-label">Assigned Staff</label>
               <select className="input" value={form.assignedTo} onChange={e => { set('assignedTo', e.target.value); }}>
                 <option value="" disabled>Select staff member...</option>
@@ -84,9 +84,9 @@ export const NewApptModal: React.FC<{ onClose: () => void; defaultDate?: string 
                 ))}
               </select>
             </div>
-            <div className="input-group" style={{ gridColumn: '1/-1' }}>
+            <div className="input-group col-span-full">
               <label className="input-label">Notes</label>
-              <textarea className="input" rows={2} style={{ resize: 'vertical' }} placeholder="Any special notes..." value={form.notes} onChange={e => { set('notes', e.target.value); }} />
+              <textarea className="input resize-y" rows={2} placeholder="Any special notes..." value={form.notes} onChange={e => { set('notes', e.target.value); }} />
             </div>
           </div>
         </div>

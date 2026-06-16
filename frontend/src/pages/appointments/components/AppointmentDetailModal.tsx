@@ -18,14 +18,14 @@ export const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({ 
 
   return (
     <div className="modal-overlay" onClick={() => { setSelected(null); }}>
-      <div className="modal animate-slide-up" onClick={e => { e.stopPropagation(); }} style={{ maxWidth: 460 }}>
+      <div className="modal animate-slide-up max-w-[460px]" onClick={e => { e.stopPropagation(); }}>
         <div className="modal-header">
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+            <div className="flex items-center gap-2 mb-1">
               <span style={{ color: typeCfg.color, opacity: 0.8 }}>
                 <SvgIcon name={typeCfg.icon} width="20" height="20" />
               </span>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.1rem' }}>{selected.type} — {selected.customer}</h3>
+              <h3 className="font-['Playfair_Display',serif] text-[1.1rem]">{selected.type} — {selected.customer}</h3>
             </div>
             <span className={`badge ${statusCfg.cls}`}>{selected.status}</span>
           </div>
@@ -33,8 +33,8 @@ export const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({ 
             <SvgIcon name="close" width="16" height="16" />
           </button>
         </div>
-        <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+        <div className="modal-body flex flex-col gap-[14px]">
+          <div className="grid grid-cols-2 gap-[10px]">
             {[
               { label: 'Date', value: `${fmtDay(selected.date).weekday}, ${fmtDay(selected.date).month} ${fmtDay(selected.date).day}` },
               { label: 'Time', value: `${selected.time} (${selected.duration} min)` },
@@ -42,15 +42,15 @@ export const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({ 
               { label: 'Assigned To', value: selected.assignedTo },
               ...(selected.orderId ? [{ label: 'Linked Order', value: selected.orderId }] : []),
             ].map(i => (
-              <div key={i.label} style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '8px 10px' }}>
-                <div style={{ fontSize: '.7rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 3 }}>{i.label}</div>
-                <div style={{ fontSize: '.875rem', fontWeight: 700 }}>{i.value}</div>
+              <div key={i.label} className="bg-[var(--bg-panel-hover)] rounded-[var(--radius-sm)] px-[10px] py-2">
+                <div className="text-[.7rem] text-[var(--text-muted)] font-semibold mb-[3px]">{i.label}</div>
+                <div className="text-[.875rem] font-bold">{i.value}</div>
               </div>
             ))}
           </div>
           {selected.notes && (
-            <div style={{ padding: '10px 12px', background: '#FFFBEB', border: '1px solid #FDE68A', borderRadius: 'var(--radius-sm)', fontSize: '.85rem', color: '#92400E', display: 'flex', gap: 8 }}>
-              <SvgIcon name="tailoring" width="14" height="14" style={{ marginTop: 2 }} />
+            <div className="px-3 py-[10px] bg-[#FFFBEB] border border-[#FDE68A] rounded-[var(--radius-sm)] text-[.85rem] text-[#92400E] flex gap-2">
+              <SvgIcon name="tailoring" width="14" height="14" className="mt-0.5" />
               {selected.notes}
             </div>
           )}

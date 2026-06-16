@@ -38,11 +38,11 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 };
 
 export const TableSkeleton: React.FC<{ rows?: number; cols?: number }> = ({ rows = 5, cols = 4 }) => (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+  <div className="flex flex-col gap-3">
     {Array.from({ length: rows }).map((_, r) => (
-      <div key={r} style={{ display: 'flex', gap: 16 }}>
+      <div key={r} className="flex gap-4">
         {Array.from({ length: cols }).map((_, c) => (
-          <Skeleton key={c} height={40} style={{ flex: 1 }} />
+          <Skeleton key={c} height={40} className="flex-1" />
         ))}
       </div>
     ))}
@@ -50,9 +50,9 @@ export const TableSkeleton: React.FC<{ rows?: number; cols?: number }> = ({ rows
 );
 
 export const CardSkeleton: React.FC = () => (
-  <div className="card" style={{ padding: 20 }}>
-    <Skeleton width="40%" height={16} style={{ marginBottom: 16 }} />
-    <Skeleton height={32} style={{ marginBottom: 12 }} />
+  <div className="card p-5">
+    <Skeleton width="40%" height={16} className="mb-4" />
+    <Skeleton height={32} className="mb-3" />
     <Skeleton width="60%" height={14} />
   </div>
 );

@@ -9,7 +9,7 @@ interface TaxesTabProps {
 export const TaxesTab: React.FC<TaxesTabProps> = ({ store, set }) => (
   <div className="panel">
     <div className="panel-header"><span className="panel-title">Tax &amp; Fee Configuration</span></div>
-    <div className="modal-body" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+    <div className="modal-body grid grid-cols-2 gap-[14px]">
       {[
         { key: 'taxRate',        label: 'Sales Tax Rate (%)',         hint: 'Applied to all taxable items. NY default: 8.875%' },
         { key: 'lateFeePerDay', label: 'Late Return Fee (per day)',  hint: 'Charged each day a rental is overdue.' },
@@ -21,23 +21,23 @@ export const TaxesTab: React.FC<TaxesTabProps> = ({ store, set }) => (
           <input className="input" type="number" step="0.001"
             value={(store as Record<string, string>)[f.key]}
             onChange={e => { set(f.key, e.target.value); }} />
-          <p style={{ fontSize: '.72rem', color: 'var(--text-muted)', marginTop: 4 }}>{f.hint}</p>
+          <p className="text-[.72rem] text-[var(--text-muted)] mt-1">{f.hint}</p>
         </div>
       ))}
     </div>
-    <div className="section-divider" style={{ margin: '8px 0' }} />
-    <div style={{ margin: '0 24px 20px', padding: '12px 16px', background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-md)', fontSize: '.85rem', border: '1px solid var(--border-subtle)' }}>
-      <div style={{ fontWeight: 700, marginBottom: 8, color: 'var(--text-primary)' }}>Preview — $100 rental for 3 days</div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <div className="section-divider my-2" />
+    <div className="mt-0 mx-6 mb-5 py-3 px-4 bg-[var(--bg-panel-hover)] rounded-[var(--radius-md)] text-[.85rem] border border-[var(--border-subtle)]">
+      <div className="font-bold mb-2 text-[var(--text-primary)]">Preview — $100 rental for 3 days</div>
+      <div className="flex flex-col gap-1">
         {[
           ['Subtotal', '$100.00'],
           [`Tax (${store.taxRate}%)`, `$${(100 * parseFloat(store.taxRate) / 100).toFixed(2)}`],
           [`Deposit (${store.depositPct}%)`, `$${(100 * parseFloat(store.depositPct) / 100).toFixed(2)}`],
           ['Total Due', `$${(100 + 100 * parseFloat(store.taxRate) / 100).toFixed(2)}`],
         ].map(([l, v]) => (
-          <div key={l} style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ color: 'var(--text-secondary)' }}>{l}</span>
-            <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{v}</span>
+          <div key={l} className="flex justify-between">
+            <span className="text-[var(--text-secondary)]">{l}</span>
+            <span className="font-bold text-[var(--text-primary)]">{v}</span>
           </div>
         ))}
       </div>

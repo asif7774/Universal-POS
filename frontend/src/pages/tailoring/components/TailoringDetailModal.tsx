@@ -59,11 +59,12 @@ export const TailoringDetailModal: React.FC<TailoringDetailModalProps> = ({ sele
       maxWidth={520}
       title={(
         <div>
-          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.1rem' }}>{selected.jobNo}</div>
-          <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
+          <div className="font-['Playfair_Display',serif] text-[1.1rem]">{selected.jobNo}</div>
+          <div className="flex gap-1.5 mt-1.5">
             <span className={`badge ${TYPE_BADGE[selected.type] || 'badge-gray'}`}>{selected.type}</span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 999, background: `${STATUS_COLOR[selected.status] || '#94A3B8'}18`, color: STATUS_COLOR[selected.status] || '#94A3B8', fontSize: '.75rem', fontWeight: 600 }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: STATUS_COLOR[selected.status] || '#94A3B8' }} />
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[.75rem] font-semibold"
+              style={{ background: `${STATUS_COLOR[selected.status] || '#94A3B8'}18`, color: STATUS_COLOR[selected.status] || '#94A3B8' }}>
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: STATUS_COLOR[selected.status] || '#94A3B8' }} />
               {selected.status}
             </span>
           </div>
@@ -79,16 +80,16 @@ export const TailoringDetailModal: React.FC<TailoringDetailModalProps> = ({ sele
           </>
         ) : (
           <>
-            <button className="btn btn-outline" onClick={startEditing} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <button className="btn btn-outline inline-flex items-center gap-1.5" onClick={startEditing}>
               <SvgIcon name="tailoring" width="14" height="14" /> Edit Job
             </button>
             {selected.status !== 'Delivered' && selected.status !== 'Ready' && (
-              <button className="btn btn-gold" disabled={updateStatus.isPending} onClick={() => {
+              <button className="btn btn-gold flex items-center gap-1.5" disabled={updateStatus.isPending} onClick={() => {
                 const currentIdx = STAGES.indexOf(selected.status);
                 if (currentIdx < STAGES.length - 1) {
                   updateStatus.mutate({ id: selected.id, status: STAGES[currentIdx + 1] });
                 }
-              }} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              }}>
                 {updateStatus.isPending ? 'Advancing...' : (
                   <>
                     Advance Stage <SvgIcon name="chevron-right" width="12" height="12" />
@@ -97,9 +98,9 @@ export const TailoringDetailModal: React.FC<TailoringDetailModalProps> = ({ sele
               </button>
             )}
             {selected.status === 'Ready' && (
-              <button className="btn btn-gold" disabled={updateStatus.isPending} onClick={() => {
+              <button className="btn btn-gold flex items-center gap-1.5" disabled={updateStatus.isPending} onClick={() => {
                 updateStatus.mutate({ id: selected.id, status: 'Delivered' });
-              }} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              }}>
                 {updateStatus.isPending ? 'Marking...' : (
                   <>
                     <SvgIcon name="check-circle" width="14" height="14" /> Mark Delivered
@@ -113,8 +114,8 @@ export const TailoringDetailModal: React.FC<TailoringDetailModalProps> = ({ sele
       }
     >
       {isEditing ? (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-          <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+        <div className="grid grid-cols-2 gap-3.5">
+          <div className="input-group col-span-2">
             <label className="input-label">Customer Name</label>
             <input className="input" value={editForm.customerName}
               onChange={e => { setEditForm(f => ({ ...f, customerName: e.target.value })); }} />
@@ -153,26 +154,26 @@ export const TailoringDetailModal: React.FC<TailoringDetailModalProps> = ({ sele
             <input className="input" type="number" step="0.01" value={editForm.price || ''}
               onChange={e => { setEditForm(f => ({ ...f, price: Number(e.target.value) })); }} />
           </div>
-          <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+          <div className="input-group col-span-2">
             <label className="input-label">Notes</label>
-            <textarea className="input" rows={2} value={editForm.notes}
-              onChange={e => { setEditForm(f => ({ ...f, notes: e.target.value })); }}
-              style={{ resize: 'vertical' }} />
+            <textarea className="input resize-y" rows={2} value={editForm.notes}
+              onChange={e => { setEditForm(f => ({ ...f, notes: e.target.value })); }} />
           </div>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div className="flex flex-col gap-3.5">
           <div>
-            <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: 10, letterSpacing: '.05em' }}>PROGRESS PIPELINE</div>
+            <div className="text-[.72rem] text-[var(--text-muted)] font-bold mb-2.5 tracking-[.05em]">PROGRESS PIPELINE</div>
             <StatusPipeline current={selected.status} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
+            <div className="flex justify-between mt-1.5">
               {STAGES.filter(s => s !== 'Delivered').map(s => (
-                <span key={s} style={{ fontSize: '.6rem', color: s === selected.status ? 'var(--text-primary)' : 'var(--text-muted)', textAlign: 'center', flex: 1, fontWeight: s === selected.status ? 800 : 400 }}>{s}</span>
+                <span key={s} className="text-[.6rem] text-center flex-1"
+                  style={{ color: s === selected.status ? 'var(--text-primary)' : 'var(--text-muted)', fontWeight: s === selected.status ? 800 : 400 }}>{s}</span>
               ))}
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          <div className="grid grid-cols-2 gap-2.5">
             {[
               { label: 'Customer', value: selected.customerName },
               { label: 'Phone', value: selected.phone || 'N/A' },
@@ -181,21 +182,21 @@ export const TailoringDetailModal: React.FC<TailoringDetailModalProps> = ({ sele
               { label: 'Due Date', value: fmtDate(selected.dueDate) },
               { label: 'Price', value: fmt(selected.price) },
             ].map(i => (
-              <div key={i.label} style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px', border: '1px solid var(--border-subtle)' }}>
-                <div style={{ fontSize: '.7rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 4 }}>{i.label}</div>
-                <div style={{ fontSize: '.875rem', fontWeight: 700 }}>{i.value}</div>
+              <div key={i.label} className="bg-[var(--bg-panel-hover)] rounded-[var(--radius-sm)] px-3 py-2.5 border border-[var(--border-subtle)]">
+                <div className="text-[.7rem] text-[var(--text-muted)] font-semibold mb-1">{i.label}</div>
+                <div className="text-[.875rem] font-bold">{i.value}</div>
               </div>
             ))}
           </div>
 
-          <div style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '12px', border: '1px solid var(--border-subtle)' }}>
-            <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: 8, letterSpacing: '.05em' }}>WORK DESCRIPTION</div>
-            <p style={{ fontSize: '.875rem', margin: 0, color: 'var(--text-primary)', lineHeight: 1.5 }}>{selected.description || 'No description provided.'}</p>
+          <div className="bg-[var(--bg-panel-hover)] rounded-[var(--radius-sm)] p-3 border border-[var(--border-subtle)]">
+            <div className="text-[.72rem] text-[var(--text-muted)] font-bold mb-2 tracking-[.05em]">WORK DESCRIPTION</div>
+            <p className="text-[.875rem] m-0 text-[var(--text-primary)] leading-[1.5]">{selected.description || 'No description provided.'}</p>
           </div>
 
           {selected.notes && (
-            <div style={{ padding: '10px 12px', background: '#FFFBEB', borderRadius: 'var(--radius-sm)', border: '1px solid #FDE68A', fontSize: '.85rem', color: '#92400E', display: 'flex', gap: 8 }}>
-              <SvgIcon name="warning" width="16" height="16" style={{ marginTop: 2 }} /> {selected.notes}
+            <div className="px-3 py-2.5 bg-[#FFFBEB] rounded-[var(--radius-sm)] border border-[#FDE68A] text-[.85rem] text-[#92400E] flex gap-2">
+              <SvgIcon name="warning" width="16" height="16" className="mt-0.5" /> {selected.notes}
             </div>
           )}
         </div>

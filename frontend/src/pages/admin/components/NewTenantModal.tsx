@@ -31,7 +31,7 @@ export const NewTenantModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
       onClose={onClose}
       title={
         <>
-          <SvgIcon name="building" width="20" height="20" style={{ color: 'var(--accent-gold)' }} />
+          <SvgIcon name="building" width="20" height="20" className="text-[var(--accent-gold)]" />
           New Tenant
         </>
       }
@@ -45,7 +45,7 @@ export const NewTenantModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
         </>
       }
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      <div className="flex flex-col gap-[14px]">
         <div className="input-group">
           <label className="input-label">Business Name *</label>
           <input className="input" placeholder="e.g. Prestige Formalwear" value={form.name}
@@ -55,7 +55,7 @@ export const NewTenantModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
           <label className="input-label">Domain *</label>
           <input className="input" placeholder="e.g. prestige" value={form.domain}
             onChange={e => { set('domain', e.target.value); }} />
-          <span style={{ fontSize: '.72rem', color: 'var(--text-muted)', marginTop: 4 }}>
+          <span className="text-[.72rem] text-[var(--text-muted)] mt-1">
             Will be accessible at {form.domain || '___'}.tuxedopos.com
           </span>
         </div>

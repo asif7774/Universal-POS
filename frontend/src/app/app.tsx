@@ -40,18 +40,18 @@ const AdminPanel   = lazy(() => import('pages/admin'));
 const CustomerPortal = lazy(() => import('pages/customer-portal'));
 
 const ComingSoon = ({ page }: { page: string }) => (
-  <div style={{ textAlign: 'center', padding: '80px 24px', color: 'var(--text-muted)' }}>
+  <div className="text-center py-[80px] px-6 text-[var(--text-muted)]">
     <div className="text-[3rem] mb-4 text-[var(--tux-gold)]">
       <SvgIcon name="wrench" width="64" height="64" />
     </div>
-    <h2 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)', marginBottom: 8 }}>{page}</h2>
-    <p style={{ fontSize: '.9rem' }}>This module is being built — check back soon!</p>
+    <h2 className="font-['Playfair_Display',serif] text-[var(--text-primary)] mb-2">{page}</h2>
+    <p className="text-[.9rem]">This module is being built — check back soon!</p>
   </div>
 );
 
 const Spinner = () => (
-  <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface-bg)' }}>
-    <div style={{ width: 40, height: 40, border: '3px solid var(--surface-border)', borderTopColor: 'var(--tux-navy)', borderRadius: '50%', animation: 'spin .7s linear infinite' }} />
+  <div className="min-h-screen flex items-center justify-center bg-[var(--surface-bg)]">
+    <div className="w-10 h-10 border-[3px] border-[var(--surface-border)] border-t-[var(--tux-navy)] rounded-full animate-[spin_.7s_linear_infinite]" />
     <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
   </div>
 );

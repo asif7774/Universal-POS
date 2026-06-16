@@ -22,7 +22,7 @@ export const EmailForm: React.FC<EmailFormProps> = ({ loading, onLogin, onSucces
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-[18px]">
       <div className="input-group">
         <label className="input-label" htmlFor="email">Email address</label>
         <div className="input-with-icon">
@@ -40,28 +40,22 @@ export const EmailForm: React.FC<EmailFormProps> = ({ loading, onLogin, onSucces
 
       <div className="input-group">
         <label className="input-label" htmlFor="password">Password</label>
-        <div className="input-with-icon" style={{ position: 'relative' }}>
+        <div className="input-with-icon relative">
           <span className="input-icon">
             <SvgIcon name="lock" width="16" height="16" />
           </span>
           <input
             id="password"
             type={showPassword ? 'text' : 'password'}
-            className="input"
+            className="input pr-[44px]"
             placeholder="••••••••"
             value={password} onChange={e => { setPassword(e.target.value); }}
             autoComplete="current-password" required
-            style={{ paddingRight: 44 }}
           />
           <button
             type="button"
             onClick={() => { setShowPassword(s => !s); }}
-            style={{
-              position: 'absolute', right: 12, top: '50%',
-              transform: 'translateY(-50%)',
-              background: 'none', border: 'none', cursor: 'pointer',
-              color: 'var(--text-muted)', padding: 2,
-            }}
+            className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-[var(--text-muted)] p-[2px]"
             aria-label={showPassword ? 'Hide password' : 'Show password'}
           >
             <SvgIcon name={showPassword ? 'eye-slash' : 'eye'} width="18" height="18" />
@@ -77,15 +71,10 @@ export const EmailForm: React.FC<EmailFormProps> = ({ loading, onLogin, onSucces
 
       <button
         type="submit" disabled={loading}
-        className="btn btn-gold w-full"
-        style={{ marginTop: 4 }}
+        className="btn btn-gold w-full mt-1"
       >
         {loading ? (
-          <div style={{
-            width: 18, height: 18, border: '2px solid rgba(255,255,255,.3)',
-            borderTopColor: 'white', borderRadius: '50%',
-            animation: 'spin 0.8s linear infinite',
-          }} />
+          <div className="w-[18px] h-[18px] border-2 border-white/30 border-t-white rounded-full animate-spin" />
         ) : 'Sign in'}
       </button>
     </form>

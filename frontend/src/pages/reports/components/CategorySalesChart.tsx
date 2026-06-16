@@ -16,13 +16,13 @@ interface CategorySalesChartProps {
 
 export const CategorySalesChart: React.FC<CategorySalesChartProps> = ({ data, isLoading }) => {
   return (
-    <div className="panel" style={{ height: 350, display: 'flex', flexDirection: 'column' }}>
+    <div className="panel h-[350px] flex flex-col">
       <div className="panel-header">
         <span className="panel-title">Sales by Category</span>
       </div>
-      <div style={{ flex: 1, width: '100%', position: 'relative' }}>
+      <div className="flex-1 w-full relative">
         {isLoading && (
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.15)', zIndex: 5, borderRadius: 8 }}>
+          <div className="absolute inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.15)] z-[5] rounded-lg">
             <div className="spinner" />
           </div>
         )}

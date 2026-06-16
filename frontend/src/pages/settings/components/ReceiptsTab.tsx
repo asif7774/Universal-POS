@@ -83,15 +83,15 @@ export const ReceiptsTab: React.FC = () => {
     <div className="flex flex-col gap-5">
       <div className="panel">
         <div className="panel-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <SvgIcon name="printer" width="16" height="16" style={{ color: 'var(--text-primary)' }} />
+          <div className="flex items-center gap-[10px]">
+            <SvgIcon name="printer" width="16" height="16" className="text-[var(--text-primary)]" />
             <span className="panel-title">Receipt Configuration</span>
           </div>
           <span className="text-[0.7rem] text-[var(--text-muted)]">Saved on this device</span>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div className="flex flex-col gap-[14px]">
           {CHECKBOX_OPTIONS.map(opt => (
-            <label key={opt.key} style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', padding: '8px 0', borderBottom: '1px solid var(--border-subtle)' }}>
+            <label key={opt.key} className="flex items-center gap-3 cursor-pointer py-2 border-b border-[var(--border-subtle)]">
               <input type="checkbox"
                 checked={prefs[opt.key] ?? opt.defaultChecked}
                 onChange={() => { togglePref(opt.key); }}
@@ -104,15 +104,15 @@ export const ReceiptsTab: React.FC = () => {
                   backgroundRepeat: 'no-repeat',
                 }}
               />
-              <span style={{ fontSize: '.875rem' }}>{opt.label}</span>
+              <span className="text-[.875rem]">{opt.label}</span>
             </label>
           ))}
           <div className="input-group">
             <label className="input-label">Receipt Footer Message</label>
-            <textarea className="input" rows={2} style={{ resize: 'vertical' }}
+            <textarea className="input resize-y" rows={2}
               value={footer}
               onChange={e => { setFooter(e.target.value); }} />
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 6 }}>
+            <div className="flex justify-end mt-[6px]">
               <button className="btn btn-sm btn-outline" onClick={saveFooter}>Save Footer</button>
             </div>
           </div>
@@ -121,8 +121,8 @@ export const ReceiptsTab: React.FC = () => {
 
       <div className="panel">
         <div className="panel-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <SvgIcon name="wrench" width="16" height="16" style={{ color: 'var(--accent-gold)' }} />
+          <div className="flex items-center gap-[10px]">
+            <SvgIcon name="wrench" width="16" height="16" className="text-[var(--accent-gold)]" />
             <span className="panel-title">Hardware Diagnostics</span>
           </div>
         </div>

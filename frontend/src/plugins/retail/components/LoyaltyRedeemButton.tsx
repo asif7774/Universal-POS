@@ -28,15 +28,14 @@ export const LoyaltyRedeemButton: React.FC = () => {
 
   if (isExpanded) {
     return (
-      <div style={{ border: '1px solid var(--tux-gold)', borderRadius: 'var(--radius-md)', padding: 12, marginBottom: 12, background: '#FFFDF5' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-          <SvgIcon name="gift" width="16" height="16" style={{ color: 'var(--tux-gold-dark)' }} />
-          <span style={{ fontWeight: 600, fontSize: '.85rem', color: 'var(--tux-navy)' }}>Redeem Loyalty Points</span>
+      <div className="border border-[var(--tux-gold)] rounded-[var(--radius-md)] p-3 mb-3 bg-[#FFFDF5]">
+        <div className="flex items-center gap-2 mb-2">
+          <SvgIcon name="gift" width="16" height="16" className="text-[var(--tux-gold-dark)]" />
+          <span className="font-semibold text-[.85rem] text-[var(--tux-navy)]">Redeem Loyalty Points</span>
         </div>
-        <div style={{ display: 'flex', gap: 6 }}>
-          <input className="input" type="number" placeholder="Points to redeem" value={points}
-            onChange={e => { setPoints(e.target.value); }}
-            style={{ flex: 1, fontSize: '.85rem' }} />
+        <div className="flex gap-[6px]">
+          <input className="input flex-1 text-[.85rem]" type="number" placeholder="Points to redeem" value={points}
+            onChange={e => { setPoints(e.target.value); }} />
           <button className="btn btn-gold btn-sm" onClick={handleRedeem}
             disabled={redeemLoyalty.isPending}>
             Apply
@@ -45,7 +44,7 @@ export const LoyaltyRedeemButton: React.FC = () => {
             <SvgIcon name="close" width="12" height="12" />
           </button>
         </div>
-        <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', marginTop: 6 }}>
+        <div className="text-[.72rem] text-text-muted mt-[6px]">
           100 points = $1.00 discount
         </div>
       </div>
@@ -53,7 +52,7 @@ export const LoyaltyRedeemButton: React.FC = () => {
   }
 
   return (
-    <button className="btn flex items-center justify-center gap-2" style={{ width: '100%', marginBottom: 12 }}
+    <button className="btn flex items-center justify-center gap-2 w-full mb-3"
       onClick={() => { setIsExpanded(true); }}>
       <SvgIcon name="gift" width="16" height="16" />
       Redeem Points

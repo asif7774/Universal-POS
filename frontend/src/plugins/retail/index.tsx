@@ -3,15 +3,15 @@ import { ReturnsPage } from './pages/ReturnsPage';
 import { LoyaltyRedeemButton } from './components/LoyaltyRedeemButton';
 
 const LoyaltySettings = () => (
-  <div style={{ padding: 20 }}>
+  <div className="p-5">
     <h3>Loyalty Program</h3>
-    <div style={{ marginTop: 16 }}>
-      <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+    <div className="mt-4">
+      <label className="flex items-center gap-2">
         <input type="checkbox" defaultChecked /> Enable Points System
       </label>
-      <div style={{ marginTop: 12 }}>
+      <div className="mt-3">
         <label>Points per $1 spent</label>
-        <input type="number" defaultValue={1} className="input" style={{ width: 100, marginLeft: 8 }} />
+        <input type="number" defaultValue={1} className="input w-[100px] ml-2" />
       </div>
     </div>
   </div>

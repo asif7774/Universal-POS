@@ -147,7 +147,7 @@ const CustomerPortal: React.FC = () => {
         </div>
 
         {/* Measurements Section */}
-        <section className="mb-16 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+        <section className="mb-16 animate-slide-up [animation-delay:0.1s]">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-xl font-display font-bold">Your Measurements</h2>
             {(measurements?.length ?? 0) > 1 && (
@@ -208,7 +208,7 @@ const CustomerPortal: React.FC = () => {
         </section>
 
         {/* Upcoming Rentals */}
-        <section className="animate-slide-up mb-16" style={{ animationDelay: '0.2s' }}>
+        <section className="animate-slide-up mb-16 [animation-delay:0.2s]">
           <h2 className="text-xl font-display font-bold mb-8">Upcoming Rentals</h2>
           {activeRentals.length > 0 ? (
             <div className="space-y-4">

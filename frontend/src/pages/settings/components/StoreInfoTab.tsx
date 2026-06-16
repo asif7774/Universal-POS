@@ -9,7 +9,7 @@ interface StoreInfoTabProps {
 export const StoreInfoTab: React.FC<StoreInfoTabProps> = ({ store, set }) => (
   <div className="panel">
     <div className="panel-header"><span className="panel-title">Store Information</span></div>
-    <div className="modal-body" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+    <div className="modal-body grid grid-cols-2 gap-[14px]">
       {[
         { key: 'name',    label: 'Store Name',     span: true },
         { key: 'address', label: 'Street Address',  span: true },
@@ -27,8 +27,8 @@ export const StoreInfoTab: React.FC<StoreInfoTabProps> = ({ store, set }) => (
         </div>
       ))}
     </div>
-    <div className="section-divider" style={{ margin: '16px 0' }} />
-    <div style={{ padding: '0 24px 20px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
+    <div className="section-divider my-4" />
+    <div className="px-6 pb-5 grid grid-cols-3 gap-[14px]">
       <div className="input-group">
         <label>Currency</label>
         <select className="input" value={store.currency} onChange={e => { set('currency', e.target.value); }}>

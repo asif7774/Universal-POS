@@ -73,10 +73,10 @@ export const StaffTab: React.FC = () => {
 
   return (
     <>
-      <div className="panel" style={{ padding: 0, overflow: 'hidden' }}>
-        <div className="panel-header" style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span className="panel-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <SvgIcon name="users" width="18" height="18" style={{ color: 'var(--accent-gold-text)' }} />
+      <div className="panel p-0 overflow-hidden">
+        <div className="panel-header px-5 py-4 flex justify-between items-center">
+          <span className="panel-title flex items-center gap-2">
+            <SvgIcon name="users" width="18" height="18" className="text-[var(--accent-gold-text)]" />
             Staff Members
           </span>
           <button className="btn btn-gold btn-sm" onClick={() => setIsAdding(true)}>+ Add Staff</button>
@@ -101,23 +101,24 @@ export const StaffTab: React.FC = () => {
               {staff.map(s => (
                 <tr key={s.id} className="table-row" style={{ opacity: s.isActive ? 1 : 0.5 }}>
                   <td>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div className="flex items-center gap-2">
                       <div className="avatar" style={{ width: 30, height: 30, fontSize: '.7rem', background: s.role === 'owner' ? 'var(--accent-gold)' : 'var(--bg-panel-hover)' }}>
                         {s.name.split(' ').map(n => n[0]).join('')}
                       </div>
-                      <span style={{ fontWeight: 600, fontSize: '.875rem', color: 'var(--text-primary)' }}>{s.name}</span>
+                      <span className="font-semibold text-[.875rem] text-[var(--text-primary)]">{s.name}</span>
                     </div>
                   </td>
-                  <td style={{ fontSize: '.82rem', color: 'var(--text-secondary)' }}>{s.email}</td>
+                  <td className="text-[.82rem] text-[var(--text-secondary)]">{s.email}</td>
                   <td>
-                    <span className={`badge ${ROLE_BADGE[s.role] ?? 'badge-neutral'}`} style={{ textTransform: 'capitalize' }}>{s.role}</span>
+                    <span className={`badge ${ROLE_BADGE[s.role] ?? 'badge-neutral'} capitalize`}>{s.role}</span>
                   </td>
-                  <td style={{ fontFamily: 'monospace', fontSize: '.85rem', color: 'var(--text-secondary)' }}>{s.pin ?? '—'}</td>
-                  <td style={{ fontSize: '.8rem', color: 'var(--text-muted)' }}>{s.lastLogin}</td>
+                  <td className="font-mono text-[.85rem] text-[var(--text-secondary)]">{s.pin ?? '—'}</td>
+                  <td className="text-[.8rem] text-[var(--text-muted)]">{s.lastLogin}</td>
                   <td>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: '.78rem', fontWeight: 600,
-                      color: s.isActive ? 'var(--accent-emerald-text)' : 'var(--text-muted)' }}>
-                      <span style={{ width: 6, height: 6, borderRadius: '50%', background: s.isActive ? 'var(--accent-emerald-text)' : 'var(--text-muted)' }} />
+                    <span className="inline-flex items-center gap-1 text-[.78rem] font-semibold"
+                      style={{ color: s.isActive ? 'var(--accent-emerald-text)' : 'var(--text-muted)' }}>
+                      <span className="w-1.5 h-1.5 rounded-full"
+                        style={{ background: s.isActive ? 'var(--accent-emerald-text)' : 'var(--text-muted)' }} />
                       {s.isActive ? 'Active' : 'Inactive'}
                     </span>
                   </td>
@@ -139,20 +140,20 @@ export const StaffTab: React.FC = () => {
       {/* ── Add Staff Modal ── */}
       {isAdding && (
         <div className="modal-overlay" onClick={handleClose}>
-          <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 440 }}>
+          <div className="modal max-w-[440px]" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h2 className="modal-title">Add Staff Member</h2>
               <button className="btn btn-ghost btn-sm" onClick={handleClose}>
                 <SvgIcon name="close" width="16" height="16" />
               </button>
             </div>
-            <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="modal-body flex flex-col gap-4">
               <div>
-                <label className="label">Name <span style={{ color: 'var(--status-error)' }}>*</span></label>
+                <label className="label">Name <span className="text-status-error">*</span></label>
                 <input className="input" placeholder="Full name" value={form.name} onChange={e => set('name', e.target.value)} />
               </div>
               <div>
-                <label className="label">Email <span style={{ color: 'var(--status-error)' }}>*</span></label>
+                <label className="label">Email <span className="text-status-error">*</span></label>
                 <input className="input" type="email" placeholder="staff@example.com" value={form.email} onChange={e => set('email', e.target.value)} />
               </div>
               <div>
@@ -164,11 +165,11 @@ export const StaffTab: React.FC = () => {
                 </select>
               </div>
               <div>
-                <label className="label">PIN <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(optional)</span></label>
+                <label className="label">PIN <span className="text-[var(--text-muted)] font-normal">(optional)</span></label>
                 <input className="input" placeholder="4-digit PIN" maxLength={4} value={form.pin} onChange={e => set('pin', e.target.value.replace(/\D/g, ''))} />
               </div>
             </div>
-            <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
+            <div className="modal-footer flex justify-end gap-[10px]">
               <button className="btn btn-outline" onClick={handleClose}>Cancel</button>
               <button className="btn btn-gold" onClick={handleAdd} disabled={createStaff.isPending}>
                 {createStaff.isPending ? 'Adding...' : 'Add Staff Member'}
@@ -181,20 +182,20 @@ export const StaffTab: React.FC = () => {
       {/* ── Edit Staff Modal ── */}
       {editing && (
         <div className="modal-overlay" onClick={handleEditClose}>
-          <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 440 }}>
+          <div className="modal max-w-[440px]" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h2 className="modal-title">Edit — {editing.name}</h2>
               <button className="btn btn-ghost btn-sm" onClick={handleEditClose}>
                 <SvgIcon name="close" width="16" height="16" />
               </button>
             </div>
-            <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="modal-body flex flex-col gap-4">
               <div>
-                <label className="label">Name <span style={{ color: 'var(--status-error)' }}>*</span></label>
+                <label className="label">Name <span className="text-status-error">*</span></label>
                 <input className="input" placeholder="Full name" value={editForm.name} onChange={e => setEdit('name', e.target.value)} />
               </div>
               <div>
-                <label className="label">Email <span style={{ color: 'var(--status-error)' }}>*</span></label>
+                <label className="label">Email <span className="text-status-error">*</span></label>
                 <input className="input" type="email" placeholder="staff@example.com" value={editForm.email} onChange={e => setEdit('email', e.target.value)} />
               </div>
               <div>
@@ -206,11 +207,11 @@ export const StaffTab: React.FC = () => {
                 </select>
               </div>
               <div>
-                <label className="label">PIN <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(optional)</span></label>
+                <label className="label">PIN <span className="text-[var(--text-muted)] font-normal">(optional)</span></label>
                 <input className="input" placeholder="4-digit PIN" maxLength={4} value={editForm.pin} onChange={e => setEdit('pin', e.target.value.replace(/\D/g, ''))} />
               </div>
             </div>
-            <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
+            <div className="modal-footer flex justify-end gap-[10px]">
               <button className="btn btn-outline" onClick={handleEditClose}>Cancel</button>
               <button className="btn btn-gold" onClick={handleEdit} disabled={updateStaff.isPending}>
                 {updateStaff.isPending ? 'Saving...' : 'Save Changes'}

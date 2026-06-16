@@ -38,27 +38,18 @@ export const ProductImage: React.FC<ProductImageProps> = ({
         src={imageUrl}
         alt={name}
         onError={() => { setImgError(true); }}
-        style={{ width: dimensions, height: dimensions, objectFit: 'cover', borderRadius: 'var(--radius-md)' }}
-        className={className}
+        style={{ width: dimensions, height: dimensions }}
+        className={`object-cover rounded-[var(--radius-md)] ${className}`}
       />
     );
   }
 
   return (
     <div
-      style={{
-        width: dimensions,
-        height: dimensions,
-        background: style.bg,
-        borderRadius: 'var(--radius-md)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexShrink: 0,
-      }}
-      className={className}
+      style={{ width: dimensions, height: dimensions, background: style.bg }}
+      className={`flex items-center justify-center shrink-0 rounded-[var(--radius-md)] ${className}`}
     >
-      <SvgIcon name={style.icon} width={iconSize} height={iconSize} style={{ color: style.color, opacity: 0.85 }} />
+      <SvgIcon name={style.icon} width={iconSize} height={iconSize} style={{ color: style.color }} className="opacity-[0.85]" />
     </div>
   );
 };

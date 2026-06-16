@@ -55,7 +55,7 @@ export const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose
       onClose={onClose}
       title={(
         <>
-          <SvgIcon name="measurements" width="20" height="20" style={{ color: 'var(--accent-gold)' }} />
+          <SvgIcon name="measurements" width="20" height="20" className="text-[var(--accent-gold)]" />
           New Measurement Record
         </>
       )}
@@ -69,8 +69,8 @@ export const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose
         </>
       }
     >
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-        <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="input-group col-span-full">
           <label className="input-label">Select Customer</label>
           <SearchableSelect
             options={customers.map(c => ({ value: c.id, label: `${c.firstName} ${c.lastName}` }))}
@@ -91,11 +91,11 @@ export const NewMeasurementModal: React.FC<{ onClose: () => void }> = ({ onClose
             />
           </div>
         ))}
-        <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+        <div className="input-group col-span-full">
           <label className="input-label">Fitting Notes</label>
           <textarea
-            className="input" placeholder="Any special notes about fit, alterations needed, etc."
-            rows={3} style={{ resize: 'vertical' }}
+            className="input resize-y" placeholder="Any special notes about fit, alterations needed, etc."
+            rows={3}
             value={form.fittingNotes ?? ''}
             onChange={e => { set('fittingNotes', e.target.value); }}
           />

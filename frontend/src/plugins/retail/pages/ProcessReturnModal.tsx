@@ -58,7 +58,7 @@ export const ProcessReturnModal: React.FC<{ onClose: () => void }> = ({ onClose 
       onClose={onClose}
       title={
         <>
-          <SvgIcon name="return" width="20" height="20" style={{ color: 'var(--tux-gold)' }} />
+          <SvgIcon name="return" width="20" height="20" className="text-[var(--tux-gold)]" />
           Process Return
         </>
       }
@@ -72,8 +72,8 @@ export const ProcessReturnModal: React.FC<{ onClose: () => void }> = ({ onClose 
         </>
       }
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+      <div className="flex flex-col gap-[14px]">
+        <div className="grid grid-cols-2 gap-3">
           <div className="input-group">
             <label className="input-label">Order # *</label>
             <input className="input" placeholder="e.g. ORD-001" value={form.orderNo}
@@ -96,26 +96,24 @@ export const ProcessReturnModal: React.FC<{ onClose: () => void }> = ({ onClose 
         </div>
 
         <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-            <label className="input-label" style={{ margin: 0 }}>Return Items</label>
+          <div className="flex justify-between items-center mb-2">
+            <label className="input-label m-0">Return Items</label>
             <button className="btn btn-ghost btn-sm" onClick={addItem}>+ Add Item</button>
           </div>
           {form.items.map((item, i) => (
-            <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'flex-end' }}>
-              <div className="input-group" style={{ flex: 2 }}>
+            <div key={i} className="flex gap-2 mb-2 items-end">
+              <div className="input-group flex-[2]">
                 {i === 0 && <label className="input-label">Item Name</label>}
                 <input className="input" placeholder="e.g. Slim Fit Tuxedo" value={item.name}
                   onChange={e => { updateItem(i, 'name', e.target.value); }} />
               </div>
-              <div className="input-group" style={{ flex: 0, minWidth: 60 }}>
+              <div className="input-group flex-none min-w-[60px]">
                 {i === 0 && <label className="input-label">Qty</label>}
-                <input className="input" type="number" min={1} value={item.qty}
-                  onChange={e => { updateItem(i, 'qty', Number(e.target.value)); }}
-                  style={{ textAlign: 'center' }} />
+                <input className="input text-center" type="number" min={1} value={item.qty}
+                  onChange={e => { updateItem(i, 'qty', Number(e.target.value)); }} />
               </div>
               {form.items.length > 1 && (
-                <button className="btn btn-ghost btn-sm btn-icon" onClick={() => { removeItem(i); }}
-                  style={{ height: 38, color: 'var(--status-error)' }}>
+                <button className="btn btn-ghost btn-sm btn-icon h-[38px] text-[var(--status-error)]" onClick={() => { removeItem(i); }}>
                   <SvgIcon name="close" width="14" height="14" />
                 </button>
               )}

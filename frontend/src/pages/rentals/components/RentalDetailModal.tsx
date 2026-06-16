@@ -49,8 +49,8 @@ export const RentalDetailModal = ({ selected, setSelected }: RentalDetailModalPr
       maxWidth={560}
       title={(
         <div>
-          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.1rem' }}>{selected.rentalNo}</div>
-          <span className={`badge ${cfg.cls}`} style={{ marginTop: 6, textTransform: 'capitalize', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <div className="font-[family-name:'Playfair_Display',serif] text-[1.1rem]">{selected.rentalNo}</div>
+          <span className={`badge ${cfg.cls} mt-[6px] capitalize inline-flex items-center gap-[6px]`}>
             <SvgIcon name={cfg.icon} width="12" height="12" /> {currentStatus}
           </span>
         </div>
@@ -87,52 +87,52 @@ export const RentalDetailModal = ({ selected, setSelected }: RentalDetailModalPr
         </>
       }
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div className="flex flex-col gap-4">
         {/* Customer */}
-        <div style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-md)', padding: '12px 14px', border: '1px solid var(--border-subtle)' }}>
-          <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', marginBottom: 6, fontWeight: 700, letterSpacing: '.05em' }}>CUSTOMER</div>
-          <div style={{ fontWeight: 700, fontSize: '.95rem' }}>{selected.customer ? `${selected.customer.firstName} ${selected.customer.lastName}` : 'Unknown'}</div>
-          <div style={{ fontSize: '.85rem', color: 'var(--text-secondary)' }}>{selected.customer?.phone}</div>
+        <div className="bg-[var(--bg-panel-hover)] rounded-[var(--radius-md)] px-[14px] py-[12px] border border-[var(--border-subtle)]">
+          <div className="text-[.72rem] text-[var(--text-muted)] mb-[6px] font-bold tracking-[.05em]">CUSTOMER</div>
+          <div className="font-bold text-[.95rem]">{selected.customer ? `${selected.customer.firstName} ${selected.customer.lastName}` : 'Unknown'}</div>
+          <div className="text-[.85rem] text-[var(--text-secondary)]">{selected.customer?.phone}</div>
         </div>
 
         {/* Event */}
         <div>
-          <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', marginBottom: 4, fontWeight: 700, letterSpacing: '.05em' }}>EVENT</div>
-          <div style={{ fontSize: '.9rem', color: 'var(--text-primary)' }}>{selected.eventName || 'N/A'}</div>
+          <div className="text-[.72rem] text-[var(--text-muted)] mb-1 font-bold tracking-[.05em]">EVENT</div>
+          <div className="text-[.9rem] text-[var(--text-primary)]">{selected.eventName || 'N/A'}</div>
         </div>
 
         {/* Items */}
         <div>
-          <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', marginBottom: 8, fontWeight: 700, letterSpacing: '.05em' }}>RENTED ITEMS</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <div className="text-[.72rem] text-[var(--text-muted)] mb-2 font-bold tracking-[.05em]">RENTED ITEMS</div>
+          <div className="flex flex-col gap-[6px]">
             {selected.items?.map((item, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
-                <SvgIcon name="inventory" width="14" height="14" style={{ color: 'var(--text-primary)', opacity: 0.7 }} />
-                <span style={{ fontSize: '.875rem', fontWeight: 500 }}>{item.productName}</span>
+              <div key={i} className="flex items-center gap-[10px] px-[12px] py-[10px] bg-[var(--bg-panel-hover)] rounded-[var(--radius-sm)] border border-[var(--border-subtle)]">
+                <SvgIcon name="inventory" width="14" height="14" className="text-[var(--text-primary)] opacity-70" />
+                <span className="text-[.875rem] font-medium">{item.productName}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Dates + Financials */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <div className="grid grid-cols-2 gap-3">
           {[
             { label: 'Pickup Date', value: fmtDate(selected.pickupDate) },
             { label: 'Return Date', value: fmtDate(selected.returnDate) },
             { label: 'Deposit Paid', value: fmt(selected.depositPaid) },
           ].map(item => (
-            <div key={item.label} style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
-              <div style={{ fontSize: '.7rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 4 }}>{item.label}</div>
-              <div style={{ fontSize: '.92rem', fontWeight: 700 }}>{item.value}</div>
+            <div key={item.label} className="bg-[var(--bg-panel-hover)] rounded-[var(--radius-sm)] px-[12px] py-[10px]">
+              <div className="text-[.7rem] text-[var(--text-muted)] font-semibold mb-1">{item.label}</div>
+              <div className="text-[.92rem] font-bold">{item.value}</div>
             </div>
           ))}
         </div>
 
         {showCheckinForm && (
-          <div style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-md)', padding: '14px', border: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <div style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '.05em' }}>RETURN DETAILS</div>
+          <div className="bg-[var(--bg-panel-hover)] rounded-[var(--radius-md)] p-[14px] border border-[var(--border-subtle)] flex flex-col gap-3">
+            <div className="text-[.75rem] font-bold text-[var(--text-muted)] tracking-[.05em]">RETURN DETAILS</div>
             <div>
-              <label className="label" style={{ fontSize: '.78rem' }}>Condition</label>
+              <label className="label text-[.78rem]">Condition</label>
               <select className="input" value={checkinCondition} onChange={e => { setCheckinCondition(e.target.value); }}>
                 <option value="good">Good — no issues</option>
                 <option value="minor">Minor — small wear or stain</option>
@@ -140,7 +140,7 @@ export const RentalDetailModal = ({ selected, setSelected }: RentalDetailModalPr
               </select>
             </div>
             <div>
-              <label className="label" style={{ fontSize: '.78rem' }}>Damage Fee ($)</label>
+              <label className="label text-[.78rem]">Damage Fee ($)</label>
               <input className="input" type="number" min="0" step="0.01" value={damageFee}
                 onChange={e => { setDamageFee(e.target.value); }} />
             </div>
@@ -148,8 +148,8 @@ export const RentalDetailModal = ({ selected, setSelected }: RentalDetailModalPr
         )}
 
         {selected.notes && (
-          <div style={{ padding: '10px 12px', background: '#FFFBEB', borderRadius: 'var(--radius-sm)', border: '1px solid #FDE68A', fontSize: '.85rem', color: '#92400E', display: 'flex', gap: 8 }}>
-            <SvgIcon name="warning" width="16" height="16" style={{ marginTop: 2 }} /> {selected.notes}
+          <div className="px-[12px] py-[10px] bg-[#FFFBEB] rounded-[var(--radius-sm)] border border-[#FDE68A] text-[.85rem] text-[#92400E] flex gap-2">
+            <SvgIcon name="warning" width="16" height="16" className="mt-[2px]" /> {selected.notes}
           </div>
         )}
       </div>

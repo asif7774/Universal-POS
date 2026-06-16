@@ -111,37 +111,25 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
   const dropdown = isOpen ? (
     <div
       ref={dropdownRef}
-      style={{
-        ...dropdownStyle,
-        background: 'var(--surface-card)',
-        border: '1.5px solid var(--surface-border)',
-        borderRadius: 'var(--radius-md)',
-        boxShadow: 'var(--shadow-lg)',
-        overflow: 'hidden',
-      }}
+      style={dropdownStyle}
+      className="bg-surface-card border-[1.5px] border-[var(--surface-border)] rounded-md shadow-lg overflow-hidden"
     >
       {/* Search row */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 8,
-        padding: '8px 12px', borderBottom: '1px solid var(--surface-border)',
-      }}>
-        <SvgIcon name="search" width="14" height="14" style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
+      <div className="flex items-center gap-2 px-3 py-2 border-b border-[var(--surface-border)]">
+        <SvgIcon name="search" width="14" height="14" className="text-text-muted shrink-0" />
         <input
           ref={searchInputRef}
           value={search}
           onChange={e => { setSearch(e.target.value); setHighlighted(0); }}
           onKeyDown={handleSearchKeyDown}
           placeholder={searchPlaceholder}
-          style={{
-            flex: 1, border: 'none', outline: 'none', background: 'transparent',
-            fontSize: '.875rem', color: 'var(--text-primary)', fontFamily: 'inherit',
-          }}
+          className="flex-1 border-none outline-none bg-transparent text-sm text-text-primary font-[inherit]"
         />
         {search && (
           <button
             type="button"
             onClick={() => { setSearch(''); searchInputRef.current?.focus(); }}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: 'var(--text-muted)', display: 'flex' }}
+            className="bg-transparent border-none cursor-pointer p-0.5 text-text-muted flex"
           >
             <SvgIcon name="close" width="13" height="13" />
           </button>
@@ -149,9 +137,9 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
       </div>
 
       {/* Options list */}
-      <ul style={{ maxHeight: 220, overflowY: 'auto', padding: '4px 0', margin: 0, listStyle: 'none' }}>
+      <ul className="max-h-[220px] overflow-y-auto py-1 m-0 list-none">
         {filtered.length === 0 ? (
-          <li style={{ padding: '12px 16px', color: 'var(--text-muted)', fontSize: '.85rem', textAlign: 'center' }}>
+          <li className="px-4 py-3 text-text-muted text-[.85rem] text-center">
             {noOptionsMessage}
           </li>
         ) : filtered.map((opt, i) => {
@@ -164,25 +152,23 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
               aria-selected={isSel}
               onClick={() => { pick(opt); }}
               onMouseEnter={() => { setHighlighted(i); }}
+              className="px-3 py-2 cursor-pointer flex items-center justify-between gap-2"
               style={{
-                padding: '8px 12px', cursor: 'pointer',
                 background: isHi || isSel ? 'var(--surface-hover)' : 'transparent',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
               }}
             >
-              <div style={{ minWidth: 0 }}>
-                <div style={{
-                  fontSize: '.875rem', fontWeight: isSel ? 600 : 400,
-                  color: 'var(--text-primary)', whiteSpace: 'nowrap',
-                  overflow: 'hidden', textOverflow: 'ellipsis',
-                }}>
+              <div className="min-w-0">
+                <div
+                  className="text-sm text-text-primary whitespace-nowrap overflow-hidden text-ellipsis"
+                  style={{ fontWeight: isSel ? 600 : 400 }}
+                >
                   {opt.label}
                 </div>
                 {opt.sublabel && (
-                  <div style={{ fontSize: '.74rem', color: 'var(--text-muted)', marginTop: 1 }}>{opt.sublabel}</div>
+                  <div className="text-[.74rem] text-text-muted mt-px">{opt.sublabel}</div>
                 )}
               </div>
-              {isSel && <SvgIcon name="check-circle" width="14" height="14" style={{ color: 'var(--status-success)', flexShrink: 0 }} />}
+              {isSel && <SvgIcon name="check-circle" width="14" height="14" className="text-status-success shrink-0" />}
             </li>
           );
         })}
@@ -195,32 +181,27 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
       <button
         ref={triggerRef}
         type="button"
-        className="input"
+        className="input flex items-center justify-between gap-2 select-none text-left"
         onClick={() => { isOpen ? close() : open(); }}
         disabled={disabled}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          gap: 8, cursor: disabled ? 'not-allowed' : 'pointer', userSelect: 'none',
-          textAlign: 'left',
-        }}
+        style={{ cursor: disabled ? 'not-allowed' : 'pointer' }}
       >
-        <span style={{
-          flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-          color: selected ? 'var(--text-primary)' : 'var(--text-muted)',
-          fontWeight: selected ? 500 : 400,
-        }}>
+        <span
+          className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap"
+          style={{
+            color: selected ? 'var(--text-primary)' : 'var(--text-muted)',
+            fontWeight: selected ? 500 : 400,
+          }}
+        >
           {selected?.label ?? placeholder}
         </span>
         <SvgIcon
           name="chevron-collapse"
           width="14" height="14"
-          style={{
-            flexShrink: 0, color: 'var(--text-muted)',
-            transition: 'transform .15s',
-            transform: isOpen ? 'rotate(180deg)' : 'none',
-          }}
+          className="shrink-0 text-text-muted transition-transform duration-[150ms]"
+          style={{ transform: isOpen ? 'rotate(180deg)' : 'none' }}
         />
       </button>
 

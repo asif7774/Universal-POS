@@ -10,10 +10,10 @@ interface KanbanColProps {
 }
 
 export const KanbanCol = memo(({ status, jobs, onSelect }: KanbanColProps) => (
-  <div className="bg-[var(--bg-panel-hover)] rounded-[var(--radius-xl)] p-3" style={{ minWidth: 200, flex: '1 1 200px' }}>
+  <div className="bg-[var(--bg-panel-hover)] rounded-[var(--radius-xl)] p-3 min-w-[200px] flex-[1_1_200px]">
     <div className="flex items-center justify-between mb-3">
       <div className="flex items-center gap-1.5">
-        <div style={{ width: 10, height: 10, borderRadius: '50%', background: STATUS_COLOR[status] }} />
+        <div className="w-[10px] h-[10px] rounded-full" style={{ background: STATUS_COLOR[status] }} />
         <span className="panel-title text-sm">{status}</span>
       </div>
       <span className="badge badge-neutral">{jobs.length}</span>
@@ -33,7 +33,7 @@ export const KanbanCol = memo(({ status, jobs, onSelect }: KanbanColProps) => (
         >
           <div className="flex justify-between mb-1">
             <code className="text-[0.72rem] text-[var(--text-muted)] font-bold">{job.jobNo}</code>
-            <span className={`badge ${TYPE_BADGE[job.type] || 'badge-neutral'}`} style={{ fontSize: '.65rem' }}>{job.type}</span>
+            <span className={`badge ${TYPE_BADGE[job.type] || 'badge-neutral'} text-[.65rem]`}>{job.type}</span>
           </div>
           <div className="text-sm font-semibold text-[var(--text-primary)] mb-0.5">{job.customerName}</div>
           <div className="text-xs text-[var(--text-muted)] mb-1.5">{job.garment}</div>

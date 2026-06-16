@@ -107,12 +107,10 @@ export const ProductGrid = memo(({
                   </div>
                   
                   <div
-                    className="text-[0.7rem] font-medium flex items-center gap-1.5"
-                    style={{ color: product.stock === 0 ? 'var(--status-error)' : product.stock < 5 ? 'var(--status-warning)' : 'var(--status-success)' }}
+                    className={`text-[0.7rem] font-medium flex items-center gap-1.5 ${product.stock === 0 ? 'text-status-error' : product.stock < 5 ? 'text-status-warning' : 'text-status-success'}`}
                   >
                     <div
-                      className="w-1.5 h-1.5 rounded-full shrink-0"
-                      style={{ backgroundColor: product.stock === 0 ? 'var(--status-error)' : product.stock < 5 ? 'var(--status-warning)' : 'var(--status-success)' }}
+                      className={`w-1.5 h-1.5 rounded-full shrink-0 ${product.stock === 0 ? 'bg-[var(--status-error)]' : product.stock < 5 ? 'bg-[var(--status-warning)]' : 'bg-[var(--status-success)]'}`}
                     />
                     {product.category === 'Services' ? 'Service' : `${product.stock} in stock`}
                   </div>

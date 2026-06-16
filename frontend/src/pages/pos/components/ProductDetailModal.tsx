@@ -37,8 +37,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
         <>
           {canSell && !outOfStock && (
             <button
-              className="btn btn-gold"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+              className="btn btn-gold inline-flex items-center gap-1.5"
               onClick={() => { handleAdd(false); }}
             >
               <SvgIcon name="pos" width="14" height="14" />
@@ -47,8 +46,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
           )}
           {canRent && !outOfStock && (
             <button
-              className="btn btn-gold"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+              className="btn btn-gold inline-flex items-center gap-1.5"
               onClick={() => { handleAdd(true); }}
             >
               <SvgIcon name="rental" width="14" height="14" />
@@ -56,13 +54,13 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
             </button>
           )}
           {outOfStock && (
-            <span style={{ fontSize: '.85rem', color: 'var(--status-error)', fontWeight: 600 }}>Out of stock</span>
+            <span className="text-[.85rem] text-[var(--status-error)] font-semibold">Out of stock</span>
           )}
           <button className="btn btn-outline" onClick={onClose}>Close</button>
         </>
       }
     >
-      <div style={{ display: 'flex', gap: 20 }}>
+      <div className="flex gap-5">
         {/* Image */}
         <ProductImage
           imageUrl={product.imageUrl}
@@ -72,8 +70,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
         />
 
         {/* Details */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+        <div className="flex-1 flex flex-col gap-3">
+          <div className="flex gap-1.5 flex-wrap">
             <span className="badge badge-navy">{product.category}</span>
             {product.type === 'rental'
               ? <span className="badge badge-gold">Rental</span>
@@ -81,24 +79,27 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
             }
           </div>
 
-          <div style={{ fontSize: '.8rem', color: 'var(--text-muted)' }}>SKU: <strong>{product.sku}</strong></div>
+          <div className="text-[.8rem] text-[var(--text-muted)]">SKU: <strong>{product.sku}</strong></div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          <div className="grid grid-cols-2 gap-2.5">
             {canSell && (
-              <div style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
-                <div style={{ fontSize: '.7rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 3 }}>SALE PRICE</div>
-                <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--accent-gold-text)' }}>{fmt(product.price)}</div>
+              <div className="bg-[var(--bg-panel-hover)] rounded-[var(--radius-sm)] px-3 py-2.5">
+                <div className="text-[.7rem] text-[var(--text-muted)] font-semibold mb-[3px]">SALE PRICE</div>
+                <div className="text-[1.1rem] font-extrabold text-[var(--accent-gold-text)]">{fmt(product.price)}</div>
               </div>
             )}
             {canRent && (
-              <div style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
-                <div style={{ fontSize: '.7rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 3 }}>RENTAL RATE</div>
-                <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--accent-gold-text)' }}>{fmt(product.rentalRate ?? 0)}<span style={{ fontSize: '.7rem', fontWeight: 400 }}>/day</span></div>
+              <div className="bg-[var(--bg-panel-hover)] rounded-[var(--radius-sm)] px-3 py-2.5">
+                <div className="text-[.7rem] text-[var(--text-muted)] font-semibold mb-[3px]">RENTAL RATE</div>
+                <div className="text-[1.1rem] font-extrabold text-[var(--accent-gold-text)]">{fmt(product.rentalRate ?? 0)}<span className="text-[.7rem] font-normal">/day</span></div>
               </div>
             )}
-            <div style={{ background: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
-              <div style={{ fontSize: '.7rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 3 }}>IN STOCK</div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 800, color: outOfStock ? 'var(--status-error)' : lowStock ? 'var(--status-warning)' : 'var(--status-success)' }}>
+            <div className="bg-[var(--bg-panel-hover)] rounded-[var(--radius-sm)] px-3 py-2.5">
+              <div className="text-[.7rem] text-[var(--text-muted)] font-semibold mb-[3px]">IN STOCK</div>
+              <div
+                className="text-[1.1rem] font-extrabold"
+                style={{ color: outOfStock ? 'var(--status-error)' : lowStock ? 'var(--status-warning)' : 'var(--status-success)' }}
+              >
                 {product.stock} {outOfStock ? '— unavailable' : lowStock ? '— low' : ''}
               </div>
             </div>
@@ -107,11 +108,11 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
           {canRent && (
             <div className="input-group">
               <label className="input-label">Rental Duration (days)</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div className="flex items-center gap-2">
                 <button className="btn btn-outline btn-sm" onClick={() => { setRentalDays(d => Math.max(1, d - 1)); }}>−</button>
-                <span style={{ minWidth: 32, textAlign: 'center', fontWeight: 700 }}>{rentalDays}</span>
+                <span className="min-w-8 text-center font-bold">{rentalDays}</span>
                 <button className="btn btn-outline btn-sm" onClick={() => { setRentalDays(d => d + 1); }}>+</button>
-                <span style={{ fontSize: '.8rem', color: 'var(--text-muted)' }}>
+                <span className="text-[.8rem] text-[var(--text-muted)]">
                   = {fmt((product.rentalRate ?? 0) * rentalDays)} total
                 </span>
               </div>

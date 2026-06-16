@@ -8,7 +8,7 @@ import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 export const AddItemModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
-  
+
   const mutation = useMutation({
     mutationFn: (data: any) => apiClient.post('/products', data),
     onSuccess: () => {
@@ -34,19 +34,19 @@ export const AddItemModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
   };
 
   return (
-    <Modal 
-      isOpen={true} 
-      onClose={onClose} 
+    <Modal
+      isOpen={true}
+      onClose={onClose}
       title={(
         <>
-          <SvgIcon name="inventory" width="20" height="20" style={{ color: 'var(--accent-gold)' }} />
+          <SvgIcon name="inventory" width="20" height="20" className="text-[var(--accent-gold)]" />
           Add New Product
         </>
-      )} 
+      )}
       maxWidth={500}
     >
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="label">SKU *</label>
             <input required name="sku" className="input" placeholder="e.g. TUX-001" />
@@ -56,8 +56,8 @@ export const AddItemModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
             <input required name="name" className="input" placeholder="Product name" />
           </div>
         </div>
-        
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+
+        <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="label">Type *</label>
             <select name="type" className="input">
@@ -72,7 +72,7 @@ export const AddItemModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="label">Sale Price</label>
             <input name="salePrice" type="number" step="0.01" className="input" placeholder="0.00" />
@@ -83,13 +83,13 @@ export const AddItemModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 16 }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '.9rem' }}>
+        <div className="flex gap-4">
+          <label className="flex items-center gap-2 text-[0.9rem]">
             <input type="checkbox" name="taxable" defaultChecked /> Taxable
           </label>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 16 }}>
+        <div className="flex justify-end gap-3 mt-4">
           <button type="button" className="btn btn-outline" onClick={onClose}>Cancel</button>
           <button type="submit" className="btn btn-gold" disabled={mutation.isPending}>
             {mutation.isPending ? 'Saving...' : 'Add Product'}

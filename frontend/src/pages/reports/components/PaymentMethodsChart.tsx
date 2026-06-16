@@ -18,13 +18,13 @@ interface PaymentMethodsChartProps {
 
 export const PaymentMethodsChart: React.FC<PaymentMethodsChartProps> = ({ data, isLoading }) => {
   return (
-    <div className="panel" style={{ display: 'flex', flexDirection: 'column' }}>
+    <div className="panel flex flex-col">
       <div className="panel-header">
         <span className="panel-title">Payment Methods</span>
       </div>
-      <div style={{ flex: 1, minHeight: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+      <div className="flex-1 min-h-[300px] flex items-center justify-center relative">
         {isLoading && (
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.15)', zIndex: 5, borderRadius: 8 }}>
+          <div className="absolute inset-0 flex items-center justify-center bg-black/15 z-[5] rounded-lg">
             <div className="spinner" />
           </div>
         )}

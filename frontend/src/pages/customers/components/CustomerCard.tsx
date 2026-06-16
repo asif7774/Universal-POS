@@ -21,7 +21,7 @@ export const CustomerCard = memo(({ c, onClick }: CustomerCardProps) => (
       <div className="w-10 h-10 rounded-full bg-[var(--accent-gold-subtle)] text-[var(--accent-gold-text)] font-black text-sm flex items-center justify-center shrink-0">
         {c.firstName[0]}{c.lastName[0]}
       </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
+      <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5 mb-0.5">
           <span className="text-[var(--text-primary)] font-semibold text-[0.95rem]">{c.firstName} {c.lastName}</span>
           {c.tags?.includes('VIP') && <span className="badge badge-gold">VIP</span>}
@@ -33,7 +33,7 @@ export const CustomerCard = memo(({ c, onClick }: CustomerCardProps) => (
 
     <div className="divider" />
 
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, textAlign: 'center' }}>
+    <div className="grid grid-cols-3 gap-2 text-center">
       <div>
         <div className="text-[0.9rem] font-extrabold text-[var(--text-primary)]">{c.totalOrders}</div>
         <div className="text-[0.7rem] text-[var(--text-muted)] uppercase tracking-wide">Orders</div>
@@ -61,7 +61,7 @@ export const CustomerCard = memo(({ c, onClick }: CustomerCardProps) => (
     )}
 
     {c.notes && (
-      <div style={{ marginTop: 8, fontSize: '.75rem', color: 'var(--status-warning)', borderTop: '1px solid var(--border-subtle)', paddingTop: 8, display: 'flex', gap: 6, alignItems: 'center' }}>
+      <div className="mt-2 text-xs text-[var(--status-warning)] border-t border-[var(--border-subtle)] pt-2 flex gap-1.5 items-center">
         <SvgIcon name="warning" width="12" height="12" /> {c.notes}
       </div>
     )}

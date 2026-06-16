@@ -30,7 +30,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal animate-slide-up" style={{ maxWidth }} onClick={e => { e.stopPropagation(); }}>
-        <div className="modal-header" style={!title ? { borderBottom: 'none', paddingBottom: 0 } : {}}>
+        <div className={`modal-header${!title ? ' border-b-0 pb-0' : ''}`}>
           {title ? (
             <h3 className="modal-title">{title}</h3>
           ) : <div />}

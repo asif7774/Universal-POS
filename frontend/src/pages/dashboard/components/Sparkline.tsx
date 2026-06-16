@@ -20,7 +20,7 @@ export const Sparkline: React.FC<{ data: number[]; color?: string; colorVariant?
   }).join(' ');
 
   return (
-    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{ overflow: 'visible' }}>
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="overflow-visible">
       <polyline points={pts} fill="none" stroke={resolvedColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <polyline
         points={`0,${h} ${pts} ${w},${h}`}

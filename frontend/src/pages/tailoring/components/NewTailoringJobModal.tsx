@@ -50,7 +50,7 @@ export const NewTailoringJobModal: React.FC<{ onClose: () => void }> = ({ onClos
       onClose={onClose}
       title={
         <>
-          <SvgIcon name="scissors" width="20" height="20" style={{ color: 'var(--accent-gold)' }} />
+          <SvgIcon name="scissors" width="20" height="20" className="text-[var(--accent-gold)]" />
           New Tailoring Job
         </>
       }
@@ -64,8 +64,8 @@ export const NewTailoringJobModal: React.FC<{ onClose: () => void }> = ({ onClos
         </>
       }
     >
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-        <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+      <div className="grid grid-cols-2 gap-[14px]">
+        <div className="input-group col-span-full">
           <label className="input-label">Customer *</label>
           <SearchableSelect
             options={customers.map(c => ({ value: c.id, label: `${c.firstName} ${c.lastName}` }))}
@@ -123,11 +123,10 @@ export const NewTailoringJobModal: React.FC<{ onClose: () => void }> = ({ onClos
             onChange={e => { set('price', Number(e.target.value)); }} />
         </div>
 
-        <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+        <div className="input-group col-span-full">
           <label className="input-label">Notes</label>
-          <textarea className="input" rows={2} placeholder="Special instructions..."
-            value={form.notes} onChange={e => { set('notes', e.target.value); }}
-            style={{ resize: 'vertical' }} />
+          <textarea className="input resize-y" rows={2} placeholder="Special instructions..."
+            value={form.notes} onChange={e => { set('notes', e.target.value); }} />
         </div>
       </div>
     </Modal>

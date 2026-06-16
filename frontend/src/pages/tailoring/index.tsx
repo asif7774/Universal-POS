@@ -125,7 +125,7 @@ const Tailoring: React.FC = () => {
                           {j.status.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
                         </span>
                       </td>
-                      <td style={{ minWidth: 120 }}><StatusPipeline current={j.status} /></td>
+                      <td className="min-w-[120px]"><StatusPipeline current={j.status} /></td>
                     </tr>
                   ))}
                 </tbody>

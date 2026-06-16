@@ -54,15 +54,15 @@ const Inventory: React.FC = () => {
       <div className="animate-fade-in">
         <div className="search-container">
           <div className="grid grid-cols-4 gap-[14px] w-full mb-6">
-            {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} height={80} style={{ borderRadius: 'var(--radius-lg)' }} />)}
+            {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} height={80} className="rounded-[var(--radius-lg)]" />)}
           </div>
-          <Skeleton height={42} style={{ marginBottom: 16 }} />
+          <Skeleton height={42} className="mb-4" />
           <div className="flex gap-2">
             {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} width={80} height={32} />)}
           </div>
         </div>
         <div className="flex flex-col gap-4">
-          {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} height={100} style={{ borderRadius: 'var(--radius-lg)' }} />)}
+          {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} height={100} className="rounded-[var(--radius-lg)]" />)}
         </div>
       </div>
     );

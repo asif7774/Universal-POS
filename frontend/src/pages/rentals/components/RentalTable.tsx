@@ -28,7 +28,7 @@ interface RentalTableProps {
 
 export const RentalTable = memo(({ filtered, setSelected }: RentalTableProps) => {
   return (
-    <div className="panel" style={{ padding: 0, overflow: 'hidden' }}>
+    <div className="panel p-0 overflow-hidden">
       <table className="data-table">
         <thead>
           <tr>
@@ -54,35 +54,35 @@ export const RentalTable = memo(({ filtered, setSelected }: RentalTableProps) =>
 
             return (
               <tr key={r.id} className="table-row" onClick={() => { setSelected(r); }}>
-                <td><code style={{ fontSize: '.8rem', color: 'var(--accent-gold-text)', fontWeight: 700 }}>{r.rentalNo}</code></td>
+                <td><code className="text-[.8rem] text-[var(--accent-gold-text)] font-bold">{r.rentalNo}</code></td>
                 <td>
-                  <div style={{ fontWeight: 600, fontSize: '.875rem' }}>{customerName}</div>
-                  <div style={{ fontSize: '.75rem', color: 'var(--text-muted)' }}>{phone}</div>
+                  <div className="font-semibold text-[.875rem]">{customerName}</div>
+                  <div className="text-[.75rem] text-[var(--text-muted)]">{phone}</div>
                 </td>
                 <td>
-                  <div style={{ fontSize: '.8rem', maxWidth: 160 }}>
+                  <div className="text-[.8rem] max-w-[160px]">
                     {r.items && r.items.length > 0 ? r.items[0].productName : 'No items'}
-                    {r.items && r.items.length > 1 && <span style={{ color: 'var(--text-muted)' }}> +{r.items.length - 1} more</span>}
+                    {r.items && r.items.length > 1 && <span className="text-[var(--text-muted)]"> +{r.items.length - 1} more</span>}
                   </div>
                 </td>
-                <td style={{ fontSize: '.82rem', color: 'var(--text-secondary)', maxWidth: 140 }}>{r.eventName}</td>
-                <td style={{ fontSize: '.82rem', whiteSpace: 'nowrap' }}>{fmtDate(r.pickupDate)}</td>
-                <td style={{ fontSize: '.82rem', whiteSpace: 'nowrap' }}>
+                <td className="text-[.82rem] text-[var(--text-secondary)] max-w-[140px]">{r.eventName}</td>
+                <td className="text-[.82rem] whitespace-nowrap">{fmtDate(r.pickupDate)}</td>
+                <td className="text-[.82rem] whitespace-nowrap">
                   {fmtDate(r.returnDate)}
                   {r.status === 'out' && days < 0 && (
-                    <div style={{ fontSize: '.7rem', color: 'var(--status-error)', fontWeight: 700 }}>{Math.abs(days)}d overdue</div>
+                    <div className="text-[.7rem] text-[var(--status-error)] font-bold">{Math.abs(days)}d overdue</div>
                   )}
                   {r.status === 'out' && days >= 0 && (
-                    <div style={{ fontSize: '.7rem', color: 'var(--status-success)' }}>{days}d left</div>
+                    <div className="text-[.7rem] text-[var(--status-success)]">{days}d left</div>
                   )}
                 </td>
                 <td className="text-[var(--accent-gold-text)] font-bold">{fmt(r.depositPaid)}</td>
                 <td>
-                  <span className={`badge ${STATUS_BADGE[computedStatus] ?? 'badge-neutral'}`} style={{ textTransform: 'capitalize', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <span className={`badge ${STATUS_BADGE[computedStatus] ?? 'badge-neutral'} capitalize inline-flex items-center gap-[6px]`}>
                     <SvgIcon name={cfg.icon} width="12" height="12" /> {computedStatus}
                   </span>
                   {r.notes && (
-                    <div style={{ fontSize: '.7rem', color: 'var(--status-warning)', marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <div className="text-[.7rem] text-[var(--status-warning)] mt-1 flex items-center gap-1">
                       <SvgIcon name="warning" width="10" height="10" /> Note
                     </div>
                   )}
@@ -99,7 +99,7 @@ export const RentalTable = memo(({ filtered, setSelected }: RentalTableProps) =>
       {filtered.length === 0 && (
         <div className="empty-state">
           <div className="empty-state-icon">
-            <SvgIcon name="rentals" width="48" height="48" style={{ opacity: 0.3 }} />
+            <SvgIcon name="rentals" width="48" height="48" className="opacity-30" />
           </div>
           <p>No rentals found</p>
         </div>

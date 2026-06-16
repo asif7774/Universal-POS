@@ -72,9 +72,9 @@ export const NewRentalForm = ({ customers, onSubmit, isPending, onCancel }: NewR
   };
 
   return (
-    <div className="panel" style={{ maxWidth: 600, margin: '0 auto' }}>
-      <h2 style={{ marginBottom: 20, fontFamily: "'Playfair Display', serif" }}>New Rental Booking</h2>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div className="panel max-w-[600px] mx-auto">
+      <h2 className="mb-5 font-['Playfair_Display',serif]">New Rental Booking</h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
         <div className="input-group">
           <label className="input-label">Customer *</label>
@@ -94,7 +94,7 @@ export const NewRentalForm = ({ customers, onSubmit, isPending, onCancel }: NewR
             value={form.eventName} onChange={e => { set('eventName', e.target.value); }} />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div className="grid grid-cols-2 gap-4">
           <div className="input-group">
             <label className="input-label">Pickup Date *</label>
             <input className="input" type="date" required
@@ -106,9 +106,9 @@ export const NewRentalForm = ({ customers, onSubmit, isPending, onCancel }: NewR
               value={form.returnDate} onChange={e => { set('returnDate', e.target.value); }} />
           </div>
         </div>
-        
+
         {dateError && (
-          <div style={{ color: 'var(--status-error)', fontSize: '.875rem', marginTop: -8 }}>
+          <div className="text-[var(--status-error)] text-sm -mt-2">
             Return Date cannot be earlier than Pickup Date.
           </div>
         )}
@@ -125,24 +125,20 @@ export const NewRentalForm = ({ customers, onSubmit, isPending, onCancel }: NewR
             noOptionsMessage="No inventory items found"
           />
           {form.items.length > 0 ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginTop: 8 }}>
+            <div className="flex flex-col gap-[5px] mt-2">
               {form.items.map((item, i) => (
-                <div key={i} style={{
-                  display: 'flex', alignItems: 'center', gap: 8, padding: '7px 10px',
-                  borderRadius: 'var(--radius-md)',
-                  background: 'var(--bg-panel-hover)', border: '1px solid var(--border-subtle)',
-                }}>
-                  <SvgIcon name="tuxedo" width="14" height="14" style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
-                  <span style={{ flex: 1, fontSize: '.875rem', color: 'var(--text-primary)' }}>{item.productName}</span>
+                <div key={i} className="flex items-center gap-2 px-[10px] py-[7px] rounded-md bg-[var(--bg-panel-hover)] border border-[var(--border-subtle)]">
+                  <SvgIcon name="tuxedo" width="14" height="14" className="text-[var(--text-muted)] shrink-0" />
+                  <span className="flex-1 text-sm text-[var(--text-primary)]">{item.productName}</span>
                   <button type="button" onClick={() => { removeItem(i); }}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: 'var(--text-muted)', display: 'flex' }}>
+                    className="bg-transparent border-0 cursor-pointer p-0.5 text-[var(--text-muted)] flex">
                     <SvgIcon name="close" width="13" height="13" />
                   </button>
                 </div>
               ))}
             </div>
           ) : (
-            <p style={{ fontSize: '.78rem', color: 'var(--text-muted)', marginTop: 6 }}>
+            <p className="text-[.78rem] text-[var(--text-muted)] mt-1.5">
               No items added — search above to add rental items.
             </p>
           )}
@@ -156,11 +152,11 @@ export const NewRentalForm = ({ customers, onSubmit, isPending, onCancel }: NewR
 
         <div className="input-group">
           <label className="input-label">Notes</label>
-          <textarea className="input" rows={3} style={{ resize: 'vertical' }}
+          <textarea className="input resize-y" rows={3}
             value={form.notes} onChange={e => { set('notes', e.target.value); }} />
         </div>
 
-        <div style={{ display: 'flex', gap: 12, marginTop: 4, justifyContent: 'flex-end' }}>
+        <div className="flex gap-3 mt-1 justify-end">
           <button type="button" className="btn btn-outline" onClick={onCancel}>Cancel</button>
           <button type="submit" className="btn btn-gold" disabled={isPending || !canSubmit}>
             {isPending ? 'Booking...' : 'Book Rental'}

@@ -64,7 +64,7 @@ const Settings: React.FC = () => {
     title: 'Settings',
     subtitle: `${store.name || 'TuxedoPOS'} · Configure your store`,
     actions: tab !== 'staff' && tab !== 'receipts' && tab !== 'security' ? (
-      <button className="btn btn-gold" onClick={save} disabled={updateSettings.isPending} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+      <button className="btn btn-gold flex items-center gap-[6px]" onClick={save} disabled={updateSettings.isPending}>
         {updateSettings.isPending ? 'Saving...' : updateSettings.isSuccess ? (
           <>
             <SvgIcon name="check-circle" width="14" height="14" /> Saved!
@@ -79,18 +79,16 @@ const Settings: React.FC = () => {
       {isLoading ? (
         <div className="p-10 text-center text-[var(--text-muted)]">Loading settings...</div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 20 }}>
+        <div className="grid gap-5" style={{ gridTemplateColumns: '220px 1fr' }}>
           {/* Sidebar nav */}
-          <div className="panel" style={{ padding: 8, alignSelf: 'start' }}>
+          <div className="panel p-2 self-start">
             {TABS.map(t => (
               <button key={t.id} onClick={() => { setTab(t.id); }}
+                className="flex items-center gap-[10px] w-full py-[10px] px-3 border-none rounded-[var(--radius-md)] cursor-pointer text-sm transition-all duration-[150ms] text-left mb-0.5"
                 style={{
-                  display: 'flex', alignItems: 'center', gap: 10, width: '100%',
-                  padding: '10px 12px', border: 'none', borderRadius: 'var(--radius-md)',
                   background: tab === t.id ? 'var(--accent-gold)' : 'transparent',
                   color: tab === t.id ? 'var(--bg-canvas)' : 'var(--text-secondary)',
-                  cursor: 'pointer', fontSize: '.875rem', fontWeight: tab === t.id ? 700 : 500,
-                  transition: 'all .15s', textAlign: 'left', marginBottom: 2,
+                  fontWeight: tab === t.id ? 700 : 500,
                 }}>
                 <SvgIcon name={t.icon} width="16" height="16" /> {t.label}
               </button>
@@ -108,8 +106,8 @@ const Settings: React.FC = () => {
             {/* ── Plugin Settings ── */}
             {activePluginPage && (
               <div className="panel">
-                <div className="panel-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <SvgIcon name="settings" width="18" height="18" style={{ color: 'var(--accent-gold-text)' }} />
+                <div className="panel-header flex items-center gap-[10px]">
+                  <SvgIcon name="settings" width="18" height="18" className="text-[var(--accent-gold-text)]" />
                   <span className="panel-title">{activePluginPage.title}</span>
                 </div>
                 {activePluginPage.component}

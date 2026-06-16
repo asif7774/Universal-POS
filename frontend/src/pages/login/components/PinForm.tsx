@@ -28,13 +28,13 @@ export const PinForm: React.FC<PinFormProps> = ({ loading, onLogin, onSuccess, o
   const handlePinDelete = () => { setPin(p => p.slice(0, -1)); };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24 }}>
-      <p style={{ color: 'var(--text-secondary)', fontSize: '.85rem', textAlign: 'center' }}>
+    <div className="flex flex-col items-center gap-6">
+      <p className="text-[var(--text-secondary)] text-[.85rem] text-center">
         Enter your cashier PIN to quickly access the terminal
       </p>
 
       {/* PIN dots */}
-      <div style={{ display: 'flex', gap: 12 }}>
+      <div className="flex gap-3">
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} style={{
             width: 14, height: 14, borderRadius: '50%',
@@ -46,10 +46,7 @@ export const PinForm: React.FC<PinFormProps> = ({ loading, onLogin, onSuccess, o
       </div>
 
       {/* Numpad */}
-      <div style={{
-        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: 12, width: 240,
-      }}>
+      <div className="grid grid-cols-3 gap-3 w-60">
         {PIN_KEYS.map((key, i) => (
           <button
             key={i}
@@ -58,17 +55,12 @@ export const PinForm: React.FC<PinFormProps> = ({ loading, onLogin, onSuccess, o
               else if (key !== '') {handlePinInput(key);}
             }}
             disabled={key === '' || loading}
+            className="h-[60px] rounded-[var(--radius-md)] border-[1.5px] border-[var(--surface-border)] font-bold transition-all duration-100 shadow-sm"
             style={{
-              height: 60,
-              borderRadius: 'var(--radius-md)',
-              border: '1.5px solid var(--surface-border)',
               background: key === '⌫' ? 'var(--status-error-subtle)' : 'var(--bg-panel)',
               color: key === '⌫' ? 'var(--status-error)' : 'var(--text-primary)',
               fontSize: key === '⌫' ? '1.1rem' : '1.3rem',
-              fontWeight: 700,
               cursor: key === '' ? 'default' : 'pointer',
-              transition: 'all .1s',
-              boxShadow: 'var(--shadow-sm)',
               visibility: key === '' ? 'hidden' : 'visible',
             }}
             onMouseDown={e => {
@@ -86,7 +78,7 @@ export const PinForm: React.FC<PinFormProps> = ({ loading, onLogin, onSuccess, o
       </div>
 
       {loading && (
-        <div style={{ color: 'var(--text-muted)', fontSize: '.85rem' }}>
+        <div className="text-[var(--text-muted)] text-[.85rem]">
           Verifying PIN...
         </div>
       )}

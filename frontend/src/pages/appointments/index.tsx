@@ -186,7 +186,7 @@ const Appointments: React.FC = () => {
                   }}
                 >
                   <div className="flex items-center gap-1.25">
-                    <span style={{ color: cfg.color, opacity: 0.8 }}>
+                    <span className="opacity-80" style={{ color: cfg.color }}>
                       <SvgIcon name={cfg.icon} width="14" height="14" />
                     </span>
                     <span className="font-bold text-[0.78rem] whitespace-nowrap overflow-hidden text-ellipsis" style={{ color: cfg.color }}>{appt.customer}</span>

@@ -85,33 +85,33 @@ export const SecurityTab: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div className="flex flex-col gap-4">
       <div className="card">
-        <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <SvgIcon name="lock" width="16" height="16" style={{ color: 'var(--accent-gold-text)' }} />
+        <div className="card-header flex items-center gap-[10px]">
+          <SvgIcon name="lock" width="16" height="16" className="text-[var(--accent-gold-text)]" />
           <span className="card-title">Session & Access</span>
           <span className="ml-auto text-[0.7rem] text-text-muted">Saved on this device</span>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div className="flex flex-col gap-[14px]">
           {CHECKBOX_OPTIONS.map(opt => (
-            <label key={opt.key} style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', padding: '8px 0', borderBottom: '1px solid var(--border-subtle)' }}>
+            <label key={opt.key} className="flex items-center gap-3 cursor-pointer py-2 border-b border-[var(--border-subtle)]">
               <input type="checkbox"
                 checked={prefs[opt.key] ?? opt.defaultChecked}
                 onChange={() => { togglePref(opt.key); }}
-                style={{ width: 16, height: 16, accentColor: 'var(--accent-gold-text)', cursor: 'pointer' }} />
-              <span style={{ fontSize: '.875rem' }}>{opt.label}</span>
+                className="w-4 h-4 accent-[var(--accent-gold-text)] cursor-pointer" />
+              <span className="text-sm">{opt.label}</span>
             </label>
           ))}
         </div>
       </div>
 
       <div className="card">
-        <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <SvgIcon name="key" width="16" height="16" style={{ color: 'var(--accent-gold-text)' }} />
+        <div className="card-header flex items-center gap-[10px]">
+          <SvgIcon name="key" width="16" height="16" className="text-[var(--accent-gold-text)]" />
           <span className="card-title">Change Password</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-          <div className="input-group" style={{ gridColumn: '1/-1' }}>
+        <div className="grid grid-cols-2 gap-[14px]">
+          <div className="input-group col-span-full">
             <label className="input-label">Current Password</label>
             <input className="input" type="password" placeholder="••••••••"
               value={currentPw} onChange={e => { setCurrentPw(e.target.value); }} />
@@ -127,35 +127,35 @@ export const SecurityTab: React.FC = () => {
               value={confirmPw} onChange={e => { setConfirmPw(e.target.value); }} />
           </div>
         </div>
-        <div style={{ marginTop: 14 }}>
+        <div className="mt-[14px]">
           <button className="btn btn-gold" onClick={() => { void updatePassword(); }} disabled={changingPw}>
             {changingPw ? 'Updating...' : 'Update Password'}
           </button>
         </div>
       </div>
 
-      <div className="card" style={{ border: '1px solid #FECACA' }}>
-        <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <SvgIcon name="warning" width="16" height="16" style={{ color: 'var(--status-error)' }} />
-          <span className="card-title" style={{ color: 'var(--status-error)' }}>Danger Zone</span>
+      <div className="card border border-[#FECACA]">
+        <div className="card-header flex items-center gap-[10px]">
+          <SvgIcon name="warning" width="16" height="16" className="text-[var(--status-error)]" />
+          <span className="card-title text-[var(--status-error)]">Danger Zone</span>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--border-subtle)' }}>
+        <div className="flex flex-col gap-3">
+          <div className="flex justify-between items-center py-[10px] border-b border-[var(--border-subtle)]">
             <div>
-              <div style={{ fontWeight: 600, fontSize: '.875rem' }}>Export All Data</div>
-              <div style={{ fontSize: '.78rem', color: 'var(--text-muted)' }}>Download a CSV export of all orders, customers, and inventory.</div>
+              <div className="font-semibold text-sm">Export All Data</div>
+              <div className="text-[.78rem] text-[var(--text-muted)]">Download a CSV export of all orders, customers, and inventory.</div>
             </div>
-            <button className="btn btn-outline btn-sm" style={{ borderColor: '#FECACA', color: 'var(--status-error)' }}
+            <button className="btn btn-outline btn-sm border-[#FECACA] text-[var(--status-error)]"
               onClick={() => { void exportData(); }}>
               Export All Data
             </button>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--border-subtle)' }}>
+          <div className="flex justify-between items-center py-[10px] border-b border-[var(--border-subtle)]">
             <div>
-              <div style={{ fontWeight: 600, fontSize: '.875rem' }}>Clear Test Data</div>
-              <div style={{ fontSize: '.78rem', color: 'var(--text-muted)' }}>Remove all sample data. Cannot be undone.</div>
+              <div className="font-semibold text-sm">Clear Test Data</div>
+              <div className="text-[.78rem] text-[var(--text-muted)]">Remove all sample data. Cannot be undone.</div>
             </div>
-            <button className="btn btn-outline btn-sm" style={{ borderColor: '#FECACA', color: 'var(--status-error)' }}
+            <button className="btn btn-outline btn-sm border-[#FECACA] text-[var(--status-error)]"
               onClick={() => { void clearTestData(); }}>
               Clear Test Data
             </button>

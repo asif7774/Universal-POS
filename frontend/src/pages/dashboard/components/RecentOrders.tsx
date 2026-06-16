@@ -15,10 +15,10 @@ export const RecentOrders: React.FC<{ orders: RecentOrder[] }> = ({ orders }) =>
     </div>
     {orders.map(order => (
       <div key={order.id} className="table-row">
-        <span className="text-sm font-semibold text-[var(--text-primary)]" style={{ width: '110px' }}>{order.orderNo}</span>
-        <span className="text-sm text-[var(--text-secondary)]" style={{ flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{order.customer}</span>
-        <span className="text-sm font-bold text-[var(--accent-gold-text)]" style={{ width: '80px', textAlign: 'right' }}>{order.total}</span>
-        <div style={{ width: '100px', display: 'flex', justifyContent: 'flex-end' }}>
+        <span className="text-sm font-semibold text-[var(--text-primary)] w-[110px]">{order.orderNo}</span>
+        <span className="text-sm text-[var(--text-secondary)] flex-1 whitespace-nowrap overflow-hidden text-ellipsis">{order.customer}</span>
+        <span className="text-sm font-bold text-[var(--accent-gold-text)] w-[80px] text-right">{order.total}</span>
+        <div className="w-[100px] flex justify-end">
           <span className={`badge ${
             order.status === 'completed' || order.status === 'Completed' ? 'badge-success' :
             order.status === 'processing' || order.status === 'Processing' ? 'badge-gold' :
