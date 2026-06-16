@@ -68,7 +68,7 @@ async function seed() {
 
   for (const pd of productData) {
     const [p] = await db.insert(products).values({ ...pd, tenantId }).returning();
-    
+
     if (pd.type !== 'service') {
       const invValues = sizes.map(size => ({
         tenantId,
@@ -83,6 +83,57 @@ async function seed() {
       await db.insert(inventory).values(invValues);
     }
   }
+
+  // ── Low-stock demo products ──────────────────────────────────────
+  // Navy Velvet Smoking Jacket: critically low stock (1 of 10 per size = 10%)
+  const [lowStockProduct] = await db.insert(products).values({
+    tenantId,
+    sku: 'TUX-NVY-003',
+    name: 'Navy Velvet Smoking Jacket',
+    type: 'rental',
+    category: 'Tuxedos',
+    rentalRatePerDay: '110.00',
+    taxable: true,
+    isActive: true,
+    trackInventory: true,
+  }).returning();
+
+  await db.insert(inventory).values(
+    sizes.map(size => ({
+      tenantId, storeId,
+      productId: lowStockProduct.id,
+      size,
+      totalQty: 10,
+      availableQty: 1,      // 8 total available / 80 total = 10% → LOW STOCK
+      rentedQty: 9,
+      location: 'B-2',
+    }))
+  );
+
+  // Burgundy Slim Suit: moderate stock (3 of 8 per size = ~38%)
+  const [moderateStockProduct] = await db.insert(products).values({
+    tenantId,
+    sku: 'SUT-BRG-003',
+    name: 'Burgundy Slim Fit Suit',
+    type: 'rental',
+    category: 'Suits',
+    rentalRatePerDay: '70.00',
+    taxable: true,
+    isActive: true,
+    trackInventory: true,
+  }).returning();
+
+  await db.insert(inventory).values(
+    sizes.map(size => ({
+      tenantId, storeId,
+      productId: moderateStockProduct.id,
+      size,
+      totalQty: 8,
+      availableQty: 3,      // 24 total available / 64 total = 37.5% → amber bar
+      rentedQty: 5,
+      location: 'C-1',
+    }))
+  );
 
   // 5. Customers & Measurements
   const customerList = [
