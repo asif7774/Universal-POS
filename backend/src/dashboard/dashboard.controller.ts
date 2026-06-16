@@ -33,13 +33,6 @@ export class DashboardController {
       actionUrl: `/rentals?search=${r.rentalNo}`
     }));
 
-    if (alerts.length === 0) {
-      alerts.push({
-        type: 'info',
-        msg: 'All systems operational.',
-      });
-    }
-
     return alerts;
   }
 }
