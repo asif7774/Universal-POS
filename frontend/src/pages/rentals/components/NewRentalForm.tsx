@@ -63,7 +63,8 @@ export const NewRentalForm = ({ customers, onSubmit, isPending, onCancel }: NewR
     setForm(f => ({ ...f, items: f.items.filter((_, i) => i !== idx) }));
   };
 
-  const canSubmit = !!form.customerId && !!form.pickupDate && !!form.returnDate && form.items.length > 0;
+  const dateError = form.pickupDate && form.returnDate && form.pickupDate > form.returnDate;
+  const canSubmit = !!form.customerId && !!form.pickupDate && !!form.returnDate && form.items.length > 0 && !dateError;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,6 +106,12 @@ export const NewRentalForm = ({ customers, onSubmit, isPending, onCancel }: NewR
               value={form.returnDate} onChange={e => { set('returnDate', e.target.value); }} />
           </div>
         </div>
+        
+        {dateError && (
+          <div style={{ color: 'var(--status-error)', fontSize: '.875rem', marginTop: -8 }}>
+            Return Date cannot be earlier than Pickup Date.
+          </div>
+        )}
 
         {/* Product picker */}
         <div className="input-group">
