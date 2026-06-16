@@ -75,7 +75,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
-  // Theme state
+  // Theme state — dark mode is temporarily disabled; light theme is enforced.
+  // The toggle UI and isDark logic are preserved below for when dark UI work resumes.
   const [isDark, setIsDark] = useState(() => {
     const saved = localStorage.getItem('theme');
     if (saved) { return saved === 'dark'; }
@@ -83,14 +84,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   });
 
   useLayoutEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [isDark]);
+    // Enforce light theme until dark UI is ready. Any previously saved dark
+    // preference is cleared so returning users also get light mode.
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+  }, []);
 
   // Labels visible when: mobile drawer open, OR desktop expanded, OR desktop collapsed+hovered
   const isEffectivelyExpanded =
@@ -249,6 +247,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
             {isUserMenuOpen && (
               <div className="absolute bottom-[calc(100%+8px)] left-3 right-3 bg-surface-card rounded-lg p-2 shadow-lg flex flex-col gap-1 z-[100] border border-surface-border">
+                {/* DARK MODE TOGGLE — hidden until dark UI is ready
                 <button
                   onClick={() => { setIsDark(d => !d); setIsUserMenuOpen(false); }}
                   className="nav-item w-full text-left bg-transparent border-none justify-start text-text-primary whitespace-nowrap p-[8px_12px]"
@@ -256,6 +255,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   <SvgIcon name={isDark ? 'moon' : 'sun'} width="18" height="18" className="nav-icon shrink-0 text-text-secondary" />
                   <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
                 </button>
+                */}
                 <button
                   onClick={handleLogout}
                   className="nav-item w-full text-left bg-transparent border-none justify-start text-status-error/90 whitespace-nowrap p-[8px_12px]"
@@ -268,6 +268,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           </>
         ) : (
           <div className="flex flex-col gap-2">
+            {/* DARK MODE TOGGLE — hidden until dark UI is ready
             <button
               onClick={() => setIsDark(d => !d)}
               className="nav-item w-full text-left bg-transparent border-none justify-center text-white/80 whitespace-nowrap"
@@ -275,6 +276,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             >
               <SvgIcon name={isDark ? 'moon' : 'sun'} width="18" height="18" className="nav-icon shrink-0" />
             </button>
+            */}
             <button
               onClick={handleLogout}
               className="nav-item w-full text-left bg-transparent border-none justify-center text-red-400/80 whitespace-nowrap"
