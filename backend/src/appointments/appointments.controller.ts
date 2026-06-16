@@ -14,7 +14,7 @@ export class AppointmentsController {
 
   @Post()
   async create(@Body() body: any, @Req() req: any) {
-    return this.appointmentsService.create(req.user.tenantId, body);
+    return this.appointmentsService.create(req.user.tenantId, req.user.storeId, body);
   }
 
   @Put(':id/status')

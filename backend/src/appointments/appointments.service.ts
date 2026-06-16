@@ -44,10 +44,39 @@ export class AppointmentsService {
     }));
   }
 
-  async create(tenantId: string, data: any) {
+  async create(tenantId: string, storeId: string, data: any) {
+    // Resolve staff UUID from display name
+    let assignedToId: string | null = null;
+    if (data.assignedTo) {
+      const hit = await db.select({ id: users.id })
+        .from(users)
+        .where(and(eq(users.tenantId, tenantId), eq(users.name, data.assignedTo)))
+        .limit(1);
+      assignedToId = hit[0]?.id ?? null;
+    }
+
+    // Best-effort customer UUID match by first name
+    let customerId: string | null = null;
+    if (data.customer) {
+      const firstName = data.customer.trim().split(' ')[0];
+      const hit = await db.select({ id: customers.id })
+        .from(customers)
+        .where(and(eq(customers.tenantId, tenantId), eq(customers.firstName, firstName)))
+        .limit(1);
+      customerId = hit[0]?.id ?? null;
+    }
+
     const res = await db.insert(appointments).values({
-      ...data,
       tenantId,
+      storeId: storeId ?? null,
+      customerId,
+      assignedTo: assignedToId,
+      type: data.type,
+      status: 'scheduled',
+      date: data.date,
+      startTime: data.time,       // form sends 'time'; DB column is 'startTime'
+      duration: data.duration ?? 30,
+      notes: data.notes ?? null,
     }).returning();
     return res[0];
   }

@@ -13,7 +13,7 @@ export const NewApptModal: React.FC<{ onClose: () => void; defaultDate?: string 
   const { showSnackbar } = useSnackbar();
   const { data: staffMembers = [] } = useStaff();
   const { data: serverTime } = useServerTime();
-  const todayServerDate = serverTime?.data?.date || new Date().toISOString().split('T')[0];
+  const todayServerDate = serverTime?.date ?? new Date().toISOString().split('T')[0];
   const [form, setForm] = useState({ customer: '', phone: '', type: 'Fitting' as AppointmentType, date: defaultDate ?? todayServerDate, time: '10:00', duration: 30, assignedTo: '', notes: '' });
   const set = (k: string, v: string | number) => { setForm(f => ({ ...f, [k]: v })); };
 
