@@ -236,7 +236,12 @@ export const useUpdateSettings = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (data: Partial<StoreSettings>) => apiClient.put<StoreSettings>('/settings', data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['settings'] }),
+    onSuccess: (_result, variables) => {
+      qc.setQueryData(QK.settings(), (prev: StoreSettings | undefined) => ({
+        ...(prev ?? {}),
+        ...variables,
+      } as StoreSettings));
+    },
   });
 };
 

@@ -49,6 +49,14 @@ const Dashboard: React.FC = () => {
   const { data: settings } = useSettings();
   const { data: revenueData = [] } = useRevenueReport('week');
 
+  const formatCurrency = (val: number | string | undefined) => {
+    const num = Number(val) || 0;
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: settings?.currency || 'USD'
+    }).format(num);
+  };
+
   const isLoadingDashboard = isLoadingTime || !todayStr || isLoadingSummary || isLoadingStats || isLoadingAppts;
 
   // Set the page header
@@ -88,7 +96,7 @@ const Dashboard: React.FC = () => {
   }
 
   const STATS: StatProps[] = [
-    { label: "Today's Revenue",    value: `$${orderSummary?.revenue?.toFixed(2) ?? '0.00'}`, change: '', positive: true,  icon: 'banknote',     colorVariant: 'gold',    sparkData: revenueData.length ? revenueData.map(d => parseFloat(String(d.revenue)) || 0) : [0] },
+    { label: "Today's Revenue",    value: formatCurrency(orderSummary?.revenue), change: '', positive: true,  icon: 'banknote',     colorVariant: 'gold',    sparkData: revenueData.length ? revenueData.map(d => parseFloat(String(d.revenue)) || 0) : [0] },
     { label: 'Active Rentals',     value: `${rentalStats?.out ?? 0}`,                        change: '', positive: true,  icon: 'tuxedo',       colorVariant: 'emerald', sparkData: Array.from({ length: 7 }, () => rentalStats?.out ?? 0) },
     { label: 'Appointments Today', value: `${appointmentData?.count ?? 0}`,                  change: '', positive: true,  icon: 'appointments', colorVariant: 'primary', sparkData: Array.from({ length: 7 }, () => appointmentData?.count ?? 0) },
     { label: 'Overdue Returns',    value: `${rentalStats?.overdue ?? 0}`,                    change: '', positive: false, icon: 'warning',      colorVariant: 'error',   sparkData: Array.from({ length: 7 }, () => rentalStats?.overdue ?? 0) },
@@ -157,7 +165,7 @@ const Dashboard: React.FC = () => {
           orderNo: o.orderNo,
           customer: o.customerName || 'Guest',
           type: o.type,
-          total: o.total,
+          total: formatCurrency(o.total),
           status: o.status,
           time: new Date(o.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }))} />
@@ -170,7 +178,7 @@ const Dashboard: React.FC = () => {
             item: r.items?.[0]?.productName || 'Rental Item',
             event: r.eventName || 'Pickup',
             date: new Date(r.pickupDate).toLocaleDateString(),
-            deposit: `$${r.depositPaid || '0.00'}`
+            deposit: formatCurrency(r.depositPaid)
           }))} />
           <RentalFleetStatus fleet={rentalFleet} />
           <PredictiveAnalytics />

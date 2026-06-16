@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../../lib/apiClient';
-import { useStaff } from '../../../lib/queries';
+import { useStaff, useServerTime } from '../../../lib/queries';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
 import { AppointmentType } from 'types/appointments';
-import { TODAY, HOURS } from 'constants/appointments';
+import { HOURS } from 'constants/appointments';
 
 import { useSnackbar } from '../../../contexts/SnackbarContext';
 
@@ -12,7 +12,9 @@ export const NewApptModal: React.FC<{ onClose: () => void; defaultDate?: string 
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
   const { data: staffMembers = [] } = useStaff();
-  const [form, setForm] = useState({ customer: '', phone: '', type: 'Fitting' as AppointmentType, date: defaultDate ?? TODAY, time: '10:00', duration: 30, assignedTo: '', notes: '' });
+  const { data: serverTime } = useServerTime();
+  const todayServerDate = serverTime?.data?.date || new Date().toISOString().split('T')[0];
+  const [form, setForm] = useState({ customer: '', phone: '', type: 'Fitting' as AppointmentType, date: defaultDate ?? todayServerDate, time: '10:00', duration: 30, assignedTo: '', notes: '' });
   const set = (k: string, v: string | number) => { setForm(f => ({ ...f, [k]: v })); };
 
   const mutation = useMutation({

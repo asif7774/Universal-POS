@@ -35,6 +35,8 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const selected = options.find(o => o.value === value);
 
   const filtered = options.filter(o =>
@@ -76,7 +78,7 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
     if (!isOpen) return;
     const handle = (e: MouseEvent) => {
       const target = e.target as Node;
-      if (!triggerRef.current?.contains(target)) close();
+      if (!triggerRef.current?.contains(target) && !dropdownRef.current?.contains(target)) close();
     };
     document.addEventListener('mousedown', handle);
     return () => document.removeEventListener('mousedown', handle);
@@ -108,6 +110,7 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
 
   const dropdown = isOpen ? (
     <div
+      ref={dropdownRef}
       style={{
         ...dropdownStyle,
         background: 'var(--surface-card)',
