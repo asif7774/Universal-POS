@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useStaff, useCreateStaff } from '../../../lib/queries';
+import { useStaff, useCreateStaff, useUpdateStaff } from '../../../lib/queries';
 import { useSnackbar } from 'contexts/SnackbarContext';
 import { SvgIcon } from 'components/atoms/svg-sprite-loader';
+import { StaffMember } from 'types/settings';
 
 const ROLE_BADGE: Record<string, string> = {
   owner:   'badge-gold',
@@ -15,12 +16,16 @@ const EMPTY_FORM = { name: '', email: '', role: 'cashier' as 'owner' | 'manager'
 export const StaffTab: React.FC = () => {
   const { data: staff = [], isLoading } = useStaff();
   const createStaff = useCreateStaff();
+  const updateStaff = useUpdateStaff();
   const { showSnackbar } = useSnackbar();
 
-  const [isAdding, setIsAdding] = useState(false);
-  const [form, setForm] = useState(EMPTY_FORM);
+  const [isAdding, setIsAdding]   = useState(false);
+  const [editing, setEditing]     = useState<StaffMember | null>(null);
+  const [form, setForm]           = useState(EMPTY_FORM);
+  const [editForm, setEditForm]   = useState(EMPTY_FORM);
 
-  const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
+  const set     = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
+  const setEdit = (k: string, v: string) => setEditForm(f => ({ ...f, [k]: v }));
 
   const handleAdd = () => {
     if (!form.name.trim() || !form.email.trim()) {
@@ -40,7 +45,31 @@ export const StaffTab: React.FC = () => {
     );
   };
 
-  const handleClose = () => { setForm(EMPTY_FORM); setIsAdding(false); };
+  const openEdit = (s: StaffMember) => {
+    setEditForm({ name: s.name, email: s.email, role: s.role, pin: s.pin ?? '' });
+    setEditing(s);
+  };
+
+  const handleEdit = () => {
+    if (!editing) return;
+    if (!editForm.name.trim() || !editForm.email.trim()) {
+      showSnackbar('Name and email are required.', 'error');
+      return;
+    }
+    updateStaff.mutate(
+      { id: editing.id, name: editForm.name.trim(), email: editForm.email.trim(), role: editForm.role, pin: editForm.pin || undefined },
+      {
+        onSuccess: () => {
+          showSnackbar('Staff member updated.', 'success');
+          setEditing(null);
+        },
+        onError: () => showSnackbar('Failed to update staff member.', 'error'),
+      }
+    );
+  };
+
+  const handleClose    = () => { setForm(EMPTY_FORM); setIsAdding(false); };
+  const handleEditClose = () => setEditing(null);
 
   return (
     <>
@@ -93,7 +122,7 @@ export const StaffTab: React.FC = () => {
                     </span>
                   </td>
                   <td>
-                    <button className="btn btn-outline btn-sm">Edit</button>
+                    <button className="btn btn-outline btn-sm" onClick={() => openEdit(s)}>Edit</button>
                   </td>
                 </tr>
               ))}
@@ -107,6 +136,7 @@ export const StaffTab: React.FC = () => {
         )}
       </div>
 
+      {/* ── Add Staff Modal ── */}
       {isAdding && (
         <div className="modal-overlay" onClick={handleClose}>
           <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 440 }}>
@@ -116,7 +146,6 @@ export const StaffTab: React.FC = () => {
                 <SvgIcon name="close" width="16" height="16" />
               </button>
             </div>
-
             <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>
                 <label className="label">Name <span style={{ color: 'var(--status-error)' }}>*</span></label>
@@ -139,11 +168,52 @@ export const StaffTab: React.FC = () => {
                 <input className="input" placeholder="4-digit PIN" maxLength={4} value={form.pin} onChange={e => set('pin', e.target.value.replace(/\D/g, ''))} />
               </div>
             </div>
-
             <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
               <button className="btn btn-outline" onClick={handleClose}>Cancel</button>
               <button className="btn btn-gold" onClick={handleAdd} disabled={createStaff.isPending}>
                 {createStaff.isPending ? 'Adding...' : 'Add Staff Member'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Edit Staff Modal ── */}
+      {editing && (
+        <div className="modal-overlay" onClick={handleEditClose}>
+          <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 440 }}>
+            <div className="modal-header">
+              <h2 className="modal-title">Edit — {editing.name}</h2>
+              <button className="btn btn-ghost btn-sm" onClick={handleEditClose}>
+                <SvgIcon name="close" width="16" height="16" />
+              </button>
+            </div>
+            <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div>
+                <label className="label">Name <span style={{ color: 'var(--status-error)' }}>*</span></label>
+                <input className="input" placeholder="Full name" value={editForm.name} onChange={e => setEdit('name', e.target.value)} />
+              </div>
+              <div>
+                <label className="label">Email <span style={{ color: 'var(--status-error)' }}>*</span></label>
+                <input className="input" type="email" placeholder="staff@example.com" value={editForm.email} onChange={e => setEdit('email', e.target.value)} />
+              </div>
+              <div>
+                <label className="label">Role</label>
+                <select className="input" value={editForm.role} onChange={e => setEdit('role', e.target.value)}>
+                  <option value="cashier">Cashier</option>
+                  <option value="manager">Manager</option>
+                  <option value="owner">Owner</option>
+                </select>
+              </div>
+              <div>
+                <label className="label">PIN <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(optional)</span></label>
+                <input className="input" placeholder="4-digit PIN" maxLength={4} value={editForm.pin} onChange={e => setEdit('pin', e.target.value.replace(/\D/g, ''))} />
+              </div>
+            </div>
+            <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
+              <button className="btn btn-outline" onClick={handleEditClose}>Cancel</button>
+              <button className="btn btn-gold" onClick={handleEdit} disabled={updateStaff.isPending}>
+                {updateStaff.isPending ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </div>
