@@ -19,7 +19,7 @@ export class InventoryController {
 
   @Put(':id/stock')
   async updateStock(@Param('id') id: string, @Req() req: any, @Body() body: any) {
-    return this.svc.updateStock(id, req.user.tenantId, body.sizes);
+    return this.svc.updateStock(id, req.user.tenantId, req.user.storeId, body.sizes);
   }
 
   @Delete(':id')

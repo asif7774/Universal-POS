@@ -66,20 +66,44 @@ export class InventoryService {
     return res[0];
   }
 
-  async updateStock(id: string, tenantId: string, sizes: Record<string, any>) {
+  async updateStock(id: string, tenantId: string, storeId: string, sizes: Record<string, any>) {
     for (const [size, data] of Object.entries(sizes)) {
-      await db.update(inventory)
-        .set({
-          totalQty: data.total,
-          availableQty: data.available,
-          rentedQty: data.out,
-          updatedAt: new Date()
-        })
+      const existing = await db
+        .select({ id: inventory.id })
+        .from(inventory)
         .where(and(
           eq(inventory.productId, id),
           eq(inventory.tenantId, tenantId),
           eq(inventory.size, size)
-        ));
+        ))
+        .limit(1);
+
+      if (existing.length > 0) {
+        await db.update(inventory)
+          .set({
+            totalQty: data.total,
+            availableQty: data.available,
+            rentedQty: data.out ?? 0,
+            updatedAt: new Date()
+          })
+          .where(and(
+            eq(inventory.productId, id),
+            eq(inventory.tenantId, tenantId),
+            eq(inventory.size, size)
+          ));
+      } else {
+        await db.insert(inventory).values({
+          productId: id,
+          tenantId,
+          storeId: storeId ?? null,
+          size,
+          totalQty: data.total ?? 0,
+          availableQty: data.available ?? 0,
+          rentedQty: data.out ?? 0,
+          cleaningQty: 0,
+          damagedQty: 0,
+        });
+      }
     }
     return { success: true };
   }
