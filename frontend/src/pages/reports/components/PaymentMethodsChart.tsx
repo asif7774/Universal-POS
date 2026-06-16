@@ -47,7 +47,7 @@ export const PaymentMethodsChart: React.FC<PaymentMethodsChartProps> = ({ data, 
               formatter={(value: any) => fmt(Number(value))}
               contentStyle={{ background: 'var(--bg-panel)', border: '1px solid var(--border-subtle)', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.3)', color: 'var(--text-primary)' }}
             />
-            <Legend verticalAlign="bottom" height={36} iconType="circle" />
+            <Legend verticalAlign="bottom" height={60} iconType="circle" />
           </PieChart>
         </ResponsiveContainer>
       </div>

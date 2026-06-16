@@ -900,7 +900,9 @@
     width: 100%;
     max-width: 560px;
     max-height: 90vh;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     animation: slideUp .2s ease;
   }
   .modal { border: 1px solid var(--border-subtle); }
@@ -927,6 +929,7 @@
     padding: 16px 24px 20px;
     border-top: 1px solid var(--border-subtle);
     display: flex;
+    align-items: center;
     gap: 10px;
     justify-content: flex-end;
     flex-shrink: 0;

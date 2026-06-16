@@ -10,13 +10,13 @@ export const SizeCell: React.FC<SizeCellProps> = ({ data, lowThreshold }) => {
   const badgeClass = data.available === 0 ? 'badge-error' : isLow ? 'badge-warning' : 'badge-emerald';
 
   return (
-    <div className={`badge ${badgeClass}`} style={{ textAlign: 'center', minWidth: 56, padding: '6px 8px', borderRadius: 6, display: 'block' }}>
-      <div style={{ fontWeight: 800, fontSize: '.9rem' }}>
+    <div className={`badge ${badgeClass} text-center min-w-[56px] px-2 py-1.5 rounded-md block`}>
+      <div className="font-extrabold text-[0.9rem] leading-none mb-1">
         {data.available}
       </div>
-      <div style={{ fontSize: '.62rem', opacity: 0.75 }}>/ {data.total}</div>
-      {data.out > 0 && <div style={{ fontSize: '.6rem', fontWeight: 600, opacity: 0.8 }}>{data.out} out</div>}
-      {data.cleaning > 0 && <div style={{ fontSize: '.6rem', opacity: 0.75 }}>{data.cleaning} clean</div>}
+      <div className="text-[0.62rem] opacity-75 font-medium leading-none">/ {data.total}</div>
+      {data.out > 0 && <div className="text-[0.6rem] font-semibold opacity-80 mt-1">{data.out} out</div>}
+      {data.cleaning > 0 && <div className="text-[0.6rem] opacity-75 mt-0.5">{data.cleaning} clean</div>}
     </div>
   );
 };

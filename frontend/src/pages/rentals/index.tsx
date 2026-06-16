@@ -83,26 +83,30 @@ const Rentals: React.FC = () => {
   });
 
   return (
-    <div className="animate-fade-in bg-[var(--bg-canvas)] p-6">
+    <div className="animate-fade-in bg-[var(--bg-canvas)]">
       {!isAdding && (
-        <div className="search-container">
-          <div className="search-input-wrapper input-with-icon">
+        <div className="p-4 border-b border-[var(--border-subtle)] bg-[var(--bg-panel)] flex gap-3 flex-wrap items-center">
+          <div className="input-with-icon flex-1 min-w-0">
             <span className="input-icon">
               <SvgIcon name="search" width="18" height="18" />
             </span>
-            <input className="input" placeholder="Search by customer, order, event..." value={search} onChange={e => { setSearch(e.target.value); }} />
+            <input className="input w-full" placeholder="Search by customer, order, event..." type="search" value={search} onChange={e => { setSearch(e.target.value); }} />
           </div>
-          <div className="filter-group">
+          <div className="flex gap-1.5 flex-wrap shrink-0">
             {statuses.map(s => {
               const count = s === 'all' ? rentals.length : (counts[s] ?? 0);
               const badgeClass = s === 'booked' ? 'badge-gold' : s === 'out' ? 'badge-emerald' : s === 'overdue' ? 'badge-error' : s === 'returned' ? 'badge-success' : 'badge-neutral';
+              
+              const isSelected = statusFilter === s;
+              const activeBadgeClass = isSelected ? 'bg-[var(--bg-canvas)] text-[var(--text-primary)] border-transparent' : badgeClass;
+
               return (
                 <button key={s} onClick={() => { setStatusFilter(s); }}
-                  className={`btn btn-sm capitalize rounded-full ${statusFilter === s ? 'btn-gold' : 'btn-outline'}`}>
+                  className={`btn btn-sm text-[0.75rem] capitalize flex items-center gap-1.5 ${isSelected ? 'bg-[var(--accent-gold)] text-[var(--text-inverse)] border-transparent' : 'bg-[var(--bg-panel-hover)] text-[var(--text-secondary)] border-transparent hover:bg-[var(--border-input)]'}`}>
                   {s === 'overdue' && <SvgIcon name="warning" width="14" height="14" />}
                   {s}
                   {count > 0 && (
-                    <span className={`badge ${badgeClass} ml-1.5 text-[0.7rem]`}>
+                    <span className={`badge ${activeBadgeClass} ml-0.5 text-[0.65rem] px-1.5 py-0.5 min-w-[20px] flex items-center justify-center`}>
                       {count}
                     </span>
                   )}

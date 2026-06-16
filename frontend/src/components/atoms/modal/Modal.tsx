@@ -32,7 +32,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
       <div className="modal animate-slide-up" style={{ maxWidth }} onClick={e => { e.stopPropagation(); }}>
         <div className="modal-header" style={!title ? { borderBottom: 'none', paddingBottom: 0 } : {}}>
           {title ? (
-            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.2rem', margin: 0, display: 'flex', alignItems: 'center', gap: 10 }}>{title}</h3>
+            <h3 className="modal-title">{title}</h3>
           ) : <div />}
           <button className="btn btn-ghost btn-icon" onClick={onClose} aria-label="Close modal">
             <SvgIcon name="close" width="16" height="16" />

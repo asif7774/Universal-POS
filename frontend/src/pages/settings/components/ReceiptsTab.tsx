@@ -82,10 +82,12 @@ export const ReceiptsTab: React.FC = () => {
   return (
     <div className="flex flex-col gap-5">
       <div className="panel">
-        <div className="panel-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <SvgIcon name="printer" width="16" height="16" style={{ color: 'var(--text-primary)' }} />
-          <span className="panel-title">Receipt Configuration</span>
-          <span className="ml-auto text-[0.7rem] text-[var(--text-muted)]">Saved on this device</span>
+        <div className="panel-header">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <SvgIcon name="printer" width="16" height="16" style={{ color: 'var(--text-primary)' }} />
+            <span className="panel-title">Receipt Configuration</span>
+          </div>
+          <span className="text-[0.7rem] text-[var(--text-muted)]">Saved on this device</span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {CHECKBOX_OPTIONS.map(opt => (
@@ -93,7 +95,15 @@ export const ReceiptsTab: React.FC = () => {
               <input type="checkbox"
                 checked={prefs[opt.key] ?? opt.defaultChecked}
                 onChange={() => { togglePref(opt.key); }}
-                style={{ width: 16, height: 16, accentColor: 'var(--text-primary)', cursor: 'pointer' }} />
+                className="appearance-none w-4 h-4 rounded-[3px] border-[1.5px] border-[var(--border-input)] checked:bg-[var(--text-primary)] checked:border-[var(--text-primary)] cursor-pointer flex-shrink-0 transition-colors"
+                style={{
+                  backgroundImage: (prefs[opt.key] ?? opt.defaultChecked)
+                    ? `url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e")`
+                    : 'none',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                }}
+              />
               <span style={{ fontSize: '.875rem' }}>{opt.label}</span>
             </label>
           ))}
@@ -110,9 +120,11 @@ export const ReceiptsTab: React.FC = () => {
       </div>
 
       <div className="panel">
-        <div className="panel-header" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <SvgIcon name="wrench" width="16" height="16" style={{ color: 'var(--accent-gold)' }} />
-          <span className="panel-title">Hardware Diagnostics</span>
+        <div className="panel-header">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <SvgIcon name="wrench" width="16" height="16" style={{ color: 'var(--accent-gold)' }} />
+            <span className="panel-title">Hardware Diagnostics</span>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 gap-3">

@@ -8,19 +8,19 @@ export const UpcomingPickups: React.FC<{ rentals: UpcomingRental[] }> = ({ renta
       <h2 className="panel-title">Upcoming Pickups</h2>
     </div>
     {rentals.map((r, i) => (
-      <div key={i} className="table-row flex-col items-start gap-1">
+      <div key={i} className="flex flex-col gap-1.5 p-4 border-b border-[var(--border-subtle)] last:border-b-0 hover:bg-[var(--bg-panel-hover)] transition-colors">
         <div className="flex w-full items-center justify-between">
-          <span className="text-[var(--text-primary)] font-semibold text-sm">{r.customer}</span>
+          <span className="text-[var(--text-primary)] font-bold text-[0.95rem]">{r.customer}</span>
           <span className="badge badge-gold text-[var(--text-muted)] text-xs">{r.date}</span>
         </div>
-        <span className="text-xs text-[var(--text-secondary)]">{r.item}</span>
-        <div className="flex items-center gap-1 text-[var(--text-muted)] text-xs">
-          <SvgIcon name="location" width="12" height="12" aria-hidden="true" />
+        <span className="text-sm text-[var(--text-secondary)]">{r.item}</span>
+        <div className="flex items-center gap-1 text-[var(--text-muted)] text-sm">
+          <SvgIcon name="location" width="14" height="14" aria-hidden="true" />
           {r.event}
         </div>
-        <div className="flex items-center gap-1 text-xs text-[var(--status-success)] font-semibold">
+        <div className="flex items-center gap-1 text-sm text-[var(--status-success)] font-semibold mt-0.5">
           Deposit: {r.deposit}
-          <SvgIcon name="check-circle" width="12" height="12" aria-hidden="true" />
+          <SvgIcon name="check-circle" width="14" height="14" aria-hidden="true" />
         </div>
       </div>
     ))}

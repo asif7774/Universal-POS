@@ -10,7 +10,6 @@ interface ProductGridProps {
   category: string;
   setCategory: (c: string) => void;
   categories: string[];
-  onAddToCart: (product: Product, isRental: boolean) => void;
   onSelectProduct: (product: Product) => void;
   searchRef: React.RefObject<HTMLInputElement | null>;
 }
@@ -18,7 +17,7 @@ interface ProductGridProps {
 const fmt = (n: number) => `$${n.toFixed(2)}`;
 
 export const ProductGrid = memo(({
-  products, search, setSearch, category, setCategory, categories, onAddToCart, onSelectProduct, searchRef
+  products, search, setSearch, category, setCategory, categories, onSelectProduct, searchRef
 }: ProductGridProps) => {
 
   const filtered = products.filter(p => {
@@ -74,10 +73,10 @@ export const ProductGrid = memo(({
             {filtered.map(product => (
               <button
                 key={product.id}
-                className="panel p-4 text-left hover:bg-[var(--bg-panel-hover)] transition-colors cursor-pointer w-full focus-visible:outline-[3px] focus-visible:outline-[var(--focus-ring)]"
+                className="panel p-4 text-left hover:bg-[var(--bg-panel-hover)] transition-all duration-200 cursor-pointer w-full flex flex-col h-full hover:shadow-md hover:-translate-y-0.5 relative overflow-hidden group"
                 onClick={() => { onSelectProduct(product); }}
               >
-                <div className="mb-2 flex justify-center">
+                <div className="mb-4 flex justify-center items-center py-5 bg-[var(--bg-canvas)] rounded-lg w-full group-hover:scale-[1.02] transition-transform duration-300">
                   <ProductImage
                     imageUrl={product.imageUrl}
                     category={product.category}
@@ -85,28 +84,38 @@ export const ProductGrid = memo(({
                     size="sm"
                   />
                 </div>
-                <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wide mb-1">{product.category}</p>
-                <p className="text-sm font-semibold text-[var(--text-primary)] mb-2 leading-snug">{product.name}</p>
-                <div className="text-[0.7rem] text-[var(--text-muted)] mb-1.5">{product.sku}</div>
-                {product.type === 'rental' ? (
+                
+                <div className="flex items-center justify-between mb-1 w-full gap-2">
+                   <p className="text-[0.65rem] font-bold text-[var(--text-muted)] uppercase tracking-wider truncate">{product.category}</p>
+                   <div className="text-[0.65rem] font-mono text-[var(--text-muted)] shrink-0">{product.sku}</div>
+                </div>
+
+                <p className="text-sm font-bold text-[var(--text-primary)] mb-3 leading-snug line-clamp-2">{product.name}</p>
+                
+                <div className="mt-auto pt-3 border-t border-[var(--border-subtle)] flex items-end justify-between w-full">
                   <div>
-                    <p className="text-lg font-black tracking-tight text-[var(--accent-gold-text)]">
-                      {fmt(product.rentalRate ?? 0)}<span className="font-normal text-[0.7rem]">/day</span>
-                    </p>
-                    <div className="badge badge-gold mt-1">Rental</div>
+                    {product.type === 'rental' ? (
+                      <div className="flex flex-col items-start gap-1">
+                        <div className="badge badge-gold text-[0.65rem] px-1.5 py-0.5">Rental</div>
+                        <p className="text-base font-black tracking-tight text-[var(--accent-gold-text)] leading-none mt-0.5">
+                          {fmt(product.rentalRate ?? 0)}<span className="font-normal text-[var(--text-muted)] text-[0.65rem] ml-0.5">/day</span>
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="text-base font-black tracking-tight text-[var(--accent-gold-text)] leading-none">{fmt(product.price)}</p>
+                    )}
                   </div>
-                ) : (
-                  <p className="text-lg font-black tracking-tight text-[var(--accent-gold-text)]">{fmt(product.price)}</p>
-                )}
-                <div
-                  className="text-[0.72rem] mt-1.5 font-semibold flex items-center gap-1"
-                  style={{ color: product.stock === 0 ? 'var(--status-error)' : product.stock < 5 ? 'var(--status-warning)' : 'var(--status-success)' }}
-                >
+                  
                   <div
-                    className="w-1.5 h-1.5 rounded-full shrink-0"
-                    style={{ backgroundColor: product.stock === 0 ? 'var(--status-error)' : product.stock < 5 ? 'var(--status-warning)' : 'var(--status-success)' }}
-                  />
-                  {product.category === 'Services' ? 'Service' : `${product.stock} in stock`}
+                    className="text-[0.7rem] font-medium flex items-center gap-1.5"
+                    style={{ color: product.stock === 0 ? 'var(--status-error)' : product.stock < 5 ? 'var(--status-warning)' : 'var(--status-success)' }}
+                  >
+                    <div
+                      className="w-1.5 h-1.5 rounded-full shrink-0"
+                      style={{ backgroundColor: product.stock === 0 ? 'var(--status-error)' : product.stock < 5 ? 'var(--status-warning)' : 'var(--status-success)' }}
+                    />
+                    {product.category === 'Services' ? 'Service' : `${product.stock} in stock`}
+                  </div>
                 </div>
               </button>
             ))}

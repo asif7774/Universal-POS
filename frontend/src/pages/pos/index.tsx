@@ -280,7 +280,6 @@ const POS: React.FC = () => {
           category={category}
           setCategory={setCategory}
           categories={CATEGORIES}
-          onAddToCart={addToCart}
           onSelectProduct={setSelectedProduct}
           searchRef={searchRef}
         />
@@ -338,7 +337,6 @@ const POS: React.FC = () => {
       <ProductDetailModal
         product={selectedProduct}
         onClose={() => { setSelectedProduct(null); }}
-        onAddToCart={(product, isRental) => { addToCart(product, isRental); }}
       />
     </div>
   );

@@ -79,7 +79,7 @@ const Appointments: React.FC = () => {
   DAYS.forEach(d => { apptsByDay[d] = appointments.filter(a => a.date === d).sort((a, b) => a.time.localeCompare(b.time)); });
 
   return (
-    <div className="animate-fade-in bg-[var(--bg-canvas)] p-6">
+    <div className="animate-fade-in bg-[var(--bg-canvas)]">
       {/* Week strip */}
       <div className="flex items-center gap-2 mb-6 pb-1 pt-4">
         <button
@@ -96,26 +96,26 @@ const Appointments: React.FC = () => {
           <SvgIcon name="chevron-left" width="14" height="14" />
         </button>
         <div className="flex gap-2 overflow-x-auto flex-1">
-        {DAYS.map(d => {
-          const info = fmtDay(d, today);
-          const count = apptsByDay[d]?.filter(a => a.status !== 'Cancelled').length ?? 0;
-          const isSelected = d === selectedDay;
-          return (
-            <button key={d} onClick={() => { setSelectedDay(d); }}
-              className={`min-w-[72px] p-2.5 px-2 rounded-[var(--radius-lg)] border-2 text-center transition-all duration-150 cursor-pointer ${isSelected ? 'border-[var(--accent-gold)] bg-[var(--accent-gold)] text-[var(--accent-gold-text)]' : info.isToday ? 'border-[var(--accent-gold)] bg-[var(--bg-panel-hover)] text-[var(--text-primary)]' : 'border-[var(--border-subtle)] bg-[var(--bg-panel)] text-[var(--text-primary)]'} ${info.isPast && !info.isToday ? 'opacity-60 text-[var(--text-muted)]' : 'opacity-100'}`}>
-              <div className="text-[0.7rem] font-bold uppercase tracking-tight mb-0.5">
-                {info.weekday}
-              </div>
-              <div className="text-[1.2rem] font-black leading-none">{info.day}</div>
-              <div className="text-[0.68rem] mt-0.5">{info.month}</div>
-              {count > 0 && (
-                <div className="mt-1 flex justify-center">
-                  <div className={`w-[18px] h-[18px] rounded-full text-[0.65rem] font-bold flex items-center justify-center ${isSelected ? 'bg-white/30 text-white' : info.isToday ? 'bg-[var(--accent-gold)] text-[var(--accent-gold-text)]' : 'bg-[var(--bg-panel-hover)] text-[var(--text-secondary)]'}`}>{count}</div>
+          {DAYS.map(d => {
+            const info = fmtDay(d, today);
+            const count = apptsByDay[d]?.filter(a => a.status !== 'Cancelled').length ?? 0;
+            const isSelected = d === selectedDay;
+            return (
+              <button key={d} onClick={() => { setSelectedDay(d); }}
+                className={`min-w-[72px] p-2.5 px-2 rounded-[var(--radius-lg)] border-2 text-center transition-all duration-150 cursor-pointer ${isSelected ? 'border-[var(--accent-gold)] bg-[var(--accent-gold)] text-[var(--accent-gold-text)]' : info.isToday ? 'border-[var(--accent-gold)] bg-[var(--bg-panel-hover)] text-[var(--text-primary)]' : 'border-[var(--border-subtle)] bg-[var(--bg-panel)] text-[var(--text-primary)]'} ${info.isPast && !info.isToday ? 'opacity-60 text-[var(--text-muted)]' : 'opacity-100'}`}>
+                <div className="text-[0.7rem] font-bold uppercase tracking-tight mb-0.5">
+                  {info.weekday}
                 </div>
-              )}
-            </button>
-          );
-        })}
+                <div className="text-[1.2rem] font-black leading-none">{info.day}</div>
+                <div className="text-[0.68rem] mt-0.5">{info.month}</div>
+                {count > 0 && (
+                  <div className="mt-1 flex justify-center">
+                    <div className={`w-[18px] h-[18px] rounded-full text-[0.65rem] font-bold flex items-center justify-center ${isSelected ? 'bg-white/30 text-white' : info.isToday ? 'bg-[var(--accent-gold)] text-[var(--accent-gold-text)]' : 'bg-[var(--bg-panel-hover)] text-[var(--text-secondary)]'}`}>{count}</div>
+                  </div>
+                )}
+              </button>
+            );
+          })}
         </div>
         <button
           className="btn btn-outline btn-sm shrink-0"
@@ -166,7 +166,7 @@ const Appointments: React.FC = () => {
               if (!appt.time) { return null; }
               const [h, m] = appt.time.split(':').map(Number);
               if (isNaN(h) || isNaN(m)) { return null; }
-              
+
               const gridStart = 9, gridEnd = 18;
               const startMin = (h - gridStart) * 60 + m;
               const gridTotalMin = (gridEnd - gridStart) * 60;
