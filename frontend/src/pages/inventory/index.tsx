@@ -63,10 +63,10 @@ const Inventory: React.FC = () => {
       </div>
     );
   }
-  if (error) {return <div className="p-10 text-center text-red-500">Error loading inventory</div>;}
+  if (error) { return <div className="p-10 text-center text-red-500">Error loading inventory</div>; }
 
   return (
-    <div className="animate-fade-in bg-[var(--bg-canvas)] p-6">
+    <div className="animate-fade-in bg-[var(--bg-canvas)]">
       <div className="search-container">
         {/* Summary stat cards */}
         <div className="grid grid-cols-4 gap-[14px] w-full mb-2.5">
@@ -111,7 +111,7 @@ const Inventory: React.FC = () => {
       {isAdding && <AddItemModal onClose={() => { setIsAdding(false); }} />}
 
       {/* Inventory cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 pt-4">
         {filtered.map(item => (
           <InventoryCard
             key={item.id}
@@ -131,9 +131,9 @@ const Inventory: React.FC = () => {
       )}
 
       {/* Detail modal */}
-      <InventoryDetailModal 
-        selected={selected} 
-        setSelected={setSelected} 
+      <InventoryDetailModal
+        selected={selected}
+        setSelected={setSelected}
       />
     </div>
   );
