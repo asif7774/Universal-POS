@@ -127,7 +127,7 @@ export const clearAllCachedSvgSprites = (): void => {
         keysToRemove.push(key);
       }
     }
-    keysToRemove.forEach(key => localStorage.removeItem(key));
+    keysToRemove.forEach(key => { localStorage.removeItem(key); });
   } catch (error) {
     if (import.meta.env.DEV) {
       console.warn('Failed to clear all cached SVG sprites:', error);

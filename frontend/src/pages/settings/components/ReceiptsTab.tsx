@@ -20,7 +20,7 @@ const CHECKBOX_OPTIONS = [
 const loadPrefs = (): Record<string, boolean> => {
   try {
     const stored = localStorage.getItem(PREFS_KEY);
-    if (stored) return JSON.parse(stored) as Record<string, boolean>;
+    if (stored) {return JSON.parse(stored) as Record<string, boolean>;}
   } catch { /**/ }
   return Object.fromEntries(CHECKBOX_OPTIONS.map(o => [o.key, o.defaultChecked]));
 };
@@ -32,7 +32,7 @@ export const ReceiptsTab: React.FC = () => {
   const [prefs, setPrefs] = useState<Record<string, boolean>>(loadPrefs);
   const [footer, setFooter] = useState(() => localStorage.getItem(FOOTER_KEY) ?? DEFAULT_FOOTER);
 
-  const refreshStatus = () => setHwStatus(HAL.getStatus());
+  const refreshStatus = () => { setHwStatus(HAL.getStatus()); };
 
   const togglePref = (key: string) => {
     const next = { ...prefs, [key]: !prefs[key] };
@@ -47,7 +47,7 @@ export const ReceiptsTab: React.FC = () => {
 
   const testPrint = async () => {
     setTesting('printer');
-    await HAL.printReceipt("TuxedoPOS HARDWARE TEST\n-----------------------\nPrinter: " + hwStatus.printer.model + "\nStatus: ONLINE");
+    await HAL.printReceipt(`TuxedoPOS HARDWARE TEST\n-----------------------\nPrinter: ${  hwStatus.printer.model  }\nStatus: ONLINE`);
     showSnackbar('Test receipt sent to printer', 'success');
     setTesting(null);
   };

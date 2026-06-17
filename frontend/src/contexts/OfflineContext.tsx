@@ -35,7 +35,7 @@ export const OfflineProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // Seed cache on mount, ONLY if authenticated
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated) {return;}
     void seedProducts();
     void seedCustomers();
     void seedOrders();

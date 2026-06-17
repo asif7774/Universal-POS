@@ -65,7 +65,7 @@ const AppRoutes = () => {
   useEffect(() => {
     const handleUnauthorized = () => {
       // Skip if already on the login page
-      if (window.location.pathname === '/login') return;
+      if (window.location.pathname === '/login') {return;}
       logout('Session expired or unauthorized. Please log in again.');
       navigate('/login', { replace: true });
     };

@@ -48,7 +48,7 @@ export const ProcessReturnModal: React.FC<{ onClose: () => void }> = ({ onClose 
         showSnackbar('Return processed successfully!', 'success');
         onClose();
       },
-      onError: () => showSnackbar('Failed to process return', 'error'),
+      onError: () => { showSnackbar('Failed to process return', 'error'); },
     });
   };
 

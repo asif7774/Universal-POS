@@ -25,7 +25,7 @@ export const TailoringDetailModal: React.FC<TailoringDetailModalProps> = ({ sele
   });
 
   const startEditing = () => {
-    if (!selected) return;
+    if (!selected) {return;}
     setEditForm({
       customerName: selected.customerName,
       garment: selected.garment,
@@ -39,14 +39,14 @@ export const TailoringDetailModal: React.FC<TailoringDetailModalProps> = ({ sele
   };
 
   const saveEdit = () => {
-    if (!selected) return;
+    if (!selected) {return;}
     updateJob.mutate({ id: selected.id, ...editForm }, {
       onSuccess: () => {
         showSnackbar('Job updated!', 'success');
         setIsEditing(false);
         setSelected(null);
       },
-      onError: () => showSnackbar('Failed to update job', 'error'),
+      onError: () => { showSnackbar('Failed to update job', 'error'); },
     });
   };
 

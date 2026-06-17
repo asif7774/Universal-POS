@@ -11,13 +11,13 @@ interface InventoryCardProps {
 const fmt = (n: number) => `$${n.toFixed(2)}`;
 
 const getCategoryIcon = (category: string) => {
-  if (!category) return 'inventory';
+  if (!category) {return 'inventory';}
   const c = category.toLowerCase();
-  if (c.includes('tux') || c.includes('suit')) return 'tuxedo';
-  if (c.includes('shoe')) return 'shoe';
-  if (c.includes('shirt')) return 'shirt';
-  if (c.includes('accessor') || c.includes('tie')) return 'bowtie';
-  if (c.includes('service') || c.includes('alteration') || c.includes('tailor')) return 'scissors';
+  if (c.includes('tux') || c.includes('suit')) {return 'tuxedo';}
+  if (c.includes('shoe')) {return 'shoe';}
+  if (c.includes('shirt')) {return 'shirt';}
+  if (c.includes('accessor') || c.includes('tie')) {return 'bowtie';}
+  if (c.includes('service') || c.includes('alteration') || c.includes('tailor')) {return 'scissors';}
   return 'inventory';
 };
 

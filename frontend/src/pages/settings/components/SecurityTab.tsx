@@ -16,7 +16,7 @@ const CHECKBOX_OPTIONS = [
 const loadPrefs = (): Record<string, boolean> => {
   try {
     const stored = localStorage.getItem(PREFS_KEY);
-    if (stored) return JSON.parse(stored) as Record<string, boolean>;
+    if (stored) {return JSON.parse(stored) as Record<string, boolean>;}
   } catch { /**/ }
   return Object.fromEntries(CHECKBOX_OPTIONS.map(o => [o.key, o.defaultChecked]));
 };
@@ -75,7 +75,7 @@ export const SecurityTab: React.FC = () => {
   };
 
   const clearTestData = async () => {
-    if (!window.confirm('This will permanently delete all test/sample data. This cannot be undone. Continue?')) return;
+    if (!window.confirm('This will permanently delete all test/sample data. This cannot be undone. Continue?')) {return;}
     try {
       await apiClient.post('/admin/clear-test-data', {});
       showSnackbar('Test data cleared successfully.', 'success');

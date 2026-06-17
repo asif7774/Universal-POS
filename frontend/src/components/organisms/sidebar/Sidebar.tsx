@@ -120,8 +120,8 @@ const Sidebar: React.FC<SidebarProps> = ({
       id="sidebar-nav"
       role="navigation"
       aria-label="Main navigation"
-      onMouseEnter={isPointerFine ? () => setIsHovered(true) : undefined}
-      onMouseLeave={isPointerFine ? () => setIsHovered(false) : undefined}
+      onMouseEnter={isPointerFine ? () => { setIsHovered(true); } : undefined}
+      onMouseLeave={isPointerFine ? () => { setIsHovered(false); } : undefined}
       className={[
         'sidebar fixed left-0 top-0 bottom-0 z-50',
         'transition-[width,transform] duration-200 ease-in-out',
@@ -228,7 +228,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         {isEffectivelyExpanded && user ? (
           <>
             <button
-              onClick={() => setIsUserMenuOpen(prev => !prev)}
+              onClick={() => { setIsUserMenuOpen(prev => !prev); }}
               className={`flex items-center gap-2.5 p-[10px_12px] mb-0 rounded-lg whitespace-nowrap w-full border-none cursor-pointer text-left transition-all duration-150 ${isUserMenuOpen ? 'bg-white/10' : 'bg-white/5'}`}
             >
               <div className="avatar avatar-gold text-[0.7rem] shrink-0">

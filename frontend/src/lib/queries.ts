@@ -211,7 +211,7 @@ export const useOrderSummary = (date?: string) =>
 
 export const useCreateOrder = () => {
   const qc = useQueryClient();
-  return useOfflineMutation<Order, any>({
+  return useOfflineMutation<Order>({
     method: 'POST',
     url: '/orders',
     mutationOptions: {

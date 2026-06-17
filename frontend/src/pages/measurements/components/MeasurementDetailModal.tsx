@@ -21,7 +21,7 @@ export const MeasurementDetailModal: React.FC<MeasurementDetailModalProps> = ({ 
   const [editForm, setEditForm] = useState<Record<string, string>>({});
 
   const startEditing = () => {
-    if (!selected) return;
+    if (!selected) {return;}
     const form: Record<string, string> = {};
     FIELDS.forEach(f => { form[f.key] = String(selected[f.key] ?? ''); });
     form.notes = selected.notes ?? '';
@@ -31,7 +31,7 @@ export const MeasurementDetailModal: React.FC<MeasurementDetailModalProps> = ({ 
   };
 
   const saveEdit = () => {
-    if (!selected) return;
+    if (!selected) {return;}
     updateMeasurement.mutate(
       { customerId: selected.customerId, measurementId: selected.id, ...editForm },
       {
@@ -40,13 +40,13 @@ export const MeasurementDetailModal: React.FC<MeasurementDetailModalProps> = ({ 
           setIsEditing(false);
           setSelected(null);
         },
-        onError: () => showSnackbar('Failed to update measurements', 'error'),
+        onError: () => { showSnackbar('Failed to update measurements', 'error'); },
       }
     );
   };
 
   const handleDelete = () => {
-    if (!selected) return;
+    if (!selected) {return;}
     deleteMeasurement.mutate(
       { customerId: selected.customerId, measurementId: selected.id },
       {
@@ -55,7 +55,7 @@ export const MeasurementDetailModal: React.FC<MeasurementDetailModalProps> = ({ 
           setShowDeleteConfirm(false);
           setSelected(null);
         },
-        onError: () => showSnackbar('Failed to delete measurement', 'error'),
+        onError: () => { showSnackbar('Failed to delete measurement', 'error'); },
       }
     );
   };

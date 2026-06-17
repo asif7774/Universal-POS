@@ -54,7 +54,7 @@ export const InventoryDetailModal: React.FC<InventoryDetailModalProps> = ({ sele
         setMode('view');
         setSelected(null);
       },
-      onError: () => showSnackbar('Failed to update product', 'error'),
+      onError: () => { showSnackbar('Failed to update product', 'error'); },
     });
   };
 
@@ -75,7 +75,7 @@ export const InventoryDetailModal: React.FC<InventoryDetailModalProps> = ({ sele
         setMode('view');
         setSelected(null);
       },
-      onError: () => showSnackbar('Failed to update stock', 'error'),
+      onError: () => { showSnackbar('Failed to update stock', 'error'); },
     });
   };
 
@@ -86,7 +86,7 @@ export const InventoryDetailModal: React.FC<InventoryDetailModalProps> = ({ sele
         setShowDeleteConfirm(false);
         setSelected(null);
       },
-      onError: () => showSnackbar('Failed to delete product', 'error'),
+      onError: () => { showSnackbar('Failed to delete product', 'error'); },
     });
   };
 

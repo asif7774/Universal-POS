@@ -50,7 +50,7 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
   }, []);
 
   const open = () => {
-    if (disabled) return;
+    if (disabled) {return;}
     const rect = triggerRef.current?.getBoundingClientRect();
     if (rect) {
       // Position below trigger; flip up if not enough space below
@@ -75,19 +75,19 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
 
   // Close on outside click
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {return;}
     const handle = (e: MouseEvent) => {
       const target = e.target as Node;
-      if (!triggerRef.current?.contains(target) && !dropdownRef.current?.contains(target)) close();
+      if (!triggerRef.current?.contains(target) && !dropdownRef.current?.contains(target)) {close();}
     };
     document.addEventListener('mousedown', handle);
-    return () => document.removeEventListener('mousedown', handle);
+    return () => { document.removeEventListener('mousedown', handle); };
   }, [isOpen, close]);
 
   // Close on scroll / resize (dropdown position becomes stale)
   useEffect(() => {
-    if (!isOpen) return;
-    const handle = () => close();
+    if (!isOpen) {return;}
+    const handle = () => { close(); };
     window.addEventListener('scroll', handle, { passive: true, capture: true });
     window.addEventListener('resize', handle, { passive: true });
     return () => {

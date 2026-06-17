@@ -56,29 +56,29 @@ const AppLayout: React.FC = () => {
     () => window.matchMedia('(pointer: fine)').matches
   );
 
-  const handleToggle = useCallback(() => setIsCollapsed(c => !c), []);
-  const handleOpen = useCallback(() => setIsMobileOpen(true), []);
-  const handleClose = useCallback(() => setIsMobileOpen(false), []);
+  const handleToggle = useCallback(() => { setIsCollapsed(c => !c); }, []);
+  const handleOpen = useCallback(() => { setIsMobileOpen(true); }, []);
+  const handleClose = useCallback(() => { setIsMobileOpen(false); }, []);
 
   useEffect(() => {
-    const handleResize = () => setIsDesktop(window.innerWidth >= 1025);
+    const handleResize = () => { setIsDesktop(window.innerWidth >= 1025); };
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => { window.removeEventListener('resize', handleResize); };
   }, []);
 
   useEffect(() => {
     const mq = window.matchMedia('(pointer: fine)');
-    const handler = (e: MediaQueryListEvent) => setIsPointerFine(e.matches);
+    const handler = (e: MediaQueryListEvent) => { setIsPointerFine(e.matches); };
     mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
+    return () => { mq.removeEventListener('change', handler); };
   }, []);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isMobileOpen) handleClose();
+      if (e.key === 'Escape' && isMobileOpen) {handleClose();}
     };
     document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    return () => { document.removeEventListener('keydown', handler); };
   }, [handleClose, isMobileOpen]);
 
   // Permanent = wide screen AND fine pointer (mouse/trackpad). iPads always drawer.

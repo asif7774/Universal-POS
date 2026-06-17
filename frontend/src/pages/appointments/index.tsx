@@ -14,7 +14,7 @@ const Appointments: React.FC = () => {
   const today = serverTime?.date ?? '';
   const [weekOffset, setWeekOffset] = useState(0);
   const DAYS = useMemo(() => {
-    if (!today) return [];
+    if (!today) {return [];}
     const days: string[] = [];
     for (let i = weekOffset - 1; i < weekOffset + 7; i++) {
       const d = new Date(`${today}T12:00:00Z`);
@@ -25,7 +25,7 @@ const Appointments: React.FC = () => {
   }, [today, weekOffset]);
   // selectedDay initialises to '' and syncs to today once serverTime arrives
   const [selectedDay, setSelectedDay] = useState('');
-  useEffect(() => { if (today && !selectedDay) setSelectedDay(today); }, [today, selectedDay]);
+  useEffect(() => { if (today && !selectedDay) {setSelectedDay(today);} }, [today, selectedDay]);
   const [view, setView] = useState<'week' | 'list'>('week');
   const [selected, setSelected] = useState<Appointment | null>(null);
   const [showNew, setShowNew] = useState(false);

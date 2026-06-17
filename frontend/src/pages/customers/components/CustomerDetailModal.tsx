@@ -57,7 +57,7 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
           showSnackbar('Measurements updated!', 'success');
           setIsEditingMeasurements(false);
         },
-        onError: () => showSnackbar('Failed to update measurements', 'error'),
+        onError: () => { showSnackbar('Failed to update measurements', 'error'); },
       }
     );
   };
@@ -94,7 +94,7 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
         setIsEditing(false);
         setSelected(null);
       },
-      onError: () => showSnackbar('Failed to update customer', 'error'),
+      onError: () => { showSnackbar('Failed to update customer', 'error'); },
     });
   };
 
@@ -105,19 +105,19 @@ export const CustomerDetailModal = ({ selected, setSelected, activeTab, setActiv
         setShowDeleteConfirm(false);
         setSelected(null);
       },
-      onError: () => showSnackbar('Failed to delete customer', 'error'),
+      onError: () => { showSnackbar('Failed to delete customer', 'error'); },
     });
   };
 
   const handleAddLoyalty = () => {
     const pts = parseInt(loyaltyInput);
-    if (!pts || pts <= 0) return;
+    if (!pts || pts <= 0) {return;}
     addLoyalty.mutate({ id: selected.id, points: pts }, {
       onSuccess: () => {
         showSnackbar(`Added ${pts} loyalty points!`, 'success');
         setLoyaltyInput('');
       },
-      onError: () => showSnackbar('Failed to add points', 'error'),
+      onError: () => { showSnackbar('Failed to add points', 'error'); },
     });
   };
 

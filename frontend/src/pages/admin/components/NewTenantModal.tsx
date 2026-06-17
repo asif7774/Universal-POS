@@ -21,7 +21,7 @@ export const NewTenantModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
         showSnackbar('Tenant created successfully!', 'success');
         onClose();
       },
-      onError: () => showSnackbar('Failed to create tenant', 'error'),
+      onError: () => { showSnackbar('Failed to create tenant', 'error'); },
     });
   };
 

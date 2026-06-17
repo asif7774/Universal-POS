@@ -48,7 +48,7 @@ export const RentalTable = memo(({ filtered, setSelected }: RentalTableProps) =>
             const isOverdue = r.status === 'out' && daysLeft(r.returnDate) < 0;
             const computedStatus = isOverdue ? 'overdue' : r.status;
             const days = daysLeft(r.returnDate);
-            const cfg = STATUS_CONFIG[computedStatus as RentalStatus] || { cls: 'badge-neutral', icon: 'help-circle' };
+            const cfg = STATUS_CONFIG[computedStatus] || { cls: 'badge-neutral', icon: 'help-circle' };
             const customerName = r.customer ? `${r.customer.firstName} ${r.customer.lastName}` : 'Unknown';
             const phone = r.customer ? r.customer.phone : '';
 

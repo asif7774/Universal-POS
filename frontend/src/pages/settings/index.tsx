@@ -27,7 +27,7 @@ const Settings: React.FC = () => {
   // ── API integration ──
   const { data: serverSettings, isLoading } = useSettings();
   const updateSettings = useUpdateSettings();
-  const [store, setStore] = useState<StoreSettings>(DEFAULT_SETTINGS);
+  const [store, setStore] = useState(DEFAULT_SETTINGS);
 
   // Sync server data into local form state when loaded
   useEffect(() => {
@@ -40,8 +40,8 @@ const Settings: React.FC = () => {
 
   const save = () => {
     updateSettings.mutate(store, {
-      onSuccess: () => showSnackbar('Settings saved successfully!', 'success'),
-      onError: () => showSnackbar('Failed to save settings.', 'error'),
+      onSuccess: () => { showSnackbar('Settings saved successfully!', 'success'); },
+      onError: () => { showSnackbar('Failed to save settings.', 'error'); },
     });
   };
 

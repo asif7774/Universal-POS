@@ -40,7 +40,7 @@ export const NewTailoringJobModal: React.FC<{ onClose: () => void }> = ({ onClos
         showSnackbar('Tailoring job created!', 'success');
         onClose();
       },
-      onError: () => showSnackbar('Failed to create job', 'error'),
+      onError: () => { showSnackbar('Failed to create job', 'error'); },
     });
   };
 
@@ -72,7 +72,7 @@ export const NewTailoringJobModal: React.FC<{ onClose: () => void }> = ({ onClos
             value={customers.find(c => `${c.firstName} ${c.lastName}` === form.customerName)?.id ?? ''}
             onChange={id => {
               const c = customers.find(x => x.id === id);
-              if (c) set('customerName', `${c.firstName} ${c.lastName}`);
+              if (c) {set('customerName', `${c.firstName} ${c.lastName}`);}
             }}
             placeholder="Search and select customer..."
             searchPlaceholder="Type name to search..."

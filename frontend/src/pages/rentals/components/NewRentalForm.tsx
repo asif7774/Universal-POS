@@ -54,8 +54,8 @@ export const NewRentalForm = ({ customers, onSubmit, isPending, onCancel }: NewR
 
   const addItem = (productId: string) => {
     const product = inventory.find(i => i.id === productId);
-    if (!product) return;
-    if (form.items.some(i => i.productName === product.name)) return;
+    if (!product) {return;}
+    if (form.items.some(i => i.productName === product.name)) {return;}
     setForm(f => ({ ...f, items: [...f.items, { productName: product.name }] }));
   };
 
@@ -68,7 +68,7 @@ export const NewRentalForm = ({ customers, onSubmit, isPending, onCancel }: NewR
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (canSubmit) onSubmit(form);
+    if (canSubmit) {onSubmit(form);}
   };
 
   return (

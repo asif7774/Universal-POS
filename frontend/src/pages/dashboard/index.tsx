@@ -27,8 +27,8 @@ const Dashboard: React.FC = () => {
   const now = serverTime ? new Date(serverTime.timestamp) : null;
   const hour = now?.getHours() ?? 12;
   let greeting = 'Good evening';
-  if (hour < 12) greeting = 'Good morning';
-  else if (hour < 17) greeting = 'Good afternoon';
+  if (hour < 12) {greeting = 'Good morning';}
+  else if (hour < 17) {greeting = 'Good afternoon';}
 
   const { data: orderSummary, isLoading: isLoadingSummary } = useQuery({
     queryKey: ['orders-summary', todayStr],
@@ -147,7 +147,7 @@ const Dashboard: React.FC = () => {
                     <div className="flex-1">
                       <div className="text-[0.82rem] font-semibold text-[var(--text-primary)] leading-normal">{a.msg}</div>
                       <div className="flex gap-2 mt-2">
-                         <button className="bg-transparent border-none p-0 text-[var(--accent-gold-text)] text-[0.7rem] font-bold cursor-pointer underline" onClick={() => { if (a.actionUrl) navigate(a.actionUrl); }}>Take Action</button>
+                         <button className="bg-transparent border-none p-0 text-[var(--accent-gold-text)] text-[0.7rem] font-bold cursor-pointer underline" onClick={() => { if (a.actionUrl) {navigate(a.actionUrl);} }}>Take Action</button>
                          <button className="bg-transparent border-none p-0 text-[var(--text-muted)] text-[0.7rem] cursor-pointer" onClick={() => { queryClient.setQueryData(['dashboard', 'alerts'], (prev: typeof alerts) => prev.filter((_, idx) => idx !== i)); }}>Ignore</button>
                       </div>
                     </div>

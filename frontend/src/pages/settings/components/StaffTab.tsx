@@ -24,8 +24,8 @@ export const StaffTab: React.FC = () => {
   const [form, setForm]           = useState(EMPTY_FORM);
   const [editForm, setEditForm]   = useState(EMPTY_FORM);
 
-  const set     = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
-  const setEdit = (k: string, v: string) => setEditForm(f => ({ ...f, [k]: v }));
+  const set     = (k: string, v: string) => { setForm(f => ({ ...f, [k]: v })); };
+  const setEdit = (k: string, v: string) => { setEditForm(f => ({ ...f, [k]: v })); };
 
   const handleAdd = () => {
     if (!form.name.trim() || !form.email.trim()) {
@@ -40,7 +40,7 @@ export const StaffTab: React.FC = () => {
           setForm(EMPTY_FORM);
           setIsAdding(false);
         },
-        onError: () => showSnackbar('Failed to add staff member.', 'error'),
+        onError: () => { showSnackbar('Failed to add staff member.', 'error'); },
       }
     );
   };
@@ -51,7 +51,7 @@ export const StaffTab: React.FC = () => {
   };
 
   const handleEdit = () => {
-    if (!editing) return;
+    if (!editing) {return;}
     if (!editForm.name.trim() || !editForm.email.trim()) {
       showSnackbar('Name and email are required.', 'error');
       return;
@@ -63,13 +63,13 @@ export const StaffTab: React.FC = () => {
           showSnackbar('Staff member updated.', 'success');
           setEditing(null);
         },
-        onError: () => showSnackbar('Failed to update staff member.', 'error'),
+        onError: () => { showSnackbar('Failed to update staff member.', 'error'); },
       }
     );
   };
 
   const handleClose    = () => { setForm(EMPTY_FORM); setIsAdding(false); };
-  const handleEditClose = () => setEditing(null);
+  const handleEditClose = () => { setEditing(null); };
 
   return (
     <>
@@ -79,7 +79,7 @@ export const StaffTab: React.FC = () => {
             <SvgIcon name="users" width="18" height="18" className="text-[var(--accent-gold-text)]" />
             Staff Members
           </span>
-          <button className="btn btn-gold btn-sm" onClick={() => setIsAdding(true)}>+ Add Staff</button>
+          <button className="btn btn-gold btn-sm" onClick={() => { setIsAdding(true); }}>+ Add Staff</button>
         </div>
 
         {isLoading ? (
@@ -123,7 +123,7 @@ export const StaffTab: React.FC = () => {
                     </span>
                   </td>
                   <td>
-                    <button className="btn btn-outline btn-sm" onClick={() => openEdit(s)}>Edit</button>
+                    <button className="btn btn-outline btn-sm" onClick={() => { openEdit(s); }}>Edit</button>
                   </td>
                 </tr>
               ))}
@@ -140,7 +140,7 @@ export const StaffTab: React.FC = () => {
       {/* ── Add Staff Modal ── */}
       {isAdding && (
         <div className="modal-overlay" onClick={handleClose}>
-          <div className="modal max-w-[440px]" onClick={e => e.stopPropagation()}>
+          <div className="modal max-w-[440px]" onClick={e => { e.stopPropagation(); }}>
             <div className="modal-header">
               <h2 className="modal-title">Add Staff Member</h2>
               <button className="btn btn-ghost btn-sm" onClick={handleClose}>
@@ -150,15 +150,15 @@ export const StaffTab: React.FC = () => {
             <div className="modal-body flex flex-col gap-4">
               <div>
                 <label className="label">Name <span className="text-status-error">*</span></label>
-                <input className="input" placeholder="Full name" value={form.name} onChange={e => set('name', e.target.value)} />
+                <input className="input" placeholder="Full name" value={form.name} onChange={e => { set('name', e.target.value); }} />
               </div>
               <div>
                 <label className="label">Email <span className="text-status-error">*</span></label>
-                <input className="input" type="email" placeholder="staff@example.com" value={form.email} onChange={e => set('email', e.target.value)} />
+                <input className="input" type="email" placeholder="staff@example.com" value={form.email} onChange={e => { set('email', e.target.value); }} />
               </div>
               <div>
                 <label className="label">Role</label>
-                <select className="input" value={form.role} onChange={e => set('role', e.target.value)}>
+                <select className="input" value={form.role} onChange={e => { set('role', e.target.value); }}>
                   <option value="cashier">Cashier</option>
                   <option value="manager">Manager</option>
                   <option value="owner">Owner</option>
@@ -166,7 +166,7 @@ export const StaffTab: React.FC = () => {
               </div>
               <div>
                 <label className="label">PIN <span className="text-[var(--text-muted)] font-normal">(optional)</span></label>
-                <input className="input" placeholder="4-digit PIN" maxLength={4} value={form.pin} onChange={e => set('pin', e.target.value.replace(/\D/g, ''))} />
+                <input className="input" placeholder="4-digit PIN" maxLength={4} value={form.pin} onChange={e => { set('pin', e.target.value.replace(/\D/g, '')); }} />
               </div>
             </div>
             <div className="modal-footer flex justify-end gap-[10px]">
@@ -182,7 +182,7 @@ export const StaffTab: React.FC = () => {
       {/* ── Edit Staff Modal ── */}
       {editing && (
         <div className="modal-overlay" onClick={handleEditClose}>
-          <div className="modal max-w-[440px]" onClick={e => e.stopPropagation()}>
+          <div className="modal max-w-[440px]" onClick={e => { e.stopPropagation(); }}>
             <div className="modal-header">
               <h2 className="modal-title">Edit — {editing.name}</h2>
               <button className="btn btn-ghost btn-sm" onClick={handleEditClose}>
@@ -192,15 +192,15 @@ export const StaffTab: React.FC = () => {
             <div className="modal-body flex flex-col gap-4">
               <div>
                 <label className="label">Name <span className="text-status-error">*</span></label>
-                <input className="input" placeholder="Full name" value={editForm.name} onChange={e => setEdit('name', e.target.value)} />
+                <input className="input" placeholder="Full name" value={editForm.name} onChange={e => { setEdit('name', e.target.value); }} />
               </div>
               <div>
                 <label className="label">Email <span className="text-status-error">*</span></label>
-                <input className="input" type="email" placeholder="staff@example.com" value={editForm.email} onChange={e => setEdit('email', e.target.value)} />
+                <input className="input" type="email" placeholder="staff@example.com" value={editForm.email} onChange={e => { setEdit('email', e.target.value); }} />
               </div>
               <div>
                 <label className="label">Role</label>
-                <select className="input" value={editForm.role} onChange={e => setEdit('role', e.target.value)}>
+                <select className="input" value={editForm.role} onChange={e => { setEdit('role', e.target.value); }}>
                   <option value="cashier">Cashier</option>
                   <option value="manager">Manager</option>
                   <option value="owner">Owner</option>
@@ -208,7 +208,7 @@ export const StaffTab: React.FC = () => {
               </div>
               <div>
                 <label className="label">PIN <span className="text-[var(--text-muted)] font-normal">(optional)</span></label>
-                <input className="input" placeholder="4-digit PIN" maxLength={4} value={editForm.pin} onChange={e => setEdit('pin', e.target.value.replace(/\D/g, ''))} />
+                <input className="input" placeholder="4-digit PIN" maxLength={4} value={editForm.pin} onChange={e => { setEdit('pin', e.target.value.replace(/\D/g, '')); }} />
               </div>
             </div>
             <div className="modal-footer flex justify-end gap-[10px]">

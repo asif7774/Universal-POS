@@ -15,7 +15,7 @@ export const PredictiveAnalytics: React.FC = () => {
       const cat = item.category;
       const avail = Object.values(item.sizes).reduce((s, sz) => s + sz.available, 0);
       const total = Object.values(item.sizes).reduce((s, sz) => s + sz.total, 0);
-      if (!acc[cat]) acc[cat] = { available: 0, total: 0 };
+      if (!acc[cat]) {acc[cat] = { available: 0, total: 0 };}
       acc[cat].available += avail;
       acc[cat].total += total;
       return acc;

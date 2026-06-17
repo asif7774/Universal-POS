@@ -14,7 +14,7 @@ export const RecentOrders: React.FC<{ orders: RecentOrder[] }> = ({ orders }) =>
       </Link>
     </div>
     {orders.map(order => (
-      <div key={order.id} className="table-row">
+      <div key={order.id} className="flex items-center justify-between py-3 border-b border-[var(--surface-border)] last:border-0 gap-3">
         <span className="text-sm font-semibold text-[var(--text-primary)] w-[110px]">{order.orderNo}</span>
         <span className="text-sm text-[var(--text-secondary)] flex-1 whitespace-nowrap overflow-hidden text-ellipsis">{order.customer}</span>
         <span className="text-sm font-bold text-[var(--accent-gold-text)] w-[80px] text-right">{order.total}</span>

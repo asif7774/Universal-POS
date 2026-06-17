@@ -24,10 +24,10 @@ export function useOfflineMutation<TData = unknown, TVariables = any>(
     mutationFn: async (variables: TVariables) => {
       if (isOnline) {
         // Online: Use API
-        if (params.method === 'POST') return apiClient.post<TData>(params.url, variables);
-        if (params.method === 'PUT') return apiClient.put<TData>(params.url, variables);
-        if (params.method === 'PATCH') return apiClient.patch<TData>(params.url, variables);
-        if (params.method === 'DELETE') return apiClient.delete<TData>(params.url);
+        if (params.method === 'POST') {return apiClient.post<TData>(params.url, variables);}
+        if (params.method === 'PUT') {return apiClient.put<TData>(params.url, variables);}
+        if (params.method === 'PATCH') {return apiClient.patch<TData>(params.url, variables);}
+        if (params.method === 'DELETE') {return apiClient.delete<TData>(params.url);}
         throw new Error(`Unsupported method: ${params.method}`);
       } else {
         // Offline: Enqueue

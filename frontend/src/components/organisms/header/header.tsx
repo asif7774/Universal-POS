@@ -10,7 +10,7 @@ interface PageHeaderProps {
 const PageHeader: React.FC<PageHeaderProps> = ({ isSidebarPermanent, onOpenMobileDrawer }) => {
   const { title, subtitle, actions } = usePageHeaderConfig();
 
-  if (!title) return null;
+  if (!title) {return null;}
 
   return (
     <header className="page-header" role="banner" id="page-header">
