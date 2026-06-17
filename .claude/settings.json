@@ -18,6 +18,18 @@
             "timeout": 30
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=$(jq -r '.tool_input.file_path // empty' 2>/dev/null); if [[ -z \"$FILE\" ]] || [[ ! \"$FILE\" =~ \\.(ts|tsx|js|jsx)$ ]]; then exit 0; fi; if [[ \"$FILE\" == */frontend/* ]]; then cd /Volumes/Data/RND/Universal-POS/frontend && npx eslint \"$FILE\" 2>&1; LINT=$?; npm run tsc 2>&1; TSC=$?; [[ $LINT -ne 0 || $TSC -ne 0 ]] && exit 2; elif [[ \"$FILE\" == */backend/* ]]; then cd /Volumes/Data/RND/Universal-POS/backend && npx eslint \"$FILE\" 2>&1; LINT=$?; npm run typecheck 2>&1; TC=$?; [[ $LINT -ne 0 || $TC -ne 0 ]] && exit 2; fi; exit 0",
+            "timeout": 60,
+            "asyncRewake": true,
+            "statusMessage": "Checking lint & types..."
+          }
+        ]
       }
     ],
     "SessionStart": [
