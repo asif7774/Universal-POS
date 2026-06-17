@@ -6,5 +6,31 @@
       "Bash(npx tsc *)",
       "Bash(grep -r \"\\\\[{.*},\" /Volumes/Data/RND/Universal-POS/frontend/src/pages --include=\"*.tsx\" -n)"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "code-review-graph update --skip-flows",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "code-review-graph status",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }
